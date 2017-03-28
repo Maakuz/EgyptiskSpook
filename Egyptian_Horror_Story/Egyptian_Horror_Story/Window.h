@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include "GraphicsHandler.h"
 
 #define WIDTH 1080
 #define HEIGHT 720
@@ -16,7 +17,7 @@ public:
 
 	// returns false for fail
 	bool setupWindowAndSDL();
-	void startWindowLoop();
+	void startWindowLoop(GraphicsHandler &graphicsHandler);
 	// returns false for quit event
 	bool handleEvent(SDL_Event const &event);
 	bool handleMouseKeyPress(SDL_KeyboardEvent const &key);

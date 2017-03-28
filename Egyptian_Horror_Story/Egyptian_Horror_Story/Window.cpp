@@ -24,7 +24,7 @@ bool Window::setupWindowAndSDL() {
 		return true;
 }
 
-void Window::startWindowLoop() {
+void Window::startWindowLoop(GraphicsHandler &graphicsHandler) {
 	mRunning = true;
 	SDL_Event event;
 
@@ -35,6 +35,7 @@ void Window::startWindowLoop() {
 		}
 
 		//do stuff
+		graphicsHandler.render();
 
 		SDL_Delay(5); // 5 ms per frame
 	}
