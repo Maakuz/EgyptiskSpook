@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL.h>
-#include "GraphicsHandler.h"
+#include "Game.h"
 
 #define WIDTH 1080
 #define HEIGHT 720
@@ -10,6 +10,8 @@ class Window {
 private:
 	SDL_Window *mWindow;
 	bool mRunning;
+
+	Game* mGame;
 public:
 	Window();
 	Window(Window const &window) = delete;
@@ -17,7 +19,7 @@ public:
 
 	// returns false for fail
 	bool setupWindowAndSDL();
-	void startWindowLoop(GraphicsHandler &graphicsHandler);
+	void startWindowLoop(GraphicsHandler* graphicsHandler);
 	// returns false for quit event
 	bool handleEvent(SDL_Event const &event);
 	bool handleMouseKeyPress(SDL_KeyboardEvent const &key);

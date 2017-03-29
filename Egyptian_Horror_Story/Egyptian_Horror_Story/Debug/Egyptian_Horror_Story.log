@@ -1,0 +1,4 @@
+﻿  CameraClass.cpp
+c:\users\markus werdien\desktop\git\egyptian_horror_story\egyptian_horror_story\cameraclass.cpp(7): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Egyptian_Horror_Story.vcxproj -> C:\Users\Markus Werdien\Desktop\Git\Egyptian_Horror_Story\Debug\Egyptian_Horror_Story.exe
+  Egyptian_Horror_Story.vcxproj -> C:\Users\Markus Werdien\Desktop\Git\Egyptian_Horror_Story\Debug\Egyptian_Horror_Story.pdb (Partial PDB)

@@ -1,8 +1,8 @@
 #include "Window.h"
 #include "GraphicsHandler.h"
 
-Window gWindow;
 GraphicsHandler gGraphicsHandler;
+Window gWindow;
 
 int main(int argc, char *args[]) {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -13,7 +13,7 @@ int main(int argc, char *args[]) {
 	gGraphicsHandler.setupBasicShaders();
 	gGraphicsHandler.setupTestData();
 
-	gWindow.startWindowLoop(gGraphicsHandler);
+	gWindow.startWindowLoop(&gGraphicsHandler);
 
 	return 0;
 }

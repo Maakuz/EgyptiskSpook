@@ -4,31 +4,37 @@
 //För att kunna använda M_PI
 #define _USE_MATH_DEFINES
 
-#include <math.h>
-#include <d3d11.h>
-#include <DirectXMath.h>
+#include "Direct3DHeader.h"
 
-#pragma comment (lib, "d3d11.lib")
+#include <math.h>
+#include "SimpleMath.h"
 
 struct WVP
 {
-	DirectX::XMFLOAT4X4 world;
-	DirectX::XMFLOAT4X4 view;
-	DirectX::XMFLOAT4X4 projection;
+	DirectX::XMMATRIX world;
+	DirectX::XMMATRIX view;
+	DirectX::XMMATRIX projection;
 };
 
 class CameraClass
 {
 private:
 	WVP matrices;
-	DirectX::XMFLOAT3 mPos;
-	DirectX::XMFLOAT3 mForward;
-	DirectX::XMFLOAT3 mRight;
-	DirectX::XMFLOAT3 mUp;
+
+	ID3D11Buffer* WVPBuffer;
+
+	DirectX::SimpleMath::Vector3 mPos;
+	DirectX::SimpleMath::Vector3 mForward;
+	DirectX::SimpleMath::Vector3 mRight;
+	DirectX::SimpleMath::Vector3 mUp;
 
 public:
-	CameraClass(float width, float height);
+	CameraClass(ID3D11Device* device, float width, float height);
 	virtual ~CameraClass();
+
+	void createVWPBuffer(ID3D11Device* device);
+
+	ID3D11Buffer* getMatrixBuffer();
 
 };
 

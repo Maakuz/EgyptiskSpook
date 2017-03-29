@@ -114,8 +114,15 @@ void GraphicsHandler::setupBasicShaders() {
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
-void GraphicsHandler::render() {
+ID3D11Device* GraphicsHandler::getDevice()
+{
+	return this->device;
+}
+
+void GraphicsHandler::render(ID3D11Buffer* WVP) {
 	float clear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+	context->VSSetConstantBuffers(0, 1, &WVP);
 	context->ClearRenderTargetView(backBufferRTV, clear);
 	context->Draw(3, 0);
 }

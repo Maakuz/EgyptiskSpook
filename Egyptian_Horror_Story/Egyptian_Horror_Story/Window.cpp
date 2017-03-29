@@ -3,9 +3,13 @@
 Window::Window() {
 	mRunning = false;
 	mWindow = nullptr;
+
+	this->mGame = nullptr;
 }
 
 Window::~Window() {
+	delete this->mGame;
+
 	if (!mWindow)
 		SDL_DestroyWindow(mWindow);
 	SDL_Quit();
@@ -24,10 +28,12 @@ bool Window::setupWindowAndSDL() {
 		return true;
 }
 
-void Window::startWindowLoop(GraphicsHandler &graphicsHandler) {
+void Window::startWindowLoop(GraphicsHandler* graphicsHandler) {
 	mRunning = true;
 	SDL_Event event;
 
+	this->mGame = new Game(graphicsHandler, WIDTH, HEIGHT);
+	
 	while (mRunning) {
 		while (SDL_PollEvent(&event)) {
 			if (!handleEvent(event))
@@ -35,8 +41,7 @@ void Window::startWindowLoop(GraphicsHandler &graphicsHandler) {
 		}
 
 		//do stuff
-		graphicsHandler.render();
-		graphicsHandler.present();
+		this->mGame->update();
 
 		SDL_Delay(5); // 5 ms delay per frame
 	}

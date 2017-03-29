@@ -24,7 +24,9 @@ public:
 	void setupViewport(int width, int height);
 	void setupBasicShaders();
 
-	void render();
+	ID3D11Device* getDevice();
+
+	void render(ID3D11Buffer* WVP);
 	void present();
 
 	GraphicsHandler* operator=(GraphicsHandler const &gh) = delete;
