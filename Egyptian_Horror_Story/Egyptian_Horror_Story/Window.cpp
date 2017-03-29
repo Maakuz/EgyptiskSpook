@@ -36,8 +36,9 @@ void Window::startWindowLoop(GraphicsHandler &graphicsHandler) {
 
 		//do stuff
 		graphicsHandler.render();
+		graphicsHandler.present();
 
-		SDL_Delay(5); // 5 ms per frame
+		SDL_Delay(5); // 5 ms delay per frame
 	}
 }
 
