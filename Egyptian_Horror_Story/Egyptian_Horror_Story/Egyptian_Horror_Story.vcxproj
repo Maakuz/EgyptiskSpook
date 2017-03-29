@@ -51,12 +51,14 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="GraphicsHandler.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ShaderHandler.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CameraClass.h" />
     <ClInclude Include="Direct3DHeader.h" />
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="ShaderHandler.h" />
@@ -66,13 +68,13 @@
     <ProjectGuid>{FF0FB6A1-E8EC-4896-BF80-4532FA45D94E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Egyptian_Horror_Story</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -85,7 +87,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">

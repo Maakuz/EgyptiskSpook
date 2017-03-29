@@ -1,0 +1,14 @@
+﻿  compilation object save succeeded; see C:\Users\Markus Werdien\Desktop\Git\Egyptian_Horror_Story\Debug\SimpleGS.cso
+  compilation object save succeeded; see C:\Users\Markus Werdien\Desktop\Git\Egyptian_Horror_Story\Debug\SimplePS.cso
+  compilation object save succeeded; see C:\Users\Markus Werdien\Desktop\Git\Egyptian_Horror_Story\Debug\SimpleVS.cso
+  Window.cpp
+  ShaderHandler.cpp
+  Main.cpp
+  GraphicsHandler.cpp
+c:\users\markus werdien\desktop\git\egyptian_horror_story\egyptian_horror_story\graphicshandler.cpp(61): warning C4244: '=': conversion from 'int' to 'FLOAT', possible loss of data
+c:\users\markus werdien\desktop\git\egyptian_horror_story\egyptian_horror_story\graphicshandler.cpp(62): warning C4244: '=': conversion from 'int' to 'FLOAT', possible loss of data
+  CameraClass.cpp
+c:\users\markus werdien\desktop\git\egyptian_horror_story\egyptian_horror_story\cameraclass.cpp(5): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Generating Code...
+  Egyptian_Horror_Story.vcxproj -> C:\Users\Markus Werdien\Desktop\Git\Egyptian_Horror_Story\Debug\Egyptian_Horror_Story.exe
+  Egyptian_Horror_Story.vcxproj -> C:\Users\Markus Werdien\Desktop\Git\Egyptian_Horror_Story\Debug\Egyptian_Horror_Story.pdb (Partial PDB)
