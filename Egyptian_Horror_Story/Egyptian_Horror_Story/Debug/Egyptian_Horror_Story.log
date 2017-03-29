@@ -1,29 +1,4 @@
-﻿Build started 2017-03-28 20:50:45.
-     1>Project "C:\Users\LukasW\Documents\Visual Studio 2015\Projects\EgyptiskSpook\Egyptian_Horror_Story\Egyptian_Horror_Story\Egyptian_Horror_Story.vcxproj" on node 2 (Build target(s)).
-     1>FxCompile:
-         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\fxc.exe /nologo /E"main" /T gs_5_0 /Fo "C:\Users\LukasW\Documents\Visual Studio 2015\Projects\EgyptiskSpook\Egyptian_Horror_Story\Debug\SimpleGS.cso" /Od /Zi SimpleGS.hlsl 
-         compilation object save succeeded; see C:\Users\LukasW\Documents\Visual Studio 2015\Projects\EgyptiskSpook\Egyptian_Horror_Story\Debug\SimpleGS.cso
-         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\fxc.exe /nologo /E"main" /T ps_5_0 /Fo "C:\Users\LukasW\Documents\Visual Studio 2015\Projects\EgyptiskSpook\Egyptian_Horror_Story\Debug\SimplePS.cso" /Od /Zi SimplePS.hlsl 
-         compilation object save succeeded; see C:\Users\LukasW\Documents\Visual Studio 2015\Projects\EgyptiskSpook\Egyptian_Horror_Story\Debug\SimplePS.cso
-         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\fxc.exe /nologo /E"main" /T vs_5_0 /Fo "C:\Users\LukasW\Documents\Visual Studio 2015\Projects\EgyptiskSpook\Egyptian_Horror_Story\Debug\SimpleVS.cso" /Od /Zi SimpleVS.hlsl 
-         compilation object save succeeded; see C:\Users\LukasW\Documents\Visual Studio 2015\Projects\EgyptiskSpook\Egyptian_Horror_Story\Debug\SimpleVS.cso
-       ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt GraphicsHandler.cpp Main.cpp ShaderHandler.cpp Window.cpp
-         Window.cpp
-         ShaderHandler.cpp
-         Main.cpp
-         GraphicsHandler.cpp
-     1>c:\users\lukasw\documents\visual studio 2015\projects\egyptiskspook\egyptian_horror_story\egyptian_horror_story\graphicshandler.cpp(56): warning C4244: '=': conversion from 'int' to 'FLOAT', possible loss of data
-     1>c:\users\lukasw\documents\visual studio 2015\projects\egyptiskspook\egyptian_horror_story\egyptian_horror_story\graphicshandler.cpp(57): warning C4244: '=': conversion from 'int' to 'FLOAT', possible loss of data
-         Generating Code...
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\LukasW\Documents\Visual Studio 2015\Projects\EgyptiskSpook\Egyptian_Horror_Story\Debug\Egyptian_Horror_Story.exe" /INCREMENTAL /NOLOGO SDL2.lib SDL2main.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\LukasW\Documents\Visual Studio 2015\Projects\EgyptiskSpook\Egyptian_Horror_Story\Debug\Egyptian_Horror_Story.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\LukasW\Documents\Visual Studio 2015\Projects\EgyptiskSpook\Egyptian_Horror_Story\Debug\Egyptian_Horror_Story.lib" /MACHINE:X86 Debug\GraphicsHandler.obj
-         Debug\Main.obj
-         Debug\ShaderHandler.obj
-         Debug\Window.obj
-         Egyptian_Horror_Story.vcxproj -> C:\Users\LukasW\Documents\Visual Studio 2015\Projects\EgyptiskSpook\Egyptian_Horror_Story\Debug\Egyptian_Horror_Story.exe
-     1>Done Building Project "C:\Users\LukasW\Documents\Visual Studio 2015\Projects\EgyptiskSpook\Egyptian_Horror_Story\Egyptian_Horror_Story\Egyptian_Horror_Story.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:04.27
+﻿  CameraClass.cpp
+c:\users\markus werdien\desktop\git\egyptian_horror_story\egyptian_horror_story\cameraclass.cpp(5): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Egyptian_Horror_Story.vcxproj -> C:\Users\Markus Werdien\Desktop\Git\Egyptian_Horror_Story\Debug\Egyptian_Horror_Story.exe
+  Egyptian_Horror_Story.vcxproj -> C:\Users\Markus Werdien\Desktop\Git\Egyptian_Horror_Story\Debug\Egyptian_Horror_Story.pdb (Partial PDB)
