@@ -6,6 +6,9 @@ GraphicsHandler::GraphicsHandler() {
 
 	device = nullptr;
 	context = nullptr;
+
+	//test
+	vertexBuffer = nullptr;
 }
 
 GraphicsHandler::~GraphicsHandler() {
@@ -18,11 +21,15 @@ GraphicsHandler::~GraphicsHandler() {
 		device->Release();
 	if (context)
 		context->Release();
+
+	//test
+	if (vertexBuffer)
+		vertexBuffer->Release();
 }
 
 HRESULT GraphicsHandler::setupSwapChain() {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
-	ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
+	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 	swapChainDesc.BufferCount = 1;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
@@ -32,9 +39,9 @@ HRESULT GraphicsHandler::setupSwapChain() {
 	swapChainDesc.SampleDesc.Count = 4;
 
 	HRESULT hr = D3D11CreateDeviceAndSwapChain(
-		NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_DEBUG,
-		NULL, NULL, D3D11_SDK_VERSION, &swapChainDesc, &swapChain, &device,
-		NULL, &context
+		nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_DEBUG,
+		nullptr, NULL, D3D11_SDK_VERSION, &swapChainDesc, &swapChain, &device,
+		nullptr, &context
 	);
 
 	if (SUCCEEDED(hr)) {
@@ -42,9 +49,7 @@ HRESULT GraphicsHandler::setupSwapChain() {
 		hr = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*) &backBuffer);
 
 		if (SUCCEEDED(hr)) {
-			hr = device->CreateRenderTargetView(backBuffer, NULL, &backBufferRTV);
-			context->OMSetRenderTargets(1, &backBufferRTV, NULL); // depth stencil test l8
-
+			hr = device->CreateRenderTargetView(backBuffer, nullptr, &backBufferRTV);
 			backBuffer->Release();
 		}
 	}
@@ -61,20 +66,58 @@ void GraphicsHandler::setupViewport(int width, int height) {
 	context->RSSetViewports(1, &viewport);
 }
 
+void GraphicsHandler::setupTestData() {
+	float testData[] = { 
+						-1.f, -1.f, 0.f,
+						0.f, 0.f, 1.0f,
+
+						 0.f, 1.f, 0.f,
+						 0.f, 1.0f, 0.f,
+
+							1.f, -1.f, 0.f,
+							1.f, 0.f, 0.f,
+					   };
+
+	D3D11_BUFFER_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	desc.ByteWidth = sizeof(testData);
+	desc.Usage = D3D11_USAGE_IMMUTABLE;
+	
+	D3D11_SUBRESOURCE_DATA data;
+	ZeroMemory(&data, sizeof(data));
+	data.pSysMem = testData;
+
+	device->CreateBuffer(&desc, &data, &vertexBuffer);
+
+	UINT stride = sizeof(float) * 6, offset = 0;
+	context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+}
+
 void GraphicsHandler::setupBasicShaders() {
-	shaderHandler.setupVertexShader(device, 0, L"SimpleVS.hlsl", "main");
+	D3D11_INPUT_ELEMENT_DESC desc[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 3 * sizeof(float), D3D11_INPUT_PER_VERTEX_DATA, 0}
+	};
+
+	shaderHandler.setupVertexShader(device, 0, L"SimpleVS.hlsl", "main", desc, ARRAYSIZE(desc));
 	shaderHandler.setupPixelShader(device, 0, L"SimplePS.hlsl", "main");
 	shaderHandler.setupGeometryShader(device, 0, L"SimpleGS.hlsl", "main");
 
 	context->VSSetShader(shaderHandler.getVertexShader(0), nullptr, 0);
 	context->PSSetShader(shaderHandler.getPixelShader(0), nullptr, 0);
 	context->GSSetShader(shaderHandler.getGeometryShader(0), nullptr, 0);
+
+	// render target, input layout and topology set
+	context->OMSetRenderTargets(1, &backBufferRTV, nullptr); // depth stencil test l8
+	context->IASetInputLayout(shaderHandler.getInputLayout(0));
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
 void GraphicsHandler::render() {
-	float clear[4] = { 1.0f, 0.0f, 0.0f, 0.0f };
+	float clear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	context->ClearRenderTargetView(backBufferRTV, clear);
-	present();
+	context->Draw(3, 0);
 }
 
 void GraphicsHandler::present() {
