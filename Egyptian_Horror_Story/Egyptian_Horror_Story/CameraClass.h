@@ -54,7 +54,6 @@ public:
 	void setRight(DirectX::SimpleMath::Vector3 right);
 	void setYaw(float yaw);
 	void setPitch(float pitch);
-
 };
 
 

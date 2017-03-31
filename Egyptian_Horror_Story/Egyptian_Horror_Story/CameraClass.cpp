@@ -58,24 +58,21 @@ void CameraClass::createVWPBuffer(ID3D11Device* device)
 
 void CameraClass::update(ID3D11DeviceContext* context)
 {
+	using namespace DirectX::SimpleMath;
+
 	if (this->mPitch > 75.f)
 		this->mPitch = 75.f;
 
 	else if (this->mPitch < -89.f)
 		this->mPitch = -89.f;
 
-	this->mForward.x = sin(this->mYaw * DEGTORADIANS) * cos(this->mPitch * DEGTORADIANS);
-	this->mForward.y = (sin(this->mPitch * DEGTORADIANS));
-	this->mForward.z = cos(this->mYaw * DEGTORADIANS) * cos(this->mPitch * DEGTORADIANS);
+	Matrix rotation = Matrix::CreateFromYawPitchRoll(mYaw * DEGTORADIANS, mPitch * DEGTORADIANS, 0);
+	mUp = rotation.Up();
+	mForward = rotation.Forward();
+	mRight = rotation.Right() * -1; //Right gets inverted, better solution exists nice
 
-	this->mForward.Normalize();
-
-
-
-	DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(this->mPos, this->mPos + this->mForward, this->mUp);
-	view = DirectX::XMMatrixTranspose(view);
-
-	this->matrices.view = view;
+	Matrix view = DirectX::XMMatrixLookAtLH(this->mPos, this->mPos + this->mForward, this->mUp);
+	matrices.view = view.Transpose();
 
 	D3D11_MAPPED_SUBRESOURCE data;
 	ZeroMemory(&data, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -89,6 +86,7 @@ void CameraClass::update(ID3D11DeviceContext* context)
 
 
 }
+
 
 ID3D11Buffer* CameraClass::getMatrixBuffer()
 {
