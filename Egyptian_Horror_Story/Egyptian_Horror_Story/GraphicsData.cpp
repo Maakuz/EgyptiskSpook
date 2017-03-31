@@ -6,6 +6,15 @@ GraphicsData::GraphicsData()
 
 GraphicsData::~GraphicsData()
 {
+	for (auto const &key : this->mBuffers) {
+		if (key.second)
+			key.second->Release();
+	}
+
+	for (auto const &key : this->mSrvs) {
+		if (key.second)
+			key.second->Release();
+	}
 }
 
 bool GraphicsData::loadTexture(char* key, wchar_t* path, ID3D11Device* device)
