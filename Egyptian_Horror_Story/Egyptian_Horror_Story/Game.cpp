@@ -15,6 +15,24 @@ Game::~Game()
 
 void Game::update()
 {
+	this->camera->update(this->graphics->getDeviceContext());
+	this->player->updatePosition();
+
 	this->graphics->render(this->camera->getMatrixBuffer());
 	this->graphics->present();
+}
+
+bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
+{
+	return this->player->handleMouseKeyPress(key);
+}
+
+bool Game::handleMouseKeyRelease(SDL_KeyboardEvent const& key)
+{
+	return this->player->handleMouseKeyRelease(key);
+}
+
+void Game::handleMouseMotion(SDL_MouseMotionEvent const &motion)
+{
+	this->player->handleMouseMotion(motion);
 }

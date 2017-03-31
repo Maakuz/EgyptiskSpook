@@ -119,6 +119,11 @@ ID3D11Device* GraphicsHandler::getDevice()
 	return this->device;
 }
 
+ID3D11DeviceContext* GraphicsHandler::getDeviceContext()
+{
+	return this->context;
+}
+
 void GraphicsHandler::render(ID3D11Buffer* WVP) {
 	float clear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 

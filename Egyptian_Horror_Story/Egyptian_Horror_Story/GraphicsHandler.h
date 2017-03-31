@@ -25,6 +25,7 @@ public:
 	void setupBasicShaders();
 
 	ID3D11Device* getDevice();
+	ID3D11DeviceContext* getDeviceContext();
 
 	void render(ID3D11Buffer* WVP);
 	void present();

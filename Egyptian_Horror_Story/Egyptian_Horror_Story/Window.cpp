@@ -49,23 +49,45 @@ void Window::startWindowLoop(GraphicsHandler* graphicsHandler) {
 
 bool Window::handleEvent(SDL_Event const &event) {
 	switch (event.type) {
-		case SDL_QUIT:
-			return false; //quit
-		case SDL_KEYDOWN:
-			return handleMouseKeyPress(event.key);
+	case SDL_QUIT:
+		return false; //quit
+	case SDL_KEYDOWN:
+		return handleKeyPress(event.key);
+
+	case SDL_KEYUP:
+		return handleKeyRelease(event.key);
+
+	case SDL_MOUSEMOTION:
+		this->handleMouseMotion(event.motion);
 	}
+
+
 
 	return true;
 }
 
-bool Window::handleMouseKeyPress(SDL_KeyboardEvent const &key) {
+bool Window::handleKeyPress(SDL_KeyboardEvent const &key) {
 	switch (key.keysym.scancode) {
 		case SDL_SCANCODE_ESCAPE:
 			return false;
 		case SDL_SCANCODE_RSHIFT:
 			//change from fullscreen and back
 			SDL_SetWindowFullscreen(mWindow, SDL_GetWindowFlags(mWindow) ^ SDL_WINDOW_FULLSCREEN);
+		default:
+			this->mGame->handleMouseKeyPress(key);
 	}
 
 	return true;
+}
+
+bool Window::handleKeyRelease(SDL_KeyboardEvent const &key)
+{
+	this->mGame->handleMouseKeyRelease(key);
+
+	return true;
+}
+
+void Window::handleMouseMotion(SDL_MouseMotionEvent const &motion)
+{
+	this->mGame->handleMouseMotion(motion);
 }

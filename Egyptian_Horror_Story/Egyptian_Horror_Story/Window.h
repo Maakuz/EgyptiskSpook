@@ -1,5 +1,4 @@
 #pragma once
-#include <SDL.h>
 #include "Game.h"
 
 #define WIDTH 1080
@@ -22,6 +21,8 @@ public:
 	void startWindowLoop(GraphicsHandler* graphicsHandler);
 	// returns false for quit event
 	bool handleEvent(SDL_Event const &event);
-	bool handleMouseKeyPress(SDL_KeyboardEvent const &key);
+	bool handleKeyPress(SDL_KeyboardEvent const &key);
+	bool handleKeyRelease(SDL_KeyboardEvent const &key);
+	void handleMouseMotion(SDL_MouseMotionEvent const &motion);
 	Window* operator=(Window const &window) = delete;
 };
