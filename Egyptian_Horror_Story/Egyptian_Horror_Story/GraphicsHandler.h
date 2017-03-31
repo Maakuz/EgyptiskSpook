@@ -1,9 +1,11 @@
 #pragma once
 #include "ShaderHandler.h"
+#include "GraphicsData.h"
 
 class GraphicsHandler {
 private:
 	ShaderHandler shaderHandler;
+	GraphicsData mGraphicsData;
 
 	IDXGISwapChain *swapChain;
 	ID3D11RenderTargetView *backBufferRTV;

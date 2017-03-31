@@ -69,13 +69,22 @@ void GraphicsHandler::setupViewport(int width, int height) {
 void GraphicsHandler::setupTestData() {
 	float testData[] = { 
 						-1.f, -1.f, 0.f,
-						0.f, 0.f, 1.0f,
+						0.f, 1.f,
 
-						 0.f, 1.f, 0.f,
-						 0.f, 1.0f, 0.f,
+						-1.f, 1.f, 0.f,
+						0.f, 0.f,
 
-							1.f, -1.f, 0.f,
-							1.f, 0.f, 0.f,
+						1.f, -1.f, 0.f,
+						1.f, 1.f,
+
+						1.f, -1.f, 0.f,
+						1.f, 1.f,
+
+						1.f, 1.f, 0.f,
+						1.f, 0.f,
+
+						-1.f, 1.f, 0.f,
+						0.f, 0.f,
 					   };
 
 	D3D11_BUFFER_DESC desc;
@@ -90,14 +99,20 @@ void GraphicsHandler::setupTestData() {
 
 	device->CreateBuffer(&desc, &data, &vertexBuffer);
 
-	UINT stride = sizeof(float) * 6, offset = 0;
+	UINT stride = sizeof(float) * 5, offset = 0;
 	context->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+
+	this->mGraphicsData.loadTexture("test", L"../Resource/Textures/normalMap.png", device);
+
+	ID3D11ShaderResourceView* temp = this->mGraphicsData.getSRV("test");
+
+	context->PSSetShaderResources(0, 1, &temp);
 }
 
 void GraphicsHandler::setupBasicShaders() {
 	D3D11_INPUT_ELEMENT_DESC desc[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 3 * sizeof(float), D3D11_INPUT_PER_VERTEX_DATA, 0}
+		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 3 * sizeof(float), D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
 	shaderHandler.setupVertexShader(device, 0, L"SimpleVS.hlsl", "main", desc, ARRAYSIZE(desc));
@@ -129,7 +144,7 @@ void GraphicsHandler::render(ID3D11Buffer* WVP) {
 
 	context->VSSetConstantBuffers(0, 1, &WVP);
 	context->ClearRenderTargetView(backBufferRTV, clear);
-	context->Draw(3, 0);
+	context->Draw(6, 0);
 }
 
 void GraphicsHandler::present() {

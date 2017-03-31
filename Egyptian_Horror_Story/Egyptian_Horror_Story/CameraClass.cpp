@@ -71,6 +71,7 @@ void CameraClass::update(ID3D11DeviceContext* context)
 	this->mForward.Normalize();
 
 
+
 	DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(this->mPos, this->mPos + this->mForward, this->mUp);
 	view = DirectX::XMMatrixTranspose(view);
 

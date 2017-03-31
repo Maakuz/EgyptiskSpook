@@ -1,12 +1,12 @@
 struct GS_IN {
-	float4 pos : SV_POSITION;
-	float3 color : COLOR;
+    float4 pos : SV_POSITION;
+    float2 uv : UV;
 };
 
 struct GS_OUT
 {
 	float4 pos : SV_POSITION;
-	float3 color : COLOR;
+    float2 uv : UV;
 };
 
 [maxvertexcount(3)]
@@ -19,7 +19,7 @@ void main(
 	for (uint i = 0; i < 3; i++)
 	{
 		element.pos = input[i].pos;
-		element.color = input[i].color;
+		element.uv = input[i].uv;
 		output.Append(element);
 	}
 }

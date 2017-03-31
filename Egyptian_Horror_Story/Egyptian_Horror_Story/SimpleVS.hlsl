@@ -1,11 +1,11 @@
 struct VS_IN {
 	float3 pos : POSITION;
-	float3 color : COLOR;
+	float2 uv : UV;
 };
 
 struct VS_OUT {
 	float4 pos : SV_POSITION;
-	float3 color : COLOR;
+	float2 uv: UV;
 };
 
 cbuffer WVP
@@ -22,6 +22,6 @@ VS_OUT main( VS_IN input )
     output.pos = mul(output.pos, world);
     output.pos = mul(output.pos, view);
     output.pos = mul(output.pos, projection);
-	output.color = input.color;
+	output.uv = input.uv;
 	return output;
 }
