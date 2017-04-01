@@ -7,9 +7,9 @@
 class Game
 {
 private:
-	GraphicsHandler* graphics;
-	Player* player;
-	CameraClass* camera;
+	GraphicsHandler* mGraphics;
+	Player* mPlayer;
+	CameraClass* mCamera;
 
 public:
 	Game(GraphicsHandler* graphicsHandler, float width, float height);

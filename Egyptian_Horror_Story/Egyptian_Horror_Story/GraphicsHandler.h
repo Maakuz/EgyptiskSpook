@@ -4,18 +4,18 @@
 
 class GraphicsHandler {
 private:
-	ShaderHandler shaderHandler;
+	ShaderHandler mShaderHandler;
 	GraphicsData mGraphicsData;
 
-	IDXGISwapChain *swapChain;
-	ID3D11RenderTargetView *backBufferRTV;
-	ID3D11Device *device;
-	ID3D11DeviceContext *context;
+	IDXGISwapChain *mSwapChain;
+	ID3D11RenderTargetView *mBackBufferRTV;
+	ID3D11Device *mDevice;
+	ID3D11DeviceContext *mContext;
 
-	D3D11_VIEWPORT viewport;
+	D3D11_VIEWPORT mViewport;
 
 	// 4 Testing
-	ID3D11Buffer *vertexBuffer;
+	ID3D11Buffer *mVertexBuffer;
 public:
 	GraphicsHandler();
 	GraphicsHandler(GraphicsHandler const &gh) = delete;

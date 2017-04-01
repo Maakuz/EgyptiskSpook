@@ -9,8 +9,7 @@
 class Entity
 {
 public:
-	DirectX::SimpleMath::Vector3 pos;
-
+	DirectX::SimpleMath::Vector3 mPos;
 public:
 	Entity();
 	virtual ~Entity();

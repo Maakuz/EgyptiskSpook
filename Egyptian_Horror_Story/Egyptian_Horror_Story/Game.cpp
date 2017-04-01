@@ -1,38 +1,39 @@
 #include "Game.h"
 
-Game::Game(GraphicsHandler* graphicsHandler, float width, float height)
+Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 {
-	this->graphics = graphicsHandler;
-	this->camera = new CameraClass(this->graphics->getDevice(), width, height);
-	this->player = new Player(this->camera);
+	this->mGraphics = mGraphicsHandler;
+	this->mCamera = new CameraClass(this->mGraphics->getDevice(), width, height);
+	this->mPlayer = new Player(this->mCamera);
 }
 
 Game::~Game()
 {
-	delete this->camera;
-	delete this->player;
+	delete this->mCamera;
+	delete this->mPlayer;
 }
 
 void Game::update()
 {
-	this->camera->update(this->graphics->getDeviceContext());
-	this->player->updatePosition();
+	this->mCamera->update(this->mGraphics->getDeviceContext());
+	this->mPlayer->updatePosition();
 
-	this->graphics->render(this->camera->getMatrixBuffer());
-	this->graphics->present();
+	this->mGraphics->render(this->mCamera->getMatrixBuffer());
+	this->mGraphics->present();
 }
 
 bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
 {
-	return this->player->handleMouseKeyPress(key);
+	return this->mPlayer->handleMouseKeyPress(key);
 }
 
 bool Game::handleMouseKeyRelease(SDL_KeyboardEvent const& key)
 {
-	return this->player->handleMouseKeyRelease(key);
+	return this->mPlayer->handleMouseKeyRelease(key);
 }
 
 void Game::handleMouseMotion(SDL_MouseMotionEvent const &motion)
 {
-	this->player->handleMouseMotion(motion);
+	this->mPlayer->handleMouseMotion(motion);
+	this->mCamera->updateRotation(this->mGraphics->getDeviceContext());
 }

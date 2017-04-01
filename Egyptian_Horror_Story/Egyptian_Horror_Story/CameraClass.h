@@ -10,19 +10,17 @@
 #include "SimpleMath.h"
 struct WVP
 {
-	DirectX::XMMATRIX world;
-	DirectX::XMMATRIX view;
-	DirectX::XMMATRIX projection;
+	DirectX::SimpleMath::Matrix world, view, projection;
 };
 
 class CameraClass
 {
 private:
-	WVP matrices;
+	const double DEGTORADIANS = M_PI / 180;
 	
-	const float DEGTORADIANS = M_PI / 180;
+	WVP mMatrices;
 
-	ID3D11Buffer* WVPBuffer;
+	ID3D11Buffer* mWVPBuffer;
 
 	DirectX::SimpleMath::Vector3 mPos;
 	DirectX::SimpleMath::Vector3 mForward;
@@ -38,6 +36,7 @@ public:
 
 	void createVWPBuffer(ID3D11Device* device);
 	void update(ID3D11DeviceContext* context);
+	void updateRotation(ID3D11DeviceContext* context);
 
 	ID3D11Buffer* getMatrixBuffer();
 

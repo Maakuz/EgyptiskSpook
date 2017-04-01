@@ -2,7 +2,7 @@
 
 Entity::Entity()
 {
-	this->pos = DirectX::SimpleMath::Vector3(0, 0, 0);
+	this->mPos = DirectX::SimpleMath::Vector3(0, 0, 0);
 }
 
 Entity::~Entity()
@@ -11,15 +11,15 @@ Entity::~Entity()
 
 void Entity::move(DirectX::SimpleMath::Vector3 offset)
 {
-	this->pos += offset;
+	this->mPos += offset;
 }
 
-void Entity::setPosition(DirectX::SimpleMath::Vector3 pos)
+void Entity::setPosition(DirectX::SimpleMath::Vector3 mPos)
 {
-	this->pos = pos;
+	this->mPos = mPos;
 }
 
 DirectX::SimpleMath::Vector3 Entity::getPosition() const
 {
-	return this->pos;
+	return this->mPos;
 }
