@@ -59,9 +59,8 @@ void CameraClass::createVWPBuffer(ID3D11Device* device)
 void CameraClass::update(ID3D11DeviceContext* context)
 {
 	// per frame
-	using namespace DirectX::SimpleMath;
-
-	Matrix view = DirectX::XMMatrixLookAtLH(this->mPos, this->mPos + this->mForward, this->mUp);
+	DirectX::SimpleMath::Matrix view =
+		DirectX::XMMatrixLookAtLH(this->mPos, this->mPos + this->mForward, this->mUp);
 	view = view.Transpose();
 	if (mMatrices.view != view) {
 		mMatrices.view = view;

@@ -3,3 +3,6 @@ Egyptian_Horror_Story/Egyptian_Horror_Story/Debug/
 Egyptian_Horror_Story/Debug/Egyptian_Horror_Story.pdb
 Egyptian_Horror_Story/Debug/Egyptian_Horror_Story.ilk
 Egyptian_Horror_Story/Debug/Egyptian_Horror_Story.exe
+*.sdf
+*.opensdf
+*.cso
