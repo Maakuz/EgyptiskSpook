@@ -1,4 +1,6 @@
-#pragma once
+#ifndef GRAPHICSHANDLER_H
+#define GRAPHICSHANDLER_H
+
 #include "ShaderHandler.h"
 #include "GraphicsData.h"
 #include "Renderer.h"
@@ -53,3 +55,5 @@ public:
 
 	GraphicsHandler* operator=(GraphicsHandler const &gh) = delete;
 };
+
+#endif

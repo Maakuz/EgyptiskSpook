@@ -1,5 +1,6 @@
-#ifndef PLAYER
-#define PLAYER
+#ifndef PLAYER_H
+#define PLAYER_H
+
 #include "Entity.h"
 #include "CameraClass.h"
 #include "Light.h"

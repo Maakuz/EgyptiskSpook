@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHADERHANDLER_H
+#define SHADERHANDLER_H
+
 #include "Direct3DHeader.h"
 #include <map>
 
@@ -34,3 +36,5 @@ public:
 
 	ShaderHandler* operator=(ShaderHandler const &handler) = delete;
 };
+
+#endif

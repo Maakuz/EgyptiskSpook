@@ -13,7 +13,6 @@ ShadowRenderer::ShadowRenderer(Light* light)
 
 	this->mDSV = nullptr;
 	this->mSRV = nullptr;
-
 }
 
 ShadowRenderer::~ShadowRenderer()
@@ -34,8 +33,8 @@ void ShadowRenderer::setup(ID3D11Device* device, ShaderHandler& shaders)
 	descTex.ArraySize = descTex.MipLevels = 1;
 	descTex.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 	descTex.Format = DXGI_FORMAT_R32_TYPELESS;
-	descTex.Height = this->mViewport.Height;
-	descTex.Width = this->mViewport.Width;
+	descTex.Height = static_cast<UINT> (this->mViewport.Height);
+	descTex.Width = static_cast<UINT> (this->mViewport.Width);
 	descTex.SampleDesc.Count = 4;
 
 	HRESULT hr = device->CreateTexture2D(&descTex, NULL, &texture);

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef WINDOW_H
+#define WINDOW_H
+
 #include "Game.h"
 
 #define TITLE "Cool Egypt Game"
@@ -24,3 +26,5 @@ public:
 	void handleMouseMotion(SDL_MouseMotionEvent const &motion);
 	Window* operator=(Window const &window) = delete;
 };
+
+#endif
