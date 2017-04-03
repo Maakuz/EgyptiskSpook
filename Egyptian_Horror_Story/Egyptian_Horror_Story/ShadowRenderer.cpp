@@ -93,5 +93,5 @@ void ShadowRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaders
 	context->GSSetShader(nullptr, nullptr, 0);
 	context->PSSetShader(nullptr, nullptr, 0);
 
-	context->Draw(12, 0);
+	context->Draw(6, 0);
 }

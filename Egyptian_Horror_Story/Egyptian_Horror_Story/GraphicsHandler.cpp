@@ -261,6 +261,7 @@ ID3D11DeviceContext* GraphicsHandler::getDeviceContext()
 }
 
 void GraphicsHandler::render(ID3D11Buffer* WVP) {
+	// render test data, should be moved to a separate renderer
 	float clear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	UINT stride = sizeof(float) * 5, offset = 0;
