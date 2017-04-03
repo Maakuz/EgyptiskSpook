@@ -61,8 +61,6 @@ GraphicsHandler::GraphicsHandler()
 
 	//test
 	mVertexBuffer = nullptr;
-
-	this->shadow = nullptr;
 }
 
 GraphicsHandler::~GraphicsHandler() {
@@ -89,7 +87,9 @@ GraphicsHandler::~GraphicsHandler() {
 	if (this->mDSV)
 		this->mDSV->Release();
 
-	delete this->shadow;
+	for (auto *renderer : renderers) {
+		delete renderer;
+	}
 }
 
 HRESULT GraphicsHandler::setupSwapChain() {
@@ -234,10 +234,20 @@ void GraphicsHandler::setupBasicShaders() {
 	mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
-void GraphicsHandler::setupShadow(Light* light)
-{
-	this->shadow = new ShadowRenderer(light);
-	this->shadow->setup(this->mDevice, this->mShaderHandler);
+void GraphicsHandler::addRenderer(Renderer *renderer) {
+	renderers.push_back(renderer);
+}
+
+void GraphicsHandler::setupRenderers() {
+	for (const auto& renderer : renderers) {
+		renderer->setup(mDevice, mShaderHandler);
+	}
+}
+
+void GraphicsHandler::renderRenderers() {
+	for (const auto& renderer : renderers) {
+		renderer->render(mContext, mShaderHandler);
+	}
 }
 
 ID3D11Device* GraphicsHandler::getDevice()
@@ -254,8 +264,6 @@ void GraphicsHandler::render(ID3D11Buffer* WVP) {
 	float clear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	UINT stride = sizeof(float) * 5, offset = 0;
-
-	this->shadow->render(this->mContext, this->mShaderHandler);
 
 	this->mContext->RSSetViewports(1, &this->mViewport);
 

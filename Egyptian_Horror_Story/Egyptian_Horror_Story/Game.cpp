@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "ShadowRenderer.h"
 
 Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 {
@@ -6,11 +7,11 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	this->mCamera = new CameraClass(this->mGraphics->getDevice(), width, height);
 	this->mPlayer = new Player(this->mCamera, this->mGraphics->getDevice());
 
-	this->mGraphics->setupShadow(this->mPlayer->getLight());
+	this->mGraphics->addRenderer(new ShadowRenderer(mPlayer->getLight()));
+	this->mGraphics->setupRenderers();
 	
 	this->mGraphics->setupTestData();
 	this->mGraphics->setupFloor();
-
 }
 
 Game::~Game()
@@ -24,6 +25,7 @@ void Game::update()
 	this->mCamera->update(this->mGraphics->getDeviceContext());
 	this->mPlayer->updatePosition();
 
+	this->mGraphics->renderRenderers();
 	this->mGraphics->render(this->mCamera->getMatrixBuffer());
 	this->mGraphics->present();
 }

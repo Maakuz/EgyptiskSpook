@@ -1,7 +1,8 @@
 #pragma once
 #include "ShaderHandler.h"
 #include "GraphicsData.h"
-#include "ShadowRenderer.h"
+#include "Renderer.h"
+#include <vector>
 
 #define WIDTH 1080
 #define HEIGHT 720
@@ -25,8 +26,7 @@ private:
 	ID3D11Buffer *mVertexBuffer;
 	ID3D11Buffer *mVertexBuffer2;
 
-	ShadowRenderer* shadow;
-	
+	std::vector<Renderer*> renderers;
 
 	void createDepthStencil();
 public:
@@ -39,7 +39,11 @@ public:
 	void setupFloor();
 	void setupViewport(int width, int height);
 	void setupBasicShaders();
-	void setupShadow(Light* light);
+
+	//this class will delete the renderers!
+	void addRenderer(Renderer *renderer);
+	void setupRenderers();
+	void renderRenderers();
 
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();
