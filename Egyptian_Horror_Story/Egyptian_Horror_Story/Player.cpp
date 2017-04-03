@@ -1,14 +1,18 @@
 #include "Player.h"
 
-Player::Player(CameraClass* camera)
+Player::Player(CameraClass* camera, ID3D11Device* device)
 {
 	this->mCamera = camera;
 	this->mSpeed = 0.03f;
+	this->mPos = DirectX::SimpleMath::Vector3(0, 0, 0);
 
+	this->mLight = new Light(this->mPos, this->mCamera->getForward(), device);
 }
 
 Player::~Player()
 {
+	if (this->mLight)
+	delete this->mLight;
 }
 
 void Player::updatePosition()
@@ -82,4 +86,9 @@ void Player::handleMouseMotion(SDL_MouseMotionEvent const &motion)
 	{
 		this->mCamera->setPitch(this->mCamera->getPitch() - motion.yrel);
 	}
+}
+
+Light* Player::getLight()
+{
+	return this->mLight;
 }

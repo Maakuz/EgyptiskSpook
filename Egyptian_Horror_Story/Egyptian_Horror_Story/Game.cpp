@@ -4,7 +4,13 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 {
 	this->mGraphics = mGraphicsHandler;
 	this->mCamera = new CameraClass(this->mGraphics->getDevice(), width, height);
-	this->mPlayer = new Player(this->mCamera);
+	this->mPlayer = new Player(this->mCamera, this->mGraphics->getDevice());
+
+	this->mGraphics->setupShadow(this->mPlayer->getLight());
+	
+	this->mGraphics->setupTestData();
+	this->mGraphics->setupFloor();
+
 }
 
 Game::~Game()

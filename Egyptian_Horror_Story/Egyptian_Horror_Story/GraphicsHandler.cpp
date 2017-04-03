@@ -1,14 +1,68 @@
 #include "GraphicsHandler.h"
 
-GraphicsHandler::GraphicsHandler() {
+void GraphicsHandler::createDepthStencil()
+{
+	ID3D11Texture2D* texture;
+
+	D3D11_TEXTURE2D_DESC descTex;
+	ZeroMemory(&descTex, sizeof(D3D11_TEXTURE2D_DESC));
+	descTex.ArraySize = descTex.MipLevels = 1;
+	descTex.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	descTex.Format = DXGI_FORMAT_D32_FLOAT;
+	descTex.Height = HEIGHT;
+	descTex.Width = WIDTH;
+	descTex.SampleDesc.Count = 4;
+	
+	HRESULT hr = this->mDevice->CreateTexture2D(&descTex, NULL, &texture);
+	if (FAILED(hr))
+	{
+		MessageBox(0, L"Depth texture creation failed", L"error", MB_OK);
+	}
+
+	D3D11_DEPTH_STENCIL_DESC descSten;
+	ZeroMemory(&descSten, sizeof(D3D11_DEPTH_STENCIL_DESC));
+	descSten.DepthEnable = true;
+	descSten.DepthFunc = D3D11_COMPARISON_LESS;
+	descSten.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	descSten.StencilEnable = false;
+
+	hr = this->mDevice->CreateDepthStencilState(&descSten, &this->mDSS);
+	if (FAILED(hr))
+	{
+		MessageBox(0, L"Depth stencil state creation failed", L"error", MB_OK);
+	}
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC descStenV;
+	ZeroMemory(&descStenV, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+	descStenV.Format = DXGI_FORMAT_D32_FLOAT;
+	descStenV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+
+	hr = this->mDevice->CreateDepthStencilView(texture, &descStenV, &this->mDSV);
+	if (FAILED(hr))
+	{
+		MessageBox(0, L"Depth stencil view creation failed", L"error", MB_OK);
+	}
+
+	this->mContext->OMSetDepthStencilState(this->mDSS, 0);
+
+	texture->Release();
+
+}
+
+GraphicsHandler::GraphicsHandler()
+{
 	mSwapChain = nullptr;
 	mBackBufferRTV = nullptr;
+	this->mDSS = nullptr;
+	this->mDSV = nullptr;
 
 	mDevice = nullptr;
 	mContext = nullptr;
 
 	//test
 	mVertexBuffer = nullptr;
+
+	this->shadow = nullptr;
 }
 
 GraphicsHandler::~GraphicsHandler() {
@@ -25,6 +79,17 @@ GraphicsHandler::~GraphicsHandler() {
 	//test
 	if (mVertexBuffer)
 		mVertexBuffer->Release();
+
+	if (mVertexBuffer2)
+		mVertexBuffer2->Release();
+
+	if (this->mDSS)
+		this->mDSS->Release();
+
+	if (this->mDSV)
+		this->mDSV->Release();
+
+	delete this->shadow;
 }
 
 HRESULT GraphicsHandler::setupSwapChain() {
@@ -49,6 +114,8 @@ HRESULT GraphicsHandler::setupSwapChain() {
 		hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*) &backBuffer);
 
 		if (SUCCEEDED(hr)) {
+			this->createDepthStencil();
+
 			hr = mDevice->CreateRenderTargetView(backBuffer, nullptr, &mBackBufferRTV);
 			backBuffer->Release();
 		}
@@ -109,6 +176,44 @@ void GraphicsHandler::setupTestData() {
 	mContext->PSSetShaderResources(0, 1, &temp);
 }
 
+void GraphicsHandler::setupFloor()
+{
+	float testData[] = {
+		-10.f, -2.f, -10.f,
+		0.f, 1.f,
+
+		-10.f, -2.f, 10.f,
+		0.f, 0.f,
+
+		10.f, -2.f, 10.f,
+		1.f, 0.f,
+
+		-10.f, -2.f, -10.f,
+		0.f, 1.f,
+
+		10.f, -2.f, -10.f,
+		1.f, 1.f,
+
+		10.f, -2.f, 10.f,
+		1.f, 0.f,
+	};
+
+	D3D11_BUFFER_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	desc.ByteWidth = sizeof(testData);
+	desc.Usage = D3D11_USAGE_IMMUTABLE;
+
+	D3D11_SUBRESOURCE_DATA data;
+	ZeroMemory(&data, sizeof(data));
+	data.pSysMem = testData;
+
+	mDevice->CreateBuffer(&desc, &data, &mVertexBuffer2);
+
+	UINT stride = sizeof(float) * 5, offset = 0;
+	mContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
+}
+
 void GraphicsHandler::setupBasicShaders() {
 	D3D11_INPUT_ELEMENT_DESC desc[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -124,9 +229,15 @@ void GraphicsHandler::setupBasicShaders() {
 	mContext->GSSetShader(mShaderHandler.getGeometryShader(0), nullptr, 0);
 
 	// render target, input layout and topology set
-	mContext->OMSetRenderTargets(1, &mBackBufferRTV, nullptr); // depth stencil test l8
+	mContext->OMSetRenderTargets(1, &mBackBufferRTV, this->mDSV);
 	mContext->IASetInputLayout(mShaderHandler.getInputLayout(0));
 	mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+}
+
+void GraphicsHandler::setupShadow(Light* light)
+{
+	this->shadow = new ShadowRenderer(light);
+	this->shadow->setup(this->mDevice, this->mShaderHandler);
 }
 
 ID3D11Device* GraphicsHandler::getDevice()
@@ -142,8 +253,26 @@ ID3D11DeviceContext* GraphicsHandler::getDeviceContext()
 void GraphicsHandler::render(ID3D11Buffer* WVP) {
 	float clear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
+	UINT stride = sizeof(float) * 5, offset = 0;
+
+	this->shadow->render(this->mContext, this->mShaderHandler);
+
+	this->mContext->RSSetViewports(1, &this->mViewport);
+
+	this->mContext->VSSetShader(this->mShaderHandler.getVertexShader(0), nullptr, 0);
+	this->mContext->GSSetShader(this->mShaderHandler.getGeometryShader(0), nullptr, 0);
+	this->mContext->PSSetShader(this->mShaderHandler.getPixelShader(0), nullptr, 0);
+
 	mContext->VSSetConstantBuffers(0, 1, &WVP);
 	mContext->ClearRenderTargetView(mBackBufferRTV, clear);
+	mContext->ClearDepthStencilView(this->mDSV, D3D11_CLEAR_DEPTH, 1.f, 0);
+
+	this->mContext->OMSetRenderTargets(1, &this->mBackBufferRTV, this->mDSV);
+
+	mContext->IASetVertexBuffers(0, 1, &this->mVertexBuffer, &stride, &offset);
+	mContext->Draw(6, 0);
+
+	mContext->IASetVertexBuffers(0, 1, &this->mVertexBuffer2, &stride, &offset);
 	mContext->Draw(6, 0);
 }
 

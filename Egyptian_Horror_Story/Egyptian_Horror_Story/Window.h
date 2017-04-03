@@ -1,8 +1,6 @@
 #pragma once
 #include "Game.h"
 
-#define WIDTH 1080
-#define HEIGHT 720
 #define TITLE "Cool Egypt Game"
 
 class Window {
