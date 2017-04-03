@@ -5,6 +5,8 @@
 #include <map>
 
 class ShaderHandler {
+public:
+	static const int UNBIND_SHADER = -1;
 private:
 	std::map<int, ID3D11VertexShader*> mVertexShaders;
 	std::map<int, ID3D11GeometryShader*> mGeometryShaders;
@@ -23,7 +25,7 @@ public:
 	HRESULT setupGeometryShader(ID3D11Device *dev, int key,
 		wchar_t *name, char *entryPoint);
 
-	// key = -1 unbinds the shader
+	// key = UNBIND_SHADER unbinds the shader
 	void setVertexShader(ID3D11DeviceContext *context, int key);
 	void setPixelShader(ID3D11DeviceContext *context, int key);
 	void setGeometryShader(ID3D11DeviceContext *context, int key);

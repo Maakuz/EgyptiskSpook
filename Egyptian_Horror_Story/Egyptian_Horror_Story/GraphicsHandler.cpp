@@ -285,11 +285,9 @@ void GraphicsHandler::render(ID3D11Buffer* WVP) {
 
 	UINT stride = sizeof(float) * 5, offset = 0;
 
-	this->mContext->RSSetViewports(1, &this->mViewport);
+	this->mContext->RSSetViewports(1, &mViewport);
 
-	this->mContext->VSSetShader(this->mShaderHandler.getVertexShader(0), nullptr, 0);
-	this->mContext->GSSetShader(this->mShaderHandler.getGeometryShader(0), nullptr, 0);
-	this->mContext->PSSetShader(this->mShaderHandler.getPixelShader(0), nullptr, 0);
+	mShaderHandler.setShaders(mContext, 0, 0, 0);
 
 	mContext->VSSetConstantBuffers(0, 1, &WVP);
 	mContext->ClearRenderTargetView(mBackBufferRTV, clear);
