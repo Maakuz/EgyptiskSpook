@@ -53,8 +53,9 @@ GraphicsHandler::GraphicsHandler()
 {
 	mSwapChain = nullptr;
 	mBackBufferRTV = nullptr;
-	this->mDSS = nullptr;
-	this->mDSV = nullptr;
+	mDSS = nullptr;
+	mDSV = nullptr;
+	mSamplerState = nullptr;
 
 	mDevice = nullptr;
 	mContext = nullptr;
@@ -80,14 +81,18 @@ GraphicsHandler::~GraphicsHandler() {
 
 	if (mVertexBuffer2)
 		mVertexBuffer2->Release();
+	//end of test
 
-	if (this->mDSS)
-		this->mDSS->Release();
+	if (mDSS)
+		mDSS->Release();
 
-	if (this->mDSV)
-		this->mDSV->Release();
+	if (mDSV)
+		mDSV->Release();
 
-	for (auto *renderer : renderers) {
+	if (mSamplerState)
+		mSamplerState->Release();
+
+	for (auto *renderer : mRenderers) {
 		delete renderer;
 	}
 }
@@ -234,18 +239,32 @@ void GraphicsHandler::setupBasicShaders() {
 	mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
+void GraphicsHandler::setupSamplerState() {
+	D3D11_SAMPLER_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+	desc.AddressU = desc.AddressV =
+		desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	desc.Filter = D3D11_FILTER_ANISOTROPIC;
+	desc.MaxLOD = D3D11_FLOAT32_MAX;
+	desc.MaxAnisotropy = 16; //max
+	desc.ComparisonFunc = D3D11_COMPARISON_LESS; // idk
+
+	mDevice->CreateSamplerState(&desc, &mSamplerState);
+	mContext->PSSetSamplers(0, 1, &mSamplerState);
+}
+
 void GraphicsHandler::addRenderer(Renderer *renderer) {
-	renderers.push_back(renderer);
+	mRenderers.push_back(renderer);
 }
 
 void GraphicsHandler::setupRenderers() {
-	for (const auto& renderer : renderers) {
+	for (const auto& renderer : mRenderers) {
 		renderer->setup(mDevice, mShaderHandler);
 	}
 }
 
 void GraphicsHandler::renderRenderers() {
-	for (const auto& renderer : renderers) {
+	for (const auto& renderer : mRenderers) {
 		renderer->render(mContext, mShaderHandler);
 	}
 }

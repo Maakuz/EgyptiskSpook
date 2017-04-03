@@ -1,8 +1,6 @@
 #ifndef SHADOWRENDERER_H
 #define SHADOWRENDERER_H
 
-#include "Direct3DHeader.h"
-#include "ShaderHandler.h"
 #include "Light.h"
 #include "Renderer.h"
 

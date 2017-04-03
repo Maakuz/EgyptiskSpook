@@ -11,6 +11,7 @@ int main(int argc, char *args[]) {
 	gGraphicsHandler.setupSwapChain();
 	gGraphicsHandler.setupViewport(WIDTH, HEIGHT);
 	gGraphicsHandler.setupBasicShaders();
+	gGraphicsHandler.setupSamplerState();
 
 	gWindow.startWindowLoop(&gGraphicsHandler);
 

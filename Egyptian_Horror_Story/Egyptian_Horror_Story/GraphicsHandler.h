@@ -23,12 +23,13 @@ private:
 
 	ID3D11DepthStencilView* mDSV;
 	ID3D11DepthStencilState* mDSS;
+	ID3D11SamplerState* mSamplerState;
 
 	// 4 Testing
 	ID3D11Buffer *mVertexBuffer;
 	ID3D11Buffer *mVertexBuffer2;
 
-	std::vector<Renderer*> renderers;
+	std::vector<Renderer*> mRenderers;
 
 	void createDepthStencil();
 public:
@@ -41,6 +42,7 @@ public:
 	void setupFloor();
 	void setupViewport(int width, int height);
 	void setupBasicShaders();
+	void setupSamplerState();
 
 	//this class will delete the renderers!
 	void addRenderer(Renderer *renderer);
