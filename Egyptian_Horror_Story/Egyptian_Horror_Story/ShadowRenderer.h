@@ -3,8 +3,9 @@
 #include "Direct3DHeader.h"
 #include "ShaderHandler.h"
 #include "Light.h"
+#include "Renderer.h"
 
-class ShadowRenderer
+class ShadowRenderer : public Renderer
 {
 private:
 	D3D11_VIEWPORT mViewport;
