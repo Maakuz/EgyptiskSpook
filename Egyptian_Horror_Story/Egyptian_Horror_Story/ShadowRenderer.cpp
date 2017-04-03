@@ -1,19 +1,12 @@
 #include "ShadowRenderer.h"
+#define VERTEX_SHADER 10
 
 ShadowRenderer::ShadowRenderer(Light* light)
 {
 	this->mLight = light;
 
-	this->mViewport.Height = light->getHeight();
-	this->mViewport.Width = light->getWidth();
-	this->mViewport.MaxDepth = 1.f;
-	this->mViewport.MinDepth = 0.f;
-	this->mViewport.TopLeftX = 0;
-	this->mViewport.TopLeftY = 0;
-
 	this->mDSV = nullptr;
 	this->mSRV = nullptr;
-
 }
 
 ShadowRenderer::~ShadowRenderer()
@@ -27,6 +20,12 @@ ShadowRenderer::~ShadowRenderer()
 
 void ShadowRenderer::setup(ID3D11Device* device, ShaderHandler& shaders)
 {
+	this->mViewport.Height = mLight->getHeight();
+	this->mViewport.Width = mLight->getWidth();
+	this->mViewport.MaxDepth = 1.f;
+	this->mViewport.MinDepth = 0.f;
+	this->mViewport.TopLeftX = mViewport.TopLeftY = 0;
+
 	ID3D11Texture2D* texture;
 
 	D3D11_TEXTURE2D_DESC descTex;
@@ -34,8 +33,8 @@ void ShadowRenderer::setup(ID3D11Device* device, ShaderHandler& shaders)
 	descTex.ArraySize = descTex.MipLevels = 1;
 	descTex.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 	descTex.Format = DXGI_FORMAT_R32_TYPELESS;
-	descTex.Height = this->mViewport.Height;
-	descTex.Width = this->mViewport.Width;
+	descTex.Height = static_cast<UINT> (this->mViewport.Height);
+	descTex.Width = static_cast<UINT> (this->mViewport.Width);
 	descTex.SampleDesc.Count = 4;
 
 	HRESULT hr = device->CreateTexture2D(&descTex, NULL, &texture);
@@ -78,20 +77,15 @@ void ShadowRenderer::setup(ID3D11Device* device, ShaderHandler& shaders)
 
 void ShadowRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaders)
 {
-
 	context->ClearDepthStencilView(this->mDSV, D3D11_CLEAR_DEPTH, 1, 0);
-
 	context->OMSetRenderTargets(0, nullptr, this->mDSV);
-
-	ID3D11Buffer* temp = this->mLight->getMatrixBuffer();
-
 	context->RSSetViewports(1, &this->mViewport);
 
+	ID3D11Buffer* temp = this->mLight->getMatrixBuffer();
 	context->VSSetConstantBuffers(0, 1, &temp);
 	
-	context->VSSetShader(shaders.getVertexShader(10), nullptr, 0);
-	context->GSSetShader(nullptr, nullptr, 0);
-	context->PSSetShader(nullptr, nullptr, 0);
+	shaders.setShaders(context, VERTEX_SHADER,
+		shaders.UNBIND_SHADER, shaders.UNBIND_SHADER);
 
-	context->Draw(12, 0);
+	context->Draw(6, 0);
 }

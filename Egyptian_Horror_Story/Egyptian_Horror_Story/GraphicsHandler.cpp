@@ -53,16 +53,15 @@ GraphicsHandler::GraphicsHandler()
 {
 	mSwapChain = nullptr;
 	mBackBufferRTV = nullptr;
-	this->mDSS = nullptr;
-	this->mDSV = nullptr;
+	mDSS = nullptr;
+	mDSV = nullptr;
+	mSamplerState = nullptr;
 
 	mDevice = nullptr;
 	mContext = nullptr;
 
 	//test
 	mVertexBuffer = nullptr;
-
-	this->shadow = nullptr;
 }
 
 GraphicsHandler::~GraphicsHandler() {
@@ -82,14 +81,20 @@ GraphicsHandler::~GraphicsHandler() {
 
 	if (mVertexBuffer2)
 		mVertexBuffer2->Release();
+	//end of test
 
-	if (this->mDSS)
-		this->mDSS->Release();
+	if (mDSS)
+		mDSS->Release();
 
-	if (this->mDSV)
-		this->mDSV->Release();
+	if (mDSV)
+		mDSV->Release();
 
-	delete this->shadow;
+	if (mSamplerState)
+		mSamplerState->Release();
+
+	for (auto *renderer : mRenderers) {
+		delete renderer;
+	}
 }
 
 HRESULT GraphicsHandler::setupSwapChain() {
@@ -234,10 +239,34 @@ void GraphicsHandler::setupBasicShaders() {
 	mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
-void GraphicsHandler::setupShadow(Light* light)
-{
-	this->shadow = new ShadowRenderer(light);
-	this->shadow->setup(this->mDevice, this->mShaderHandler);
+void GraphicsHandler::setupSamplerState() {
+	D3D11_SAMPLER_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+	desc.AddressU = desc.AddressV =
+		desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	desc.Filter = D3D11_FILTER_ANISOTROPIC;
+	desc.MaxLOD = D3D11_FLOAT32_MAX;
+	desc.MaxAnisotropy = 16; //max
+	desc.ComparisonFunc = D3D11_COMPARISON_LESS; // idk
+
+	mDevice->CreateSamplerState(&desc, &mSamplerState);
+	mContext->PSSetSamplers(0, 1, &mSamplerState);
+}
+
+void GraphicsHandler::addRenderer(Renderer *renderer) {
+	mRenderers.push_back(renderer);
+}
+
+void GraphicsHandler::setupRenderers() {
+	for (const auto& renderer : mRenderers) {
+		renderer->setup(mDevice, mShaderHandler);
+	}
+}
+
+void GraphicsHandler::renderRenderers() {
+	for (const auto& renderer : mRenderers) {
+		renderer->render(mContext, mShaderHandler);
+	}
 }
 
 ID3D11Device* GraphicsHandler::getDevice()
@@ -251,17 +280,14 @@ ID3D11DeviceContext* GraphicsHandler::getDeviceContext()
 }
 
 void GraphicsHandler::render(ID3D11Buffer* WVP) {
+	// render test data, should be moved to a separate renderer
 	float clear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	UINT stride = sizeof(float) * 5, offset = 0;
 
-	this->shadow->render(this->mContext, this->mShaderHandler);
+	this->mContext->RSSetViewports(1, &mViewport);
 
-	this->mContext->RSSetViewports(1, &this->mViewport);
-
-	this->mContext->VSSetShader(this->mShaderHandler.getVertexShader(0), nullptr, 0);
-	this->mContext->GSSetShader(this->mShaderHandler.getGeometryShader(0), nullptr, 0);
-	this->mContext->PSSetShader(this->mShaderHandler.getPixelShader(0), nullptr, 0);
+	mShaderHandler.setShaders(mContext, 0, 0, 0);
 
 	mContext->VSSetConstantBuffers(0, 1, &WVP);
 	mContext->ClearRenderTargetView(mBackBufferRTV, clear);

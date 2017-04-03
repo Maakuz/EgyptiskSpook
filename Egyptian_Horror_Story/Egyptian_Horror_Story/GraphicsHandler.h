@@ -1,7 +1,10 @@
-#pragma once
+#ifndef GRAPHICSHANDLER_H
+#define GRAPHICSHANDLER_H
+
 #include "ShaderHandler.h"
 #include "GraphicsData.h"
-#include "ShadowRenderer.h"
+#include "Renderer.h"
+#include <vector>
 
 #define WIDTH 1080
 #define HEIGHT 720
@@ -20,13 +23,13 @@ private:
 
 	ID3D11DepthStencilView* mDSV;
 	ID3D11DepthStencilState* mDSS;
+	ID3D11SamplerState* mSamplerState;
 
 	// 4 Testing
 	ID3D11Buffer *mVertexBuffer;
 	ID3D11Buffer *mVertexBuffer2;
 
-	ShadowRenderer* shadow;
-	
+	std::vector<Renderer*> mRenderers;
 
 	void createDepthStencil();
 public:
@@ -39,7 +42,12 @@ public:
 	void setupFloor();
 	void setupViewport(int width, int height);
 	void setupBasicShaders();
-	void setupShadow(Light* light);
+	void setupSamplerState();
+
+	//this class will delete the renderers!
+	void addRenderer(Renderer *renderer);
+	void setupRenderers();
+	void renderRenderers();
 
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();
@@ -49,3 +57,5 @@ public:
 
 	GraphicsHandler* operator=(GraphicsHandler const &gh) = delete;
 };
+
+#endif
