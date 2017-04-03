@@ -4,9 +4,8 @@ Player::Player(CameraClass* camera, ID3D11Device* device)
 {
 	this->mCamera = camera;
 	this->mSpeed = 0.03f;
-	this->mPos = DirectX::SimpleMath::Vector3(0, 0, 0);
 
-	this->mLight = new Light(this->mPos, this->mCamera->getForward(), device);
+	this->mLight = new Light(this->getPosition(), this->mCamera->getForward(), device);
 }
 
 Player::~Player()
@@ -22,6 +21,7 @@ void Player::updatePosition()
 
 	DirectX::SimpleMath::Vector3 newPos = this->mCamera->getPos() + this->mVelocity * mSpeed;
 
+	this->setPosition(newPos);
 	this->mCamera->setPos(newPos);
 }
 

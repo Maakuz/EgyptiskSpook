@@ -11,6 +11,13 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	this->mGraphics->setupTestData();
 	this->mGraphics->setupFloor();
 
+	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
+
+	this->mWall = new Wall(
+		DirectX::SimpleMath::Vector3(-1.f, -1.f, 0.f),
+		DirectX::SimpleMath::Vector3(2.f, 0.f, 0.f), 
+		DirectX::SimpleMath::Vector3(0.f, 2.f, 0.f),
+		DirectX::SimpleMath::Vector3(0.f, 0.f, 2.f));
 }
 
 Game::~Game()
@@ -23,6 +30,9 @@ void Game::update()
 {
 	this->mCamera->update(this->mGraphics->getDeviceContext());
 	this->mPlayer->updatePosition();
+
+	//test
+	if (this->mWall->getOBB().obbVSPoint(this->mPlayer->getPosition()))
 
 	this->mGraphics->render(this->mCamera->getMatrixBuffer());
 	this->mGraphics->present();

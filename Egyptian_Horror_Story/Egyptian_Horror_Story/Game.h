@@ -3,6 +3,7 @@
 #include "GraphicsHandler.h"
 #include "Player.h"
 #include "CameraClass.h"
+#include "Wall.h"
 
 class Game
 {
@@ -10,6 +11,7 @@ private:
 	GraphicsHandler* mGraphics;
 	Player* mPlayer;
 	CameraClass* mCamera;
+	Entity* mWall;
 
 public:
 	Game(GraphicsHandler* graphicsHandler, float width, float height);

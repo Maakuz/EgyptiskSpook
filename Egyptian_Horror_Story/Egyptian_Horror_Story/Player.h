@@ -13,7 +13,6 @@ private:
 	DirectX::SimpleMath::Vector2 mDirection;
 
 	float mSpeed;
-	DirectX::SimpleMath::Vector3 mPos;
 	DirectX::SimpleMath::Vector3 mVelocity;
 
 	Light* mLight;

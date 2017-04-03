@@ -1,23 +1,25 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "Direct3DHeader.h"
-
-#include <math.h>
-#include "SimpleMath.h"
+#include "OBB.h"
 
 class Entity
 {
-public:
+private:
 	DirectX::SimpleMath::Vector3 mPos;
+	OBB* mObb;
+
 public:
 	Entity();
 	virtual ~Entity();
 
 	void move(DirectX::SimpleMath::Vector3 offset);
+	void createOBB(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 U, DirectX::SimpleMath::Vector3 V, DirectX::SimpleMath::Vector3 W);
 
 	void setPosition(DirectX::SimpleMath::Vector3 pos);
 	DirectX::SimpleMath::Vector3 getPosition() const;
+
+	OBB getOBB() const;
 };
 
 
