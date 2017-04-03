@@ -75,6 +75,25 @@ HRESULT ShaderHandler::setupGeometryShader(ID3D11Device *dev, int key,
 	return hr;
 }
 
+// key = -1 unbinds the shader
+void ShaderHandler::setVertexShader(ID3D11DeviceContext *context, int key) {
+	context->VSSetShader(key == -1 ? nullptr : mVertexShaders[key], nullptr, 0);
+}
+
+void ShaderHandler::setPixelShader(ID3D11DeviceContext *context, int key) {
+	context->PSSetShader(key == -1 ? nullptr : mPixelShaders[key], nullptr, 0);
+}
+
+void ShaderHandler::setGeometryShader(ID3D11DeviceContext *context, int key) {
+	context->GSSetShader(key == -1 ? nullptr : mGeometryShaders[key], nullptr, 0);
+}
+
+void ShaderHandler::setShaders(ID3D11DeviceContext *context, int vsKey, int psKey, int gsKey) {
+	context->VSSetShader(vsKey == -1 ? nullptr : mVertexShaders[vsKey], nullptr, 0);
+	context->GSSetShader(gsKey == -1 ? nullptr : mGeometryShaders[gsKey], nullptr, 0);
+	context->PSSetShader(psKey == -1 ? nullptr : mPixelShaders[psKey], nullptr, 0);
+}
+
 ID3D11VertexShader* ShaderHandler::getVertexShader(int key) {
 	return mVertexShaders[key];
 }
