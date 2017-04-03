@@ -101,6 +101,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ShadowRenderer.h">
+    <ClInclude Include="Renderer.h">
+
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

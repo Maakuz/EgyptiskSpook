@@ -79,6 +79,7 @@
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="ShaderHandler.h" />
     <ClInclude Include="ShadowRenderer.h" />
     <ClInclude Include="Window.h" />
