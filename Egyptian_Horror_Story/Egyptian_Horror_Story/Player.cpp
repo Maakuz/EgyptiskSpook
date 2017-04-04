@@ -34,10 +34,10 @@ void Player::updatePosition()
 }
 
 void Player::handleJumping() {
-	if (!this->mJumping) {
-		this->mVelocity.y = 0;
-		this->mVelocity.Normalize(); // Norm to make speed forward speed same if you look up or down
-	} else {
+	this->mVelocity.y = 0;
+	this->mVelocity.Normalize(); // Norm to make speed forward speed same if you look up or down
+
+	if (this->mJumping) {
 		this->jumpingVelocity -= GRAVITY; // delta time should be used
 		this->mVelocity.y = jumpingVelocity;
 
