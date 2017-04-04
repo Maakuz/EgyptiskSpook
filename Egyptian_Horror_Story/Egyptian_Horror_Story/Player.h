@@ -29,6 +29,8 @@ public:
 	void handleMouseMotion(SDL_MouseMotionEvent const &motion);
 	Light* getLight();
 
+	void setPosition(DirectX::SimpleMath::Vector3 pos);
+
 	
 };
 

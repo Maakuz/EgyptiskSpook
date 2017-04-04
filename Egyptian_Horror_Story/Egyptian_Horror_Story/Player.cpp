@@ -92,3 +92,9 @@ Light* Player::getLight()
 {
 	return this->mLight;
 }
+
+void Player::setPosition(DirectX::SimpleMath::Vector3 pos)
+{
+	Entity::setPosition(pos);
+	this->mCamera->setPos(pos);
+}

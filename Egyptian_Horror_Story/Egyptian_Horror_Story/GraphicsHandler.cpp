@@ -229,10 +229,6 @@ void GraphicsHandler::setupBasicShaders() {
 	mShaderHandler.setupPixelShader(mDevice, 0, L"SimplePS.hlsl", "main");
 	mShaderHandler.setupGeometryShader(mDevice, 0, L"SimpleGS.hlsl", "main");
 
-	mContext->VSSetShader(mShaderHandler.getVertexShader(0), nullptr, 0);
-	mContext->PSSetShader(mShaderHandler.getPixelShader(0), nullptr, 0);
-	mContext->GSSetShader(mShaderHandler.getGeometryShader(0), nullptr, 0);
-
 	// render target, input layout and topology set
 	mContext->OMSetRenderTargets(1, &mBackBufferRTV, this->mDSV);
 	mContext->IASetInputLayout(mShaderHandler.getInputLayout(0));

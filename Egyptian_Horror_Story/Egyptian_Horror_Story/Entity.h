@@ -16,7 +16,7 @@ public:
 	void move(DirectX::SimpleMath::Vector3 offset);
 	void createOBB(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 U, DirectX::SimpleMath::Vector3 V, DirectX::SimpleMath::Vector3 W);
 
-	void setPosition(DirectX::SimpleMath::Vector3 pos);
+	virtual void setPosition(DirectX::SimpleMath::Vector3 pos);
 	DirectX::SimpleMath::Vector3 getPosition() const;
 
 	OBB getOBB() const;

@@ -15,26 +15,36 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
 
-	this->mWall = new Wall(
-		DirectX::SimpleMath::Vector3(-1.f, -1.f, 0.f),
-		DirectX::SimpleMath::Vector3(2.f, 0.f, 0.f), 
-		DirectX::SimpleMath::Vector3(0.f, 2.f, 0.f),
-		DirectX::SimpleMath::Vector3(0.f, 0.f, 2.f));
+
+		this->mWall = new Wall(
+			DirectX::SimpleMath::Vector3(-1.f, -1.f, 0.f),
+			DirectX::SimpleMath::Vector3(2.f, 0.f, 0.f),
+			DirectX::SimpleMath::Vector3(0.f, 2.f, 0.f),
+			DirectX::SimpleMath::Vector3(0.f, 0.f, 2.f));
+	
 }
 
 Game::~Game()
 {
 	delete this->mCamera;
 	delete this->mPlayer;
+	delete this->mWall;
 }
 
 void Game::update()
 {
 	this->mCamera->update(this->mGraphics->getDeviceContext());
+
+	DirectX::SimpleMath::Vector3 prevPos = this->mPlayer->getPosition();
+
 	this->mPlayer->updatePosition();
 
 	//test
-	if (this->mWall->getOBB().obbVSPoint(this->mPlayer->getPosition()))
+		if (this->mWall->getOBB().obbVSPoint(this->mPlayer->getPosition()))
+		{
+			this->mPlayer->setPosition(this->mPlayer->getPosition() + mWall->getNormal() * 0.03f);
+		}
+	
 
 	this->mGraphics->renderRenderers();
 	this->mGraphics->render(this->mCamera->getMatrixBuffer());

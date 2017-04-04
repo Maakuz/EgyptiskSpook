@@ -11,7 +11,7 @@ private:
 	GraphicsHandler* mGraphics;
 	Player* mPlayer;
 	CameraClass* mCamera;
-	Entity* mWall;
+	Wall* mWall;
 
 public:
 	Game(GraphicsHandler* graphicsHandler, float width, float height);
