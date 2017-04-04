@@ -40,7 +40,6 @@ void Player::handleJumping() {
 	} else {
 		this->jumpingVelocity -= GRAVITY; // delta time should be used
 		this->mVelocity.y = jumpingVelocity;
-		SDL_Log("TEST 1: %f 2: %f 3: %d", getPosition().y + this->mVelocity.y, GROUND_Y, getPosition().y + this->mVelocity.y <= GROUND_Y);
 
 		if (getPosition().y + this->mVelocity.y * mSpeed <= GROUND_Y) {
 			// set position to ground y
