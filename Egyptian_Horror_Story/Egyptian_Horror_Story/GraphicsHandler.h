@@ -36,6 +36,8 @@ public:
 
 	HRESULT setupSwapChain();
 	void setupViewport(int width, int height);
+
+	//These shaders are never used and could be removed.
 	void setupBasicShaders();
 	void setupSamplerState();
 
