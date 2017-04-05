@@ -30,7 +30,7 @@ public:
 	void setup(ID3D11Device *device, ShaderHandler &shaderHandler);
 	void render(ID3D11DeviceContext *context, ShaderHandler &shaderHandler);
 
-	bool loadObject(ID3D11Device *device, EntityStruct::VertexStruct* vertices, int nrOfVertices);
+	bool loadObject(ID3D11Device *device, EntityStruct::VertexStruct* vertices, int nrOfVertices, wchar_t* texturePath = L"../Resource/Textures/placeholder.png");
 
 };
 

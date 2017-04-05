@@ -12,7 +12,7 @@ EntityRenderer::~EntityRenderer()
 void EntityRenderer::setup(ID3D11Device* device, ShaderHandler& shaderHandler)
 {
 	D3D11_INPUT_ELEMENT_DESC desc[] = {
-		{ "SV_POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
@@ -28,11 +28,15 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 	UINT stride = sizeof(EntityStruct::VertexStruct), offset = 0;
 
 	context->IASetVertexBuffers(0, 1, &temp, &stride, &offset);
+	context->IASetInputLayout(shaderHandler.getInputLayout(20));
+
+	ID3D11ShaderResourceView* texTemp = this->mGraphicsData.getSRV("0");
+	context->PSSetShaderResources(0, 1, &texTemp);
 
 	context->Draw(this->mNrOfVertices, 0);
 }
 
-bool EntityRenderer::loadObject(ID3D11Device* device, EntityStruct::VertexStruct* vertices, int nrOfVertices)
+bool EntityRenderer::loadObject(ID3D11Device* device, EntityStruct::VertexStruct* vertices, int nrOfVertices, wchar_t* texturePath)
 {
 	this->mNrOfVertices = nrOfVertices;
 	this->mVertices = new EntityStruct::VertexStruct[nrOfVertices];
@@ -45,6 +49,8 @@ bool EntityRenderer::loadObject(ID3D11Device* device, EntityStruct::VertexStruct
 	D3D11_SUBRESOURCE_DATA data;
 	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
 	data.pSysMem = this->mVertices;
+
+	this->mGraphicsData.loadTexture("0", texturePath, device);
 
 	if (FAILED(this->mGraphicsData.createVertexBuffer("0", this->mNrOfVertices * sizeof(EntityStruct::VertexStruct), &data, device)))
 	{

@@ -1,3 +1,6 @@
+texture2D tex : register(t0);
+SamplerState sSampler;
+
 struct VS_OUT
 {
     float4 pos : SV_POSITION;
@@ -10,9 +13,5 @@ struct VS_OUT
 
 float4 main(VS_OUT input) : SV_TARGET
 {
-
-
-
-
-	return float4(1.0f, 1.0f, 1.0f, 1.0f);
+    return tex.Sample(sSampler, input.uv);
 }
