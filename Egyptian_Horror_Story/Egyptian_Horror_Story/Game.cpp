@@ -94,6 +94,7 @@ Game::~Game()
 	delete this->mCamera;
 	delete this->mPlayer;
 	delete this->mWall;
+	delete this->mEntity;
 }
 
 void Game::update()
