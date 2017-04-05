@@ -25,9 +25,6 @@ private:
 	ID3D11DepthStencilState* mDSS;
 	ID3D11SamplerState* mSamplerState;
 
-	// 4 Testing
-	ID3D11Buffer *mVertexBuffer;
-	ID3D11Buffer *mVertexBuffer2;
 
 	std::vector<Renderer*> mRenderers;
 
@@ -38,8 +35,6 @@ public:
 	~GraphicsHandler();
 
 	HRESULT setupSwapChain();
-	void setupTestData();
-	void setupFloor();
 	void setupViewport(int width, int height);
 	void setupBasicShaders();
 	void setupSamplerState();
@@ -52,7 +47,6 @@ public:
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();
 
-	void render(ID3D11Buffer* WVP);
 	void clear();
 	void present();
 

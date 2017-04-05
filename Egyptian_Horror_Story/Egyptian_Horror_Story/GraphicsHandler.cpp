@@ -59,9 +59,6 @@ GraphicsHandler::GraphicsHandler()
 
 	mDevice = nullptr;
 	mContext = nullptr;
-
-	//test
-	mVertexBuffer = nullptr;
 }
 
 GraphicsHandler::~GraphicsHandler() {
@@ -74,14 +71,6 @@ GraphicsHandler::~GraphicsHandler() {
 		mDevice->Release();
 	if (mContext)
 		mContext->Release();
-
-	//test
-	if (mVertexBuffer)
-		mVertexBuffer->Release();
-
-	if (mVertexBuffer2)
-		mVertexBuffer2->Release();
-	//end of test
 
 	if (mDSS)
 		mDSS->Release();
@@ -142,87 +131,6 @@ void GraphicsHandler::setupViewport(int width, int height) {
 	mContext->RSSetViewports(1, &mViewport);
 }
 
-void GraphicsHandler::setupTestData() {
-	// for testing, (pos xyz, uv xy)
-	float testData[] = { 
-						-1.f, -1.f, 0.f,
-						0.f, 1.f,
-
-						-1.f, 1.f, 0.f,
-						0.f, 0.f,
-
-						1.f, -1.f, 0.f,
-						1.f, 1.f,
-
-						1.f, -1.f, 0.f,
-						1.f, 1.f,
-
-						1.f, 1.f, 0.f,
-						1.f, 0.f,
-
-						-1.f, 1.f, 0.f,
-						0.f, 0.f,
-					   };
-
-	D3D11_BUFFER_DESC desc;
-	ZeroMemory(&desc, sizeof(desc));
-	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	desc.ByteWidth = sizeof(testData);
-	desc.Usage = D3D11_USAGE_IMMUTABLE;
-	
-	D3D11_SUBRESOURCE_DATA data;
-	ZeroMemory(&data, sizeof(data));
-	data.pSysMem = testData;
-
-	mDevice->CreateBuffer(&desc, &data, &mVertexBuffer);
-
-	UINT stride = sizeof(float) * 5, offset = 0;
-	mContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
-
-	this->mGraphicsData.loadTexture("test", L"../Resource/Textures/normalMap.png", mDevice);
-
-	ID3D11ShaderResourceView* temp = this->mGraphicsData.getSRV("test");
-	mContext->PSSetShaderResources(0, 1, &temp);
-}
-
-void GraphicsHandler::setupFloor()
-{
-	float testData[] = {
-		-10.f, -2.f, -10.f,
-		0.f, 1.f,
-
-		-10.f, -2.f, 10.f,
-		0.f, 0.f,
-
-		10.f, -2.f, 10.f,
-		1.f, 0.f,
-
-		-10.f, -2.f, -10.f,
-		0.f, 1.f,
-
-		10.f, -2.f, -10.f,
-		1.f, 1.f,
-
-		10.f, -2.f, 10.f,
-		1.f, 0.f,
-	};
-
-	D3D11_BUFFER_DESC desc;
-	ZeroMemory(&desc, sizeof(desc));
-	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	desc.ByteWidth = sizeof(testData);
-	desc.Usage = D3D11_USAGE_IMMUTABLE;
-
-	D3D11_SUBRESOURCE_DATA data;
-	ZeroMemory(&data, sizeof(data));
-	data.pSysMem = testData;
-
-	mDevice->CreateBuffer(&desc, &data, &mVertexBuffer2);
-
-	UINT stride = sizeof(float) * 5, offset = 0;
-	mContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
-}
-
 void GraphicsHandler::setupBasicShaders() {
 	D3D11_INPUT_ELEMENT_DESC desc[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -281,30 +189,6 @@ ID3D11Device* GraphicsHandler::getDevice()
 ID3D11DeviceContext* GraphicsHandler::getDeviceContext()
 {
 	return this->mContext;
-}
-
-void GraphicsHandler::render(ID3D11Buffer* WVP) {
-	// render test data, should be moved to a separate renderer
-	float clear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
-
-	UINT stride = sizeof(float) * 5, offset = 0;
-
-	this->mContext->RSSetViewports(1, &mViewport);
-
-	mShaderHandler.setShaders(mContext, 0, 0, 0);
-
-	mContext->VSSetConstantBuffers(0, 1, &WVP);
-	mContext->ClearRenderTargetView(mBackBufferRTV, clear);
-	mContext->ClearDepthStencilView(this->mDSV, D3D11_CLEAR_DEPTH, 1.f, 0);
-
-	this->mContext->OMSetRenderTargets(1, &this->mBackBufferRTV, this->mDSV);
-
-	mContext->IASetVertexBuffers(0, 1, &this->mVertexBuffer, &stride, &offset);
-	mContext->Draw(6, 0);
-
-	mContext->IASetVertexBuffers(0, 1, &this->mVertexBuffer2, &stride, &offset);
-	mContext->Draw(6, 0);
 }
 
 void GraphicsHandler::clear()

@@ -50,7 +50,11 @@ bool EntityRenderer::loadObject(ID3D11Device* device, EntityStruct::VertexStruct
 	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
 	data.pSysMem = this->mVertices;
 
-	this->mGraphicsData.loadTexture("0", texturePath, device);
+	if (!this->mGraphicsData.loadTexture("0", texturePath, device))
+	{
+		//If the path is wrong it will use placeholder texture
+		this->mGraphicsData.loadTexture("0", L"../Resource/Textures/placeholder.png", device);
+	}
 
 	if (FAILED(this->mGraphicsData.createVertexBuffer("0", this->mNrOfVertices * sizeof(EntityStruct::VertexStruct), &data, device)))
 	{

@@ -40,16 +40,47 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 		DirectX::SimpleMath::Vector2(0.f, 0.f)
 	};
 
-	this->mWall->getRenderer()->loadObject(this->mGraphics->getDevice(), testData, 6);
+	this->mWall->getRenderer()->loadObject(this->mGraphics->getDevice(), testData, 6,
+		L"../Resource/Textures/normalMap.png");
+
+	//another test
+	this->mEntity = new Entity();
+
+	EntityStruct::VertexStruct testData2[] = {
+		DirectX::SimpleMath::Vector3(-10.f, -2.f, -10.f),
+		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector2(0.f, 1.f),
+
+		DirectX::SimpleMath::Vector3(-10.f, -2.f, 10.f),
+		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector2(0.f, 0.f),
+
+		DirectX::SimpleMath::Vector3(10.f, -2.f, 10.f),
+		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector2(1.f, 0.f),
+
+		DirectX::SimpleMath::Vector3(-10.f, -2.f, -10.f),
+		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector2(0.f, 1.f),
+
+		DirectX::SimpleMath::Vector3(10.f, -2.f, -10.f),
+		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector2(1.f, 1.f),
+
+		DirectX::SimpleMath::Vector3(10.f, -2.f, 10.f),
+		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector2(1.f, 0.f)
+	};
+
+	this->mEntity->getRenderer()->loadObject(this->mGraphics->getDevice(), testData2, 6,
+		L"../Resource/Textures/normalMap.png");
 
 	//Borde inte objektet ha renderern och sedan skicka en 
 	//pekare till graphicshandlern i stället?
 	this->mGraphics->addRenderer(new ShadowRenderer(mPlayer->getLight()));
 	this->mGraphics->addRenderer(this->mWall->getRenderer());
+	this->mGraphics->addRenderer(this->mEntity->getRenderer());
 	this->mGraphics->setupRenderers();
-	
-	this->mGraphics->setupTestData();
-	this->mGraphics->setupFloor();
 
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
 
@@ -82,7 +113,6 @@ void Game::update()
 
 	this->mGraphics->clear();
 	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer());
-	//this->mGraphics->render(this->mCamera->getMatrixBuffer());
 	this->mGraphics->present();
 }
 
