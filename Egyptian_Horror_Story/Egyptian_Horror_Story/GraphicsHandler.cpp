@@ -92,8 +92,12 @@ GraphicsHandler::~GraphicsHandler() {
 	if (mSamplerState)
 		mSamplerState->Release();
 
+	//Krashar för Entity tar bort sin entityRenderer
+
+	//Lösning är att antingen låta alla ta bort sina egna renderers
+	//eller att alla tas bort här. Det första vore att föredra
 	for (auto *renderer : mRenderers) {
-		delete renderer;
+			//delete renderer;
 	}
 }
 
@@ -259,8 +263,12 @@ void GraphicsHandler::setupRenderers() {
 	}
 }
 
-void GraphicsHandler::renderRenderers() {
+void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP) {
 	for (const auto& renderer : mRenderers) {
+
+		this->mContext->VSSetConstantBuffers(0, 1, &WVP);
+		this->mContext->OMSetRenderTargets(1, &this->mBackBufferRTV, this->mDSV);
+		this->mContext->RSSetViewports(1, &this->mViewport);
 		renderer->render(mContext, mShaderHandler);
 	}
 }
@@ -279,6 +287,7 @@ void GraphicsHandler::render(ID3D11Buffer* WVP) {
 	// render test data, should be moved to a separate renderer
 	float clear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
+
 	UINT stride = sizeof(float) * 5, offset = 0;
 
 	this->mContext->RSSetViewports(1, &mViewport);
@@ -296,6 +305,13 @@ void GraphicsHandler::render(ID3D11Buffer* WVP) {
 
 	mContext->IASetVertexBuffers(0, 1, &this->mVertexBuffer2, &stride, &offset);
 	mContext->Draw(6, 0);
+}
+
+void GraphicsHandler::clear()
+{
+	float clear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	mContext->ClearRenderTargetView(mBackBufferRTV, clear);
+	mContext->ClearDepthStencilView(this->mDSV, D3D11_CLEAR_DEPTH, 1.f, 0);
 }
 
 void GraphicsHandler::present() {

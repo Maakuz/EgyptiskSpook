@@ -40,3 +40,8 @@ OBB Entity::getOBB() const
 	if (this->mObb)
 		return *this->mObb;
 }
+
+EntityRenderer* Entity::getRenderer()
+{
+	return &this->renderer;
+}

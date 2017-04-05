@@ -47,12 +47,13 @@ public:
 	//this class will delete the renderers!
 	void addRenderer(Renderer *renderer);
 	void setupRenderers();
-	void renderRenderers();
+	void renderRenderers(ID3D11Buffer* WVP);
 
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();
 
 	void render(ID3D11Buffer* WVP);
+	void clear();
 	void present();
 
 	GraphicsHandler* operator=(GraphicsHandler const &gh) = delete;

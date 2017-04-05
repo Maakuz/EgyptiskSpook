@@ -2,12 +2,14 @@
 #define ENTITY_H
 
 #include "OBB.h"
+#include "EntityRenderer.h"
 
 class Entity
 {
 private:
 	DirectX::SimpleMath::Vector3 mPos;
 	OBB* mObb;
+	EntityRenderer renderer;
 
 public:
 	Entity();
@@ -20,6 +22,7 @@ public:
 	DirectX::SimpleMath::Vector3 getPosition() const;
 
 	OBB getOBB() const;
+	EntityRenderer* getRenderer();
 };
 
 

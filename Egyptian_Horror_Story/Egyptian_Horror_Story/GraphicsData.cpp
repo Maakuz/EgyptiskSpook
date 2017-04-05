@@ -27,7 +27,7 @@ bool GraphicsData::loadTexture(char* key, wchar_t* path, ID3D11Device* device)
 	return false;
 }
 
-bool GraphicsData::createConstantBuffer(char* key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device)
+HRESULT GraphicsData::createConstantBuffer(char* key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device)
 {
 	D3D11_BUFFER_DESC desc;
 	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -38,7 +38,22 @@ bool GraphicsData::createConstantBuffer(char* key, UINT size, D3D11_SUBRESOURCE_
 	desc.Usage = D3D11_USAGE_DYNAMIC;
 
 	HRESULT hr = device->CreateBuffer(&desc, data, &this->mBuffers[key]);
-	return false;
+	return hr;
+}
+
+HRESULT GraphicsData::createVertexBuffer(char* key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device)
+{
+	D3D11_BUFFER_DESC desc;
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	desc.ByteWidth = size;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+	desc.StructureByteStride = 0;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	
+
+	HRESULT hr = device->CreateBuffer(&desc, data, &this->mBuffers[key]);
+	return hr;
 }
 
 ID3D11Buffer* GraphicsData::getBuffer(char* key) const

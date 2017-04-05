@@ -37,6 +37,9 @@
     <Filter Include="Source Files\Renderers">
       <UniqueIdentifier>{a0fa83d8-ad20-41f3-8d32-694b1b1549f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Entity Shaders">
+      <UniqueIdentifier>{657f8896-2323-4eb4-a57e-e039f949acf5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="SimpleGS.hlsl">
@@ -50,6 +53,12 @@
     </FxCompile>
     <FxCompile Include="ShadowVS.hlsl">
       <Filter>Resource Files\Shadow Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="EntityVS.hlsl">
+      <Filter>Resource Files\Entity Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="EntityPS.hlsl">
+      <Filter>Resource Files\Entity Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

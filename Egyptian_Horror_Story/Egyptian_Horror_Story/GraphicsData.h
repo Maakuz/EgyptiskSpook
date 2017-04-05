@@ -19,7 +19,8 @@ public:
 
 	bool loadTexture(char* key, wchar_t* path, ID3D11Device* device);
 
-	bool createConstantBuffer(char* key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device);
+	HRESULT createConstantBuffer(char* key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device);
+	HRESULT createVertexBuffer(char* key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device);
 
 	ID3D11Buffer* getBuffer(char* key) const;
 	ID3D11ShaderResourceView* getSRV(char* key);

@@ -7,7 +7,45 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	this->mCamera = new CameraClass(this->mGraphics->getDevice(), width, height);
 	this->mPlayer = new Player(this->mCamera, this->mGraphics->getDevice());
 
+	//test
+	this->mWall = new Wall(
+		DirectX::SimpleMath::Vector3(-1.f, -1.f, 0.f),
+		DirectX::SimpleMath::Vector3(2.f, 0.f, 0.f),
+		DirectX::SimpleMath::Vector3(0.f, 2.f, 0.f),
+		DirectX::SimpleMath::Vector3(0.f, 0.f, 2.f));
+
+	EntityStruct::VertexStruct testData[] = {
+		DirectX::SimpleMath::Vector3(-1.f, -1.f, 0.f),
+		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector2(0.f, 1.f),
+
+		DirectX::SimpleMath::Vector3(-1.f, 1.f, 0.f),
+		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector2(0.f, 0.f),
+
+		DirectX::SimpleMath::Vector3(1.f, -1.f, 0.f),
+		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector2(1.f, 1.f),
+
+		DirectX::SimpleMath::Vector3(1.f, -1.f, 0.f),
+		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector2(1.f, 1.f),
+
+		DirectX::SimpleMath::Vector3(1.f, 1.f, 0.f),
+		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector2(1.f, 0.f),
+
+		DirectX::SimpleMath::Vector3(-1.f, 1.f, 0.f),
+		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector2(0.f, 0.f)
+	};
+
+	this->mWall->getRenderer()->loadObject(this->mGraphics->getDevice(), testData, 6);
+
+	//Borde inte objektet ha renderern och sedan skicka en 
+	//pekare till graphicshandlern i stället?
 	this->mGraphics->addRenderer(new ShadowRenderer(mPlayer->getLight()));
+	this->mGraphics->addRenderer(this->mWall->getRenderer());
 	this->mGraphics->setupRenderers();
 	
 	this->mGraphics->setupTestData();
@@ -16,11 +54,7 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
 
 
-		this->mWall = new Wall(
-			DirectX::SimpleMath::Vector3(-1.f, -1.f, 0.f),
-			DirectX::SimpleMath::Vector3(2.f, 0.f, 0.f),
-			DirectX::SimpleMath::Vector3(0.f, 2.f, 0.f),
-			DirectX::SimpleMath::Vector3(0.f, 0.f, 2.f));
+		
 	
 }
 
@@ -40,14 +74,15 @@ void Game::update()
 	this->mPlayer->updatePosition();
 
 	//test
-		if (this->mWall->getOBB().obbVSPoint(this->mPlayer->getPosition()))
-		{
-			this->mPlayer->setPosition(this->mPlayer->getPosition() + mWall->getNormal() * 0.03f);
-		}
+	if (this->mWall->getOBB().obbVSPoint(this->mPlayer->getPosition()))
+	{
+		this->mPlayer->setPosition(this->mPlayer->getPosition() + mWall->getNormal() * 0.03f);
+	}
 	
 
-	this->mGraphics->renderRenderers();
-	this->mGraphics->render(this->mCamera->getMatrixBuffer());
+	this->mGraphics->clear();
+	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer());
+	//this->mGraphics->render(this->mCamera->getMatrixBuffer());
 	this->mGraphics->present();
 }
 
