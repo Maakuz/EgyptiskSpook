@@ -81,12 +81,9 @@ GraphicsHandler::~GraphicsHandler() {
 	if (mSamplerState)
 		mSamplerState->Release();
 
-	//Krashar för Entity tar bort sin entityRenderer
-
-	//Lösning är att antingen låta alla ta bort sina egna renderers
-	//eller att alla tas bort här. Det första vore att föredra
+	//Oklart om denna faktiskt tar bort renderer
 	for (auto *renderer : mRenderers) {
-			//delete renderer;
+			delete renderer;
 	}
 }
 

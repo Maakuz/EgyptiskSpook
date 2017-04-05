@@ -4,6 +4,7 @@ Entity::Entity()
 {
 	this->mPos = DirectX::SimpleMath::Vector3(0, 0, 0);
 	this->mObb = nullptr;
+	this->mRenderer = new EntityRenderer();
 }
 
 Entity::~Entity()
@@ -41,7 +42,7 @@ OBB Entity::getOBB() const
 		return *this->mObb;
 }
 
-EntityRenderer* Entity::getRenderer()
+EntityRenderer*& Entity::getRenderer()
 {
-	return &this->renderer;
+	return this->mRenderer;
 }

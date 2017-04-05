@@ -9,7 +9,7 @@ class Entity
 private:
 	DirectX::SimpleMath::Vector3 mPos;
 	OBB* mObb;
-	EntityRenderer renderer;
+	EntityRenderer* mRenderer;
 
 public:
 	Entity();
@@ -22,7 +22,7 @@ public:
 	DirectX::SimpleMath::Vector3 getPosition() const;
 
 	OBB getOBB() const;
-	EntityRenderer* getRenderer();
+	EntityRenderer*& getRenderer();
 };
 
 

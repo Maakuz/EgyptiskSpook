@@ -77,9 +77,9 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 
 	//Borde inte objektet ha renderern och sedan skicka en 
 	//pekare till graphicshandlern i stället?
-	this->mGraphics->addRenderer(new ShadowRenderer(mPlayer->getLight()));
 	this->mGraphics->addRenderer(this->mWall->getRenderer());
 	this->mGraphics->addRenderer(this->mEntity->getRenderer());
+	this->mGraphics->addRenderer(new ShadowRenderer(mPlayer->getLight()));
 	this->mGraphics->setupRenderers();
 
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
