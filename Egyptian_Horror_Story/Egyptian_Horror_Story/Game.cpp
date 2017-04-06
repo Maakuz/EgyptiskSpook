@@ -5,14 +5,15 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 {
 	this->mGraphics = mGraphicsHandler;
 	this->mCamera = new CameraClass(this->mGraphics->getDevice(), width, height);
-	this->mPlayer = new Player(this->mCamera, this->mGraphics->getDevice());
-
+	this->mPlayer = new Player(this->mCamera, this->mGraphics->getDevice(), 0);
+	this->mEntityRenderer = new EntityRenderer();
+	
 	//test
 	this->mWall = new Wall(
 		DirectX::SimpleMath::Vector3(-1.f, -1.f, 0.f),
 		DirectX::SimpleMath::Vector3(2.f, 0.f, 0.f),
 		DirectX::SimpleMath::Vector3(0.f, 2.f, 0.f),
-		DirectX::SimpleMath::Vector3(0.f, 0.f, 2.f));
+		DirectX::SimpleMath::Vector3(0.f, 0.f, 2.f), 1);
 
 	EntityStruct::VertexStruct testData[] = {
 		DirectX::SimpleMath::Vector3(-1.f, -1.f, 0.f),
@@ -40,11 +41,8 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 		DirectX::SimpleMath::Vector2(0.f, 0.f)
 	};
 
-	this->mWall->getRenderer()->loadObject(this->mGraphics->getDevice(), testData, 6,
-		L"../Resource/Textures/normalMap.png");
-
 	//another test
-	this->mEntity = new Entity();
+	this->mEntity = new Entity(2);
 
 	EntityStruct::VertexStruct testData2[] = {
 		DirectX::SimpleMath::Vector3(-10.f, -2.f, -10.f),
@@ -72,19 +70,14 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 		DirectX::SimpleMath::Vector2(1.f, 0.f)
 	};
 
-	this->mEntity->getRenderer()->loadObject(this->mGraphics->getDevice(), testData2, 6,
-		L"../Resource/Textures/normalMap.png");
-
-	this->mGraphics->addRenderer(this->mWall->getRenderer());
-	this->mGraphics->addRenderer(this->mEntity->getRenderer());
+	this->mGraphics->addRenderer(this->mEntityRenderer);
 	this->mGraphics->addRenderer(new ShadowRenderer(mPlayer->getLight()));
 	this->mGraphics->setupRenderers();
 
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
 
-
-		
-	
+	this->mEntityRenderer->loadObject(this->mGraphics->getDevice(), this->mWall->getKey(), testData, 6, L"../Resource/Textures/normalMap.png");
+	this->mEntityRenderer->loadObject(this->mGraphics->getDevice(), this->mEntity->getKey(), testData2, 6, L"../Resource/Textures/normalMap.png");
 }
 
 Game::~Game()

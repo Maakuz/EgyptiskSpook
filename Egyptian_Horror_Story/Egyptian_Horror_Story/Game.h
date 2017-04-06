@@ -14,6 +14,8 @@ private:
 	Wall* mWall;
 	Entity* mEntity;
 
+	EntityRenderer* mEntityRenderer;
+
 public:
 	Game(GraphicsHandler* graphicsHandler, float width, float height);
 	virtual ~Game();

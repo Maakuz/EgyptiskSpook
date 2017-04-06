@@ -2,8 +2,8 @@
 #define GRAPHICSHANDLER_H
 
 #include "ShaderHandler.h"
+#include "EntityRenderer.h"
 #include "GraphicsData.h"
-#include "Renderer.h"
 #include <vector>
 
 #define WIDTH 1080
