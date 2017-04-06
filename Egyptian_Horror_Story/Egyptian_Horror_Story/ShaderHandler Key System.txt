@@ -1,0 +1,14 @@
+All renderers and other classes using shader handler will have to "book" keys,
+key id has two numbers, xy, x = the class book id, and y is just a random number
+the class chooses. Starting from zero is the cool way.
+
+(Vertex, Pixel and Geometry uses seperate keys, but if they are used togheter, having the
+same y is considered good practice!)
+
+BOOK IDs HERE, if u dont new renderers will prolly crash!!!!!!!!!!!!!!!!!!!!!!!!
+!!! !! !! ! ! ! !! ! 
+
+Default: 0
+ShadowRenderer: 1
+EntityRenderer: 2
+ParticleRenderer: 3
