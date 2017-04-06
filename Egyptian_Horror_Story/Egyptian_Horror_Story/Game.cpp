@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "ShadowRenderer.h"
+#include "ParticleRenderer.h"
 
 Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 {
@@ -71,7 +72,8 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	};
 
 	this->mGraphics->addRenderer(this->mEntityRenderer);
-	this->mGraphics->addRenderer(new ShadowRenderer(mPlayer->getLight()));
+	this->mGraphics->addRenderer(new ParticleRenderer()); // temp
+	// this->mGraphics->addRenderer(new ShadowRenderer(mPlayer->getLight())); no good
 	this->mGraphics->setupRenderers();
 
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));

@@ -11,6 +11,7 @@ ParticleRenderer::ParticleRenderer() {
 
 ParticleRenderer::~ParticleRenderer() {
 	delete this->mGraphicsData;
+	delete[] particles;
 }
 
 void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
