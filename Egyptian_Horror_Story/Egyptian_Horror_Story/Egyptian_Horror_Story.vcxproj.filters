@@ -45,6 +45,9 @@
     </Filter>
     <Filter Include="Header Files\Entities">
       <UniqueIdentifier>{4881abb3-0dc9-41e7-b83e-6bd97f8c57e1}</UniqueIdentifier>
+	</Filter>
+    <Filter Include="Resource Files\Particle Shaders">
+      <UniqueIdentifier>{d8484192-a330-49e8-91a1-e2a0a37660a2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +59,15 @@
     </FxCompile>
     <FxCompile Include="EntityPS.hlsl">
       <Filter>Resource Files\Entity Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleVS.hlsl">
+      <Filter>Resource Files\Particle Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePS.hlsl">
+      <Filter>Resource Files\Particle Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleGS.hlsl">
+      <Filter>Resource Files\Particle Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

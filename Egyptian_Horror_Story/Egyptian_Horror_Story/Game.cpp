@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "ShadowRenderer.h"
+#include "ParticleRenderer.h"
 
 Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 {
@@ -8,13 +9,16 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	
 	this->mEntityHandler = new EntityHandler();
 
-	this->mGraphics->setupRenderers();
-	
 	this->mEntityHandler->setupPlayer(this->mGraphics->getDevice(), this->mCamera);
 	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
 
 	this->mGraphics->addRenderer(this->mEntityHandler->getRenderer());
-	this->mGraphics->addRenderer(new ShadowRenderer(this->mEntityHandler->getPlayer()->getLight()));
+	this->mGraphics->addRenderer(new ParticleRenderer()); // temp
+
+	this->mGraphics->setupRenderers();
+
+
+	//this->mGraphics->addRenderer(new ShadowRenderer(this->mEntityHandler->getPlayer()->getLight()));
 }
 
 Game::~Game()
