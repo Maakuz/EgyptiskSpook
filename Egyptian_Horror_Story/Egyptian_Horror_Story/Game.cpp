@@ -5,103 +5,28 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 {
 	this->mGraphics = mGraphicsHandler;
 	this->mCamera = new CameraClass(this->mGraphics->getDevice(), width, height);
-	this->mPlayer = new Player(this->mCamera, this->mGraphics->getDevice(), 0);
-	this->mEntityRenderer = new EntityRenderer();
 	
-	//test
-	this->mWall = new Wall(
-		DirectX::SimpleMath::Vector3(-1.f, -1.f, 0.f),
-		DirectX::SimpleMath::Vector3(2.f, 0.f, 0.f),
-		DirectX::SimpleMath::Vector3(0.f, 2.f, 0.f),
-		DirectX::SimpleMath::Vector3(0.f, 0.f, 2.f), 1);
+	this->mEntityHandler = new EntityHandler();
 
-	EntityStruct::VertexStruct testData[] = {
-		DirectX::SimpleMath::Vector3(-1.f, -1.f, 0.f),
-		DirectX::SimpleMath::Vector3(),
-		DirectX::SimpleMath::Vector2(0.f, 1.f),
-
-		DirectX::SimpleMath::Vector3(-1.f, 1.f, 0.f),
-		DirectX::SimpleMath::Vector3(),
-		DirectX::SimpleMath::Vector2(0.f, 0.f),
-
-		DirectX::SimpleMath::Vector3(1.f, -1.f, 0.f),
-		DirectX::SimpleMath::Vector3(),
-		DirectX::SimpleMath::Vector2(1.f, 1.f),
-
-		DirectX::SimpleMath::Vector3(1.f, -1.f, 0.f),
-		DirectX::SimpleMath::Vector3(),
-		DirectX::SimpleMath::Vector2(1.f, 1.f),
-
-		DirectX::SimpleMath::Vector3(1.f, 1.f, 0.f),
-		DirectX::SimpleMath::Vector3(),
-		DirectX::SimpleMath::Vector2(1.f, 0.f),
-
-		DirectX::SimpleMath::Vector3(-1.f, 1.f, 0.f),
-		DirectX::SimpleMath::Vector3(),
-		DirectX::SimpleMath::Vector2(0.f, 0.f)
-	};
-
-	//another test
-	this->mEntity = new Entity(2);
-
-	EntityStruct::VertexStruct testData2[] = {
-		DirectX::SimpleMath::Vector3(-10.f, -2.f, -10.f),
-		DirectX::SimpleMath::Vector3(),
-		DirectX::SimpleMath::Vector2(0.f, 1.f),
-
-		DirectX::SimpleMath::Vector3(-10.f, -2.f, 10.f),
-		DirectX::SimpleMath::Vector3(),
-		DirectX::SimpleMath::Vector2(0.f, 0.f),
-
-		DirectX::SimpleMath::Vector3(10.f, -2.f, 10.f),
-		DirectX::SimpleMath::Vector3(),
-		DirectX::SimpleMath::Vector2(1.f, 0.f),
-
-		DirectX::SimpleMath::Vector3(-10.f, -2.f, -10.f),
-		DirectX::SimpleMath::Vector3(),
-		DirectX::SimpleMath::Vector2(0.f, 1.f),
-
-		DirectX::SimpleMath::Vector3(10.f, -2.f, -10.f),
-		DirectX::SimpleMath::Vector3(),
-		DirectX::SimpleMath::Vector2(1.f, 1.f),
-
-		DirectX::SimpleMath::Vector3(10.f, -2.f, 10.f),
-		DirectX::SimpleMath::Vector3(),
-		DirectX::SimpleMath::Vector2(1.f, 0.f)
-	};
-
-	this->mGraphics->addRenderer(this->mEntityRenderer);
-	this->mGraphics->addRenderer(new ShadowRenderer(mPlayer->getLight()));
 	this->mGraphics->setupRenderers();
+	
+	this->mEntityHandler->setupPlayer(this->mGraphics->getDevice(), this->mCamera);
+	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
 
-	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
-
-	this->mEntityRenderer->loadObject(this->mGraphics->getDevice(), this->mWall->getKey(), testData, 6, L"../Resource/Textures/normalMap.png");
-	this->mEntityRenderer->loadObject(this->mGraphics->getDevice(), this->mEntity->getKey(), testData2, 6, L"../Resource/Textures/normalMap.png");
+	this->mGraphics->addRenderer(this->mEntityHandler->getRenderer());
+	this->mGraphics->addRenderer(new ShadowRenderer(this->mEntityHandler->getPlayer()->getLight()));
 }
 
 Game::~Game()
 {
 	delete this->mCamera;
-	delete this->mPlayer;
-	delete this->mWall;
-	delete this->mEntity;
+	delete this->mEntityHandler;
 }
 
 void Game::update()
 {
 	this->mCamera->update(this->mGraphics->getDeviceContext());
-
-	DirectX::SimpleMath::Vector3 prevPos = this->mPlayer->getPosition();
-
-	this->mPlayer->updatePosition();
-
-	//test
-	if (this->mWall->getOBB().obbVSPoint(this->mPlayer->getPosition()))
-	{
-		this->mPlayer->setPosition(this->mPlayer->getPosition() + mWall->getNormal() * 0.03f);
-	}
-	
+	this->mEntityHandler->update();
 
 	this->mGraphics->clear();
 	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer());
@@ -110,16 +35,16 @@ void Game::update()
 
 bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
 {
-	return this->mPlayer->handleMouseKeyPress(key);
+	return this->mEntityHandler->getPlayer()->handleMouseKeyPress(key);
 }
 
 bool Game::handleMouseKeyRelease(SDL_KeyboardEvent const& key)
 {
-	return this->mPlayer->handleMouseKeyRelease(key);
+	return this->mEntityHandler->getPlayer()->handleMouseKeyRelease(key);
 }
 
 void Game::handleMouseMotion(SDL_MouseMotionEvent const &motion)
 {
-	this->mPlayer->handleMouseMotion(motion);
+	this->mEntityHandler->getPlayer()->handleMouseMotion(motion);
 	this->mCamera->updateRotation(this->mGraphics->getDeviceContext());
 }

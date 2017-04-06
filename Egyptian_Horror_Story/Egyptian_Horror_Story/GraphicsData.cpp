@@ -29,6 +29,9 @@ bool GraphicsData::loadTexture(int key, wchar_t* path, ID3D11Device* device)
 	if (SUCCEEDED(hr))
 		return true;
 
+	else
+		hr = DirectX::CreateWICTextureFromFile(device, L"../Resource/Textures/placeholder.png", nullptr, &mSrvs[key]);
+
 	return false;
 }
 

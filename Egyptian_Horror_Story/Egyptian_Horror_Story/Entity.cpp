@@ -37,7 +37,7 @@ DirectX::SimpleMath::Vector3 Entity::getPosition() const
 	return this->mPos;
 }
 
-OBB Entity::getOBB() const
+OBB Entity::getOBB()
 {
 	if (this->mObb)
 		return *this->mObb;

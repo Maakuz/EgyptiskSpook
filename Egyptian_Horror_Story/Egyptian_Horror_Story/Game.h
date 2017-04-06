@@ -1,20 +1,15 @@
 #ifndef GAME_H
 #define GAME_H
 #include "GraphicsHandler.h"
-#include "Player.h"
+#include "EntityHandler.h"
 #include "CameraClass.h"
-#include "Wall.h"
 
 class Game
 {
 private:
 	GraphicsHandler* mGraphics;
-	Player* mPlayer;
 	CameraClass* mCamera;
-	Wall* mWall;
-	Entity* mEntity;
-
-	EntityRenderer* mEntityRenderer;
+	EntityHandler* mEntityHandler;
 
 public:
 	Game(GraphicsHandler* graphicsHandler, float width, float height);

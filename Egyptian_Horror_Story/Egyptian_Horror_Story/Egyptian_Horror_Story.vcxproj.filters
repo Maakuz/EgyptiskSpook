@@ -40,6 +40,12 @@
     <Filter Include="Resource Files\Information">
       <UniqueIdentifier>{87499f51-b842-4ff1-95b6-a4de730398fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Entities">
+      <UniqueIdentifier>{a0af51e2-325e-4881-b836-af2b6d4497ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities">
+      <UniqueIdentifier>{4881abb3-0dc9-41e7-b83e-6bd97f8c57e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ShadowVS.hlsl">
@@ -56,9 +62,6 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Entity.cpp">
-      <Filter>Source Files\Game Classes</Filter>
-    </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
@@ -66,12 +69,6 @@
       <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
     <ClCompile Include="OBB.cpp">
-      <Filter>Source Files\Game Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files\Game Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Wall.cpp">
       <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
     <ClCompile Include="CameraClass.cpp">
@@ -98,8 +95,20 @@
     <ClCompile Include="EntityRenderer.cpp">
       <Filter>Source Files\Renderers</Filter>
     </ClCompile>
+    <ClCompile Include="EntityHandler.cpp">
+      <Filter>Source Files\Game Classes</Filter>
+    </ClCompile>
     <ClCompile Include="ParticleRenderer.cpp">
-      <Filter>Source Files\Graphics</Filter>
+      <Filter>Source Files\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall.cpp">
+      <Filter>Source Files\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -112,19 +121,10 @@
     <ClInclude Include="EntityRenderer.h">
       <Filter>Header Files\Renderers</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Header Files\Game classes</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files\Game classes</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>Header Files\Game classes</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files\Game classes</Filter>
-    </ClInclude>
-    <ClInclude Include="Wall.h">
       <Filter>Header Files\Game classes</Filter>
     </ClInclude>
     <ClInclude Include="CameraClass.h">
@@ -151,12 +151,24 @@
     <ClInclude Include="ParticleRenderer.h">
       <Filter>Header Files\Renderers</Filter>
     </ClInclude>
+    <ClInclude Include="EntityHandler.h">
+      <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ShaderHandler Key System.txt">
+    <Text Include="Key System.txt">
       <Filter>Resource Files\Information</Filter>
     </Text>
   </ItemGroup>

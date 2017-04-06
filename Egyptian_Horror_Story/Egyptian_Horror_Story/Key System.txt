@@ -12,3 +12,10 @@ Default: 0
 ShadowRenderer: 1
 EntityRenderer: 2
 ParticleRenderer: 3
+
+
+Same goes for booking space in the GraphicsData!
+
+player: 0
+wall: 1
+entity: 2

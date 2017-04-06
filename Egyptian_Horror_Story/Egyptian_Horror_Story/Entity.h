@@ -22,7 +22,7 @@ public:
 
 	int getKey() const;
 
-	OBB getOBB() const;
+	OBB getOBB();
 };
 
 
