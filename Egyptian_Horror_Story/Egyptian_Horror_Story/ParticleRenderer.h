@@ -9,8 +9,8 @@ class ParticleRenderer : public Renderer {
 	private:
 		GraphicsData *mGraphicsData;
 
-		UINT size;
-		DirectX::SimpleMath::Vector3 *particles;
+		UINT mSize;
+		DirectX::SimpleMath::Vector3 *mParticles;
 	public:
 		ParticleRenderer();
 		ParticleRenderer(ParticleRenderer const &renderer) = delete;
