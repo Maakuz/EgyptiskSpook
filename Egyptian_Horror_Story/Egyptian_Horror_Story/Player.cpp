@@ -19,6 +19,9 @@ Player::~Player()
 {
 	if (this->mLight)
 	delete this->mLight;
+
+	//THIS IS NOT RIGHT
+	delete this->getRenderer();
 }
 
 void Player::updatePosition()

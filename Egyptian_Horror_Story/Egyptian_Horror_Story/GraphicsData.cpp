@@ -17,7 +17,7 @@ GraphicsData::~GraphicsData()
 	}
 }
 
-bool GraphicsData::loadTexture(char* key, wchar_t* path, ID3D11Device* device)
+bool GraphicsData::loadTexture(int key, wchar_t* path, ID3D11Device* device)
 {
 	HRESULT hr = DirectX::CreateWICTextureFromFile(device, path, nullptr, &mSrvs[key]);
 
@@ -27,7 +27,7 @@ bool GraphicsData::loadTexture(char* key, wchar_t* path, ID3D11Device* device)
 	return false;
 }
 
-HRESULT GraphicsData::createConstantBuffer(char* key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device)
+HRESULT GraphicsData::createConstantBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device)
 {
 	D3D11_BUFFER_DESC desc;
 	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -41,7 +41,7 @@ HRESULT GraphicsData::createConstantBuffer(char* key, UINT size, D3D11_SUBRESOUR
 	return hr;
 }
 
-HRESULT GraphicsData::createVertexBuffer(char* key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device)
+HRESULT GraphicsData::createVertexBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device)
 {
 	D3D11_BUFFER_DESC desc;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -56,12 +56,12 @@ HRESULT GraphicsData::createVertexBuffer(char* key, UINT size, D3D11_SUBRESOURCE
 	return hr;
 }
 
-ID3D11Buffer* GraphicsData::getBuffer(char* key) const
+ID3D11Buffer* GraphicsData::getBuffer(int key) const
 {
 	return this->mBuffers.at(key);
 }
 
-ID3D11ShaderResourceView* GraphicsData::getSRV(char* key)
+ID3D11ShaderResourceView* GraphicsData::getSRV(int key)
 {
 	return this->mSrvs.at(key);
 }

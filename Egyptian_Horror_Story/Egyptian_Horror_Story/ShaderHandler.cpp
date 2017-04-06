@@ -6,6 +6,7 @@ ShaderHandler::ShaderHandler() {
 }
 
 ShaderHandler::~ShaderHandler() {
+
 	for (auto const &key : mVertexShaders) {
 		if (key.second)
 			key.second->Release();
@@ -14,6 +15,7 @@ ShaderHandler::~ShaderHandler() {
 	for (auto const &key : mGeometryShaders) {
 		if (key.second)
 			key.second->Release();
+
 	}
 
 	for (auto const &key : mPixelShaders) {

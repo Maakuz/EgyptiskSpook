@@ -121,7 +121,7 @@ HRESULT GraphicsHandler::setupSwapChain() {
 			HRESULT hr = this->mDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast <void **>(&mDebugDevice));
 			if (FAILED(hr))
 			{
-				MessageBox(0, L"debug device creation failed", L"error", MB_OK);
+				MessageBox(0, L"Debug device creation failed", L"error", MB_OK);
 			}
 		}
 	}
@@ -136,22 +136,6 @@ void GraphicsHandler::setupViewport(int width, int height) {
 	mViewport.MinDepth = 0.f;
 	mViewport.TopLeftX = mViewport.TopLeftY = 0;
 	mContext->RSSetViewports(1, &mViewport);
-}
-
-void GraphicsHandler::setupBasicShaders() {
-	D3D11_INPUT_ELEMENT_DESC desc[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 3 * sizeof(float), D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
-
-	mShaderHandler.setupVertexShader(mDevice, 0, L"SimpleVS.hlsl", "main", desc, ARRAYSIZE(desc));
-	mShaderHandler.setupPixelShader(mDevice, 0, L"SimplePS.hlsl", "main");
-	mShaderHandler.setupGeometryShader(mDevice, 0, L"SimpleGS.hlsl", "main");
-
-	// render target, input layout and topology set
-	mContext->OMSetRenderTargets(1, &mBackBufferRTV, this->mDSV);
-	mContext->IASetInputLayout(mShaderHandler.getInputLayout(0));
-	mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 }
 
 void GraphicsHandler::setupSamplerState() {

@@ -10,8 +10,8 @@ class GraphicsData
 {
 private:
 	
-	std::map<char*, ID3D11Buffer*> mBuffers;
-	std::map<char*, ID3D11ShaderResourceView*> mSrvs;
+	std::map<int, ID3D11Buffer*> mBuffers;
+	std::map<int, ID3D11ShaderResourceView*> mSrvs;
 
 public:
 	GraphicsData();
@@ -19,13 +19,13 @@ public:
 	virtual ~GraphicsData();
 	bool operator=(GraphicsData const &other) = delete;
 
-	bool loadTexture(char* key, wchar_t* path, ID3D11Device* device);
+	bool loadTexture(int key, wchar_t* path, ID3D11Device* device);
 
-	HRESULT createConstantBuffer(char* key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device);
-	HRESULT createVertexBuffer(char* key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device);
+	HRESULT createConstantBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device);
+	HRESULT createVertexBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device);
 
-	ID3D11Buffer* getBuffer(char* key) const;
-	ID3D11ShaderResourceView* getSRV(char* key);
+	ID3D11Buffer* getBuffer(int key) const;
+	ID3D11ShaderResourceView* getSRV(int key);
 };
 
 
