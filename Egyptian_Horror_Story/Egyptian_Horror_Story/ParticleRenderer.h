@@ -3,17 +3,21 @@
 
 #include "Renderer.h"
 #include "GraphicsData.h"
+#include <SimpleMath.h>
 
-class ParticleRenderer : Renderer {
+class ParticleRenderer : public Renderer {
 	private:
 		GraphicsData *mGraphicsData;
+
+		UINT size;
+		DirectX::SimpleMath::Vector3 *particles;
 	public:
 		ParticleRenderer();
 		ParticleRenderer(ParticleRenderer const &renderer) = delete;
 		virtual ~ParticleRenderer();
 
 		void setup(ID3D11Device *device, ShaderHandler &shaders);
-		void render(ID3D11Device *context, ShaderHandler &shaders);
+		void render(ID3D11DeviceContext *context, ShaderHandler &shaders);
 
 		ParticleRenderer* operator=(ParticleRenderer const &renderer) = delete;
 };
