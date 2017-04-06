@@ -75,8 +75,6 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	this->mEntity->getRenderer()->loadObject(this->mGraphics->getDevice(), testData2, 6,
 		L"../Resource/Textures/normalMap.png");
 
-	//Borde inte objektet ha renderern och sedan skicka en 
-	//pekare till graphicshandlern i stället?
 	this->mGraphics->addRenderer(this->mWall->getRenderer());
 	this->mGraphics->addRenderer(this->mEntity->getRenderer());
 	this->mGraphics->addRenderer(new ShadowRenderer(mPlayer->getLight()));

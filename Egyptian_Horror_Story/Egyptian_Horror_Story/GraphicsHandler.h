@@ -25,6 +25,8 @@ private:
 	ID3D11DepthStencilState* mDSS;
 	ID3D11SamplerState* mSamplerState;
 
+	ID3D11Debug* mDebugDevice;
+
 
 	std::vector<Renderer*> mRenderers;
 

@@ -85,6 +85,9 @@ GraphicsHandler::~GraphicsHandler() {
 	for (auto *renderer : mRenderers) {
 			delete renderer;
 	}
+
+	this->mDebugDevice->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+	this->mDebugDevice->Release();
 }
 
 HRESULT GraphicsHandler::setupSwapChain() {
@@ -113,6 +116,13 @@ HRESULT GraphicsHandler::setupSwapChain() {
 
 			hr = mDevice->CreateRenderTargetView(backBuffer, nullptr, &mBackBufferRTV);
 			backBuffer->Release();
+
+			//Creating debug device
+			HRESULT hr = this->mDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast <void **>(&mDebugDevice));
+			if (FAILED(hr))
+			{
+				MessageBox(0, L"debug device creation failed", L"error", MB_OK);
+			}
 		}
 	}
 

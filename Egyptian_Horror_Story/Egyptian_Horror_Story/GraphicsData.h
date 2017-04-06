@@ -15,7 +15,9 @@ private:
 
 public:
 	GraphicsData();
+	GraphicsData(GraphicsData const &other) = delete;
 	virtual ~GraphicsData();
+	bool operator=(GraphicsData const &other) = delete;
 
 	bool loadTexture(char* key, wchar_t* path, ID3D11Device* device);
 
