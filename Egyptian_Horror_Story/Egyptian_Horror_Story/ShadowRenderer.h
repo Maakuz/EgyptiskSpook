@@ -13,6 +13,10 @@ private:
 	ID3D11ShaderResourceView* mSRV;
 	
 	Light* mLight;
+
+	void setupViewport();
+	void setupShaders(ID3D11Device* device, ShaderHandler &shaders);
+	void setupDSAndSRViews(ID3D11Device* device, ShaderHandler &shaders);
 public:
 	ShadowRenderer(Light* light);
 	virtual ~ShadowRenderer();
