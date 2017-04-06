@@ -1,10 +1,11 @@
 #include "Entity.h"
 
-Entity::Entity()
+Entity::Entity(int graphicsKey)
 {
 	this->mPos = DirectX::SimpleMath::Vector3(0, 0, 0);
 	this->mObb = nullptr;
-	this->mRenderer = new EntityRenderer();
+
+	this->mGraphicsKey = graphicsKey;
 }
 
 Entity::~Entity()
@@ -42,7 +43,7 @@ OBB Entity::getOBB() const
 		return *this->mObb;
 }
 
-EntityRenderer*& Entity::getRenderer()
+int Entity::getKey() const
 {
-	return this->mRenderer;
+	return this->mGraphicsKey;
 }

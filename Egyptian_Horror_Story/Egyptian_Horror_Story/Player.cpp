@@ -3,7 +3,8 @@
 #define GRAVITY 0.025f //change later ok
 #define JUMP_START_VELOCITY 4.f //change later ok FOR TESTING PURPOSES JUMPING BY LW
 
-Player::Player(CameraClass* camera, ID3D11Device* device)
+Player::Player(CameraClass* camera, ID3D11Device* device, int key)
+	:Entity(key)
 {
 	this->mCamera = camera;
 	this->mSpeed = 0.03f;
@@ -19,9 +20,6 @@ Player::~Player()
 {
 	if (this->mLight)
 	delete this->mLight;
-
-	//THIS IS NOT RIGHT
-	delete this->getRenderer();
 }
 
 void Player::updatePosition()

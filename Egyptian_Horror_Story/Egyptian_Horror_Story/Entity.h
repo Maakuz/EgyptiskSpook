@@ -2,17 +2,16 @@
 #define ENTITY_H
 
 #include "OBB.h"
-#include "EntityRenderer.h"
 
 class Entity
 {
 private:
 	DirectX::SimpleMath::Vector3 mPos;
 	OBB* mObb;
-	EntityRenderer* mRenderer;
+	int mGraphicsKey;
 
 public:
-	Entity();
+	Entity(int graphicsKey);
 	virtual ~Entity();
 
 	void move(DirectX::SimpleMath::Vector3 offset);
@@ -21,8 +20,9 @@ public:
 	virtual void setPosition(DirectX::SimpleMath::Vector3 pos);
 	DirectX::SimpleMath::Vector3 getPosition() const;
 
+	int getKey() const;
+
 	OBB getOBB() const;
-	EntityRenderer*& getRenderer();
 };
 
 

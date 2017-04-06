@@ -15,6 +15,11 @@ GraphicsData::~GraphicsData()
 		if (key.second)
 			key.second->Release();
 	}
+
+	for (auto const &key : this->mVertices) {
+		if (key.second)
+			delete[] key.second;
+	}
 }
 
 bool GraphicsData::loadTexture(int key, wchar_t* path, ID3D11Device* device)
@@ -27,21 +32,27 @@ bool GraphicsData::loadTexture(int key, wchar_t* path, ID3D11Device* device)
 	return false;
 }
 
-HRESULT GraphicsData::createConstantBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device)
+HRESULT GraphicsData::createConstantBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device, bool isDynamic)
 {
 	D3D11_BUFFER_DESC desc;
 	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	desc.ByteWidth = size;
-	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	desc.CPUAccessFlags = 0;
 	desc.MiscFlags = 0;
 	desc.StructureByteStride = 0;
-	desc.Usage = D3D11_USAGE_DYNAMIC;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+
+	if (isDynamic)
+	{
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		desc.Usage = D3D11_USAGE_DYNAMIC;
+	}
 
 	HRESULT hr = device->CreateBuffer(&desc, data, &this->mBuffers[key]);
 	return hr;
 }
 
-HRESULT GraphicsData::createVertexBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device)
+HRESULT GraphicsData::createVertexBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device, bool isDynamic)
 {
 	D3D11_BUFFER_DESC desc;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -51,12 +62,28 @@ HRESULT GraphicsData::createVertexBuffer(int key, UINT size, D3D11_SUBRESOURCE_D
 	desc.StructureByteStride = 0;
 	desc.Usage = D3D11_USAGE_DEFAULT;
 	
+	if (isDynamic)
+	{
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+		desc.Usage = D3D11_USAGE_DYNAMIC;
+	}
 
 	HRESULT hr = device->CreateBuffer(&desc, data, &this->mBuffers[key]);
 	return hr;
 }
 
-ID3D11Buffer* GraphicsData::getBuffer(int key) const
+void GraphicsData::createVerticeArray(int key, EntityStruct::VertexStruct* vertices, int nrOfVertices)
+{
+	this->mNrOfVertices[key] = nrOfVertices;
+	this->mVertices[key] = new EntityStruct::VertexStruct[nrOfVertices];
+
+	for (size_t i = 0; i < nrOfVertices; i++)
+	{
+		this->mVertices.at(key)[i] = vertices[i];
+	}
+}
+
+ID3D11Buffer* GraphicsData::getBuffer(int key)
 {
 	return this->mBuffers.at(key);
 }
@@ -64,4 +91,34 @@ ID3D11Buffer* GraphicsData::getBuffer(int key) const
 ID3D11ShaderResourceView* GraphicsData::getSRV(int key)
 {
 	return this->mSrvs.at(key);
+}
+
+EntityStruct::VertexStruct* GraphicsData::getVertices(int key)
+{
+	return this->mVertices.at(key);
+}
+
+int GraphicsData::getNrOfVertices(int key)
+{
+	return this->mNrOfVertices.at(key);
+}
+
+std::map<int, ID3D11Buffer*>* GraphicsData::getBufferMap()
+{
+	return &this->mBuffers;
+}
+
+std::map<int, ID3D11ShaderResourceView*>* GraphicsData::getSrvMap()
+{
+	return &this->mSrvs;
+}
+
+std::map<int, EntityStruct::VertexStruct*>* GraphicsData::getVertexMap()
+{
+	return &this->mVertices;
+}
+
+std::map<int, int>* GraphicsData::getNrOfVerticesMap()
+{
+	return &this->mNrOfVertices;
 }

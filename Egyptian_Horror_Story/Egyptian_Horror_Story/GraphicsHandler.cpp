@@ -86,7 +86,7 @@ GraphicsHandler::~GraphicsHandler() {
 			delete renderer;
 	}
 
-	this->mDebugDevice->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+	//this->mDebugDevice->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 	this->mDebugDevice->Release();
 }
 
