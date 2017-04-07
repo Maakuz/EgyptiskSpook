@@ -6,12 +6,12 @@ struct GS_OUT
 
 cbuffer VP : register(b0)
 {
-	float4x4 world; // identity matrix
+	float4x4 world;
 	float4x4 view;
 	float4x4 projection;
 };
 
-float4x4 camera : register(b1);
+float4 camera : register(b1);
 
 [maxvertexcount(4)]
 void main(
@@ -20,28 +20,31 @@ void main(
 )
 {
 	float4x4 vpMatrix = mul(view, projection);
-	float testSize = .3f;
+	float testSize = .03f;
+	float3 cameraToPos = (input[0] - camera).xyz;
+
+	float4 right =	normalize(float4(cross(cameraToPos, float3(0, 1, 0)), 0)) * testSize;
+	float4 up =		normalize(float4(cross(cameraToPos, right), 0)) * testSize;
 	float4 pos;
-	float4 cameraRight = camera[0], cameraUp = camera[1];
 
 	GS_OUT element = (GS_OUT) 0;
-
-	pos = input[0] + cameraUp * -testSize + cameraRight * -testSize;
+	// somethign is wrong with the textures
+	pos = input[0] - up - right;
 	element.pos = mul(pos, vpMatrix);
 	element.uv = float2(0, 1);
 	output.Append(element);
 
-	pos = input[0] + cameraUp * testSize + cameraRight * -testSize;
+	pos = input[0] + up - right;
 	element.pos = mul(pos, vpMatrix);
 	element.uv = float2(0, 0);
 	output.Append(element);
 	
-	pos = input[0] + cameraUp * -testSize + cameraRight * testSize;
+	pos = input[0] - up + right;
 	element.pos = mul(pos, vpMatrix);
 	element.uv = float2(1, 1);
 	output.Append(element);
 
-	pos = input[0] + cameraUp * testSize + cameraRight * testSize;
+	pos = input[0] + up + right;
 	element.pos = mul(pos, vpMatrix);
 	element.uv = float2(1, 0);
 	output.Append(element);
