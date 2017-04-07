@@ -3,6 +3,7 @@
 
 #include "Renderer.h"
 #include "GraphicsData.h"
+#include "CameraClass.h"
 #include <SimpleMath.h>
 
 class ParticleRenderer : public Renderer {
@@ -11,8 +12,11 @@ class ParticleRenderer : public Renderer {
 
 		UINT mSize;
 		DirectX::SimpleMath::Vector3 *mParticles;
+		CameraClass *mCamera;
+
+		void updateCameraBuffer(ID3D11DeviceContext *context);
 	public:
-		ParticleRenderer();
+		ParticleRenderer(CameraClass *camera);
 		ParticleRenderer(ParticleRenderer const &renderer) = delete;
 		virtual ~ParticleRenderer();
 
