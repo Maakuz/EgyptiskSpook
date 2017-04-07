@@ -45,9 +45,12 @@
     </Filter>
     <Filter Include="Header Files\Entities">
       <UniqueIdentifier>{4881abb3-0dc9-41e7-b83e-6bd97f8c57e1}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="Resource Files\Particle Shaders">
       <UniqueIdentifier>{d8484192-a330-49e8-91a1-e2a0a37660a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\GUI Shaders">
+      <UniqueIdentifier>{5a7eefb3-0545-4e89-b644-d0b27c230f07}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +71,15 @@
     </FxCompile>
     <FxCompile Include="ParticleGS.hlsl">
       <Filter>Resource Files\Particle Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="GUIVS.hlsl">
+      <Filter>Resource Files\GUI Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="GUIPS.hlsl">
+      <Filter>Resource Files\GUI Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="GUIGS.hlsl">
+      <Filter>Resource Files\GUI Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +134,9 @@
     <ClCompile Include="Wall.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="GUIRenderer.cpp">
+      <Filter>Source Files\Renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -174,6 +189,9 @@
     </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIRenderer.h">
+      <Filter>Header Files\Renderers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
