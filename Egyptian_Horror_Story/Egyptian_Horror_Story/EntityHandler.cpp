@@ -59,7 +59,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(),
 				DirectX::SimpleMath::Vector2(0.f, 0.f)
 			};
-			this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, L"../Resource/Textures/normalMap.png");
+			this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, L"../Resource/Textures/pyramidStone.png");
 
 			this->mEntities.push_back(wall);
 		}
@@ -100,7 +100,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(),
 				DirectX::SimpleMath::Vector2(0.f, 0.f)
 			};
-			this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, L"../Resource/Textures/normalMap.png");
+			this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, L"../Resource/Textures/pyramidStone.png");
 
 			this->mEntities.push_back(wall);
 		}
