@@ -1,42 +1,49 @@
 #include "ParticleRenderer.h"
+#include <math.h> 
 #define SHADERS 30
+#define START_SIZE 1000
 
 using namespace DirectX::SimpleMath;
 
 ParticleRenderer::ParticleRenderer(CameraClass *camera) 
 	: mCamera(camera) {
-	this->mSize = 1000;
-	this->mParticles = new Vector3[mSize];
-	this->mDirection = new Vector3[mSize];
 	this->mGraphicsData = new GraphicsData();
 }
 
 ParticleRenderer::~ParticleRenderer() {
 	delete this->mGraphicsData;
-	delete[] this->mParticles;
-	delete[] this->mDirection;
 
 	blendState->Release();
 }
 
 void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	D3D11_INPUT_ELEMENT_DESC desc[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "DIMENSIONS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	shaders.setupVertexShader(device, SHADERS, L"ParticleVS.hlsl", "main", desc, ARRAYSIZE(desc));
 	shaders.setupPixelShader(device, SHADERS, L"ParticlePS.hlsl", "main");
 	shaders.setupGeometryShader(device, SHADERS, L"ParticleGS.hlsl", "main");
 
-	for (int i = 0; i < this->mSize; i++) {
-		this->mParticles[i] = Vector3(rand() % 30 - 5.f, rand() % 15, rand() % 30 - 5.f);
-		this->mDirection[i] = Vector3(rand() % 4 - 1, rand() % 4 - 1, rand() % 4 - 1);
+	ParticleVertex particle;
+	ParticleData partData;
+	int temp;
+	for (int i = 0; i < START_SIZE; i++) {
+		particle.position = Vector3(rand() % 30 - 5.f, rand() % 15, rand() % 30 - 5.f);
+		particle.dimensions = Vector2(0.005f, 0.005f);
+
+		partData.direction = Vector3(rand() % 4 - 1, rand() % 4 - 1, rand() % 4 - 1);
+		partData.timeLeft = rand() % 100;
+
+		this->mParticleVertices.push_back(particle);
+		this->mParticleData.push_back(partData);
 	}
 
 	D3D11_SUBRESOURCE_DATA data;
-	data.pSysMem = &this->mParticles[0];
+	data.pSysMem = &this->mParticleVertices[0];
 
-	mGraphicsData->createVertexBuffer(0, this->mSize * sizeof(Vector3), &data, device, true);
+	mGraphicsData->createVertexBuffer(0, getSize(), &data, device, true);
 	mGraphicsData->createConstantBuffer(1, sizeof(Vector4), nullptr, device, true);
 	mGraphicsData->loadTexture(0, L"../Resource/Textures/sand.png", device);
 
@@ -74,29 +81,29 @@ void ParticleRenderer::updateCameraBuffer(ID3D11DeviceContext *context) {
 }
 
 void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
-	for (int i = 0; i < this->mSize; i++) {
-		Vector3 dir = this->mDirection[i];
-		this->mParticles[i].x += dir.x / 5000.f;
-		this->mParticles[i].x += dir.y / 5000.f;
-		this->mParticles[i].x += dir.z / 5000.f;
-		
+	float temp = 0;
+	for (int i = 0; i < this->mParticleVertices.size(); i++) {
+		ParticleVertex *particle = &this->mParticleVertices[i];
+		ParticleData *data = &this->mParticleData[i];
+
+		particle->position += data->direction / 1000.f;
 		if (rand() % 100 == 0) {
-			this->mDirection[i].x = rand() % 4 - 1;
-			this->mDirection[i].y = rand() % 4 - 1;
-			this->mDirection[i].z = rand() % 4 - 1;
+			temp = rand() % 4 - 1;
+			data->direction = Vector3(temp, temp, temp);
 		}
 	}
 
 	D3D11_MAPPED_SUBRESOURCE res;
 	context->Map(this->mGraphicsData->getBuffer(0), 0, D3D11_MAP_WRITE_DISCARD, NULL, &res);
-	memcpy(res.pData, &mParticles[0], this->mSize * sizeof(Vector3));
+	memcpy(res.pData, &this->mParticleVertices[0], getSize());
 	context->Unmap(this->mGraphicsData->getBuffer(0), 0);
 }
 
 void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders) {
-	UINT stride = sizeof(Vector3), offset = 0;
-	ID3D11Buffer *buffer = this->mGraphicsData->getBuffer(0), *cam = this->mGraphicsData->getBuffer(1)
-		, *vp = this->mCamera->getMatrixBuffer();
+	UINT stride = sizeof(ParticleVertex), offset = 0;
+	ID3D11Buffer *buffer = this->mGraphicsData->getBuffer(0),
+						   *cam = this->mGraphicsData->getBuffer(1),
+						   *vp = this->mCamera->getMatrixBuffer();
 	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
 	shaders.setShaders(context, SHADERS, SHADERS, SHADERS);
 
@@ -110,5 +117,9 @@ void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shade
 	context->GSSetConstantBuffers(0, 1, &vp);
 	context->GSSetConstantBuffers(1, 1, &cam);
 
-	context->Draw(this->mSize, 0);
+	context->Draw(this->mParticleVertices.size(), 0);
+}
+
+UINT ParticleRenderer::getSize() const {
+	return this->mParticleVertices.size() * sizeof(ParticleVertex);
 }
