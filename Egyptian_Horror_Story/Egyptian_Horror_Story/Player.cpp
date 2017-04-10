@@ -7,7 +7,7 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 	:Entity(key)
 {
 	this->mCamera = camera;
-	this->mSpeed = 0.03f;
+	this->mSpeed = 0.3f;
 
 	// jumping stuff
 	this->mJumping = false;
