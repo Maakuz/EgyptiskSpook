@@ -26,6 +26,7 @@ void main(
 {
 	float4x4 vpMatrix = mul(view, projection);
 	float3 cameraToPos = (input[0].pos - camera).xyz;
+	if (length(cameraToPos) < 2.f) return;
 
 	float4 right =	normalize(float4(cross(cameraToPos, float3(0, 1, 0)), 0)) * input[0].dimensions.x;
 	float4 up =		normalize(float4(cross(cameraToPos, right.xyz), 0)) * input[0].dimensions.y;

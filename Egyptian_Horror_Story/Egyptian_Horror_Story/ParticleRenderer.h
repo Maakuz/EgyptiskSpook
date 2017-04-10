@@ -24,11 +24,16 @@ class ParticleRenderer : public Renderer {
 		std::vector<ParticleData> mParticleData;
 		CameraClass *mCamera;
 		ID3D11BlendState *blendState;
+		UINT frame;
 
 		void updateCameraBuffer(ID3D11DeviceContext *context);
 		void updateParticles(ID3D11DeviceContext *context);
 		void setupBlendState(ID3D11Device *device);
+
 		UINT getSize() const;
+		void addRandomParticle();
+		//check life time, if <= 0, remove and add new one
+		void timeCheck(int start, int piece);
 	public:
 		ParticleRenderer(CameraClass *camera);
 		ParticleRenderer(ParticleRenderer const &renderer) = delete;

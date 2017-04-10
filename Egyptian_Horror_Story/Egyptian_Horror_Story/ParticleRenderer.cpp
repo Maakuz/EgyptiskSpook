@@ -1,13 +1,15 @@
 #include "ParticleRenderer.h"
 #include <math.h> 
 #define SHADERS 30
-#define START_SIZE 1000
+#define DIVIDE 8 // should be divisible by 2
+#define START_SIZE 8096  // should be divisible by 2
 
 using namespace DirectX::SimpleMath;
 
 ParticleRenderer::ParticleRenderer(CameraClass *camera) 
 	: mCamera(camera) {
 	this->mGraphicsData = new GraphicsData();
+	frame = 0;
 }
 
 ParticleRenderer::~ParticleRenderer() {
@@ -26,18 +28,8 @@ void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	shaders.setupPixelShader(device, SHADERS, L"ParticlePS.hlsl", "main");
 	shaders.setupGeometryShader(device, SHADERS, L"ParticleGS.hlsl", "main");
 
-	ParticleVertex particle;
-	ParticleData partData;
-	int temp;
 	for (int i = 0; i < START_SIZE; i++) {
-		particle.position = Vector3(rand() % 30 - 5.f, rand() % 15, rand() % 30 - 5.f);
-		particle.dimensions = Vector2(0.005f, 0.005f);
-
-		partData.direction = Vector3(rand() % 4 - 1, rand() % 4 - 1, rand() % 4 - 1);
-		partData.timeLeft = rand() % 100;
-
-		this->mParticleVertices.push_back(particle);
-		this->mParticleData.push_back(partData);
+		addRandomParticle();
 	}
 
 	D3D11_SUBRESOURCE_DATA data;
@@ -81,21 +73,28 @@ void ParticleRenderer::updateCameraBuffer(ID3D11DeviceContext *context) {
 }
 
 void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
+	frame++;
 	float temp = 0;
-	for (int i = 0; i < this->mParticleVertices.size(); i++) {
+	int mod = frame % DIVIDE;
+	int piece = mParticleVertices.size() / DIVIDE;
+	int start = piece * mod;
+
+	for (int i = start; i < start + piece; i++) {
 		ParticleVertex *particle = &this->mParticleVertices[i];
 		ParticleData *data = &this->mParticleData[i];
 
 		particle->position += data->direction / 1000.f;
-		if (rand() % 100 == 0) {
+		if (rand() % 1000 == 0) {
 			temp = rand() % 4 - 1;
 			data->direction = Vector3(temp, temp, temp);
 		}
 	}
+	timeCheck(start, piece);
 
 	D3D11_MAPPED_SUBRESOURCE res;
 	context->Map(this->mGraphicsData->getBuffer(0), 0, D3D11_MAP_WRITE_DISCARD, NULL, &res);
-	memcpy(res.pData, &this->mParticleVertices[0], getSize());
+	char *ptr = static_cast<char*> (res.pData);
+	memcpy(ptr, &this->mParticleVertices[0], getSize());
 	context->Unmap(this->mGraphicsData->getBuffer(0), 0);
 }
 
@@ -122,4 +121,34 @@ void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shade
 
 UINT ParticleRenderer::getSize() const {
 	return this->mParticleVertices.size() * sizeof(ParticleVertex);
+}
+
+void ParticleRenderer::addRandomParticle() {
+	ParticleVertex particle;
+	ParticleData partData;
+
+	particle.position = Vector3(rand() % 20 - 10, rand() % 25, rand() % 20 - 10);
+	particle.dimensions = Vector2(0.008f, 0.008f);
+
+	partData.direction = Vector3(rand() % 4 - 1, rand() % 4 - 1, rand() % 4 - 1);
+	partData.timeLeft = rand() % 100 + 100;
+
+	this->mParticleVertices.push_back(particle);
+	this->mParticleData.push_back(partData);
+}
+
+void ParticleRenderer::timeCheck(int start, int piece) {
+	for (int i = start; i < start + piece; i++) {
+		ParticleVertex *particle = &this->mParticleVertices[i];
+		ParticleData *data = &this->mParticleData[i];
+
+		data->timeLeft -= 0.0001f;
+		if (data->timeLeft <= 0) {
+			addRandomParticle();
+			std::swap(this->mParticleData[i], this->mParticleData[this->mParticleData.size() - 1]);
+			std::swap(this->mParticleVertices[i], this->mParticleVertices[this->mParticleVertices.size() - 1]);
+			this->mParticleData.pop_back();
+			this->mParticleVertices.pop_back();
+		}
+	}
 }
