@@ -32,7 +32,13 @@ void Player::updatePosition()
 
 	this->setPosition(newPos);
 	this->mCamera->setPos(newPos);
-	this->mLight->update(newPos, this->mCamera->getForward());
+
+	DirectX::SimpleMath::Vector3 lightPos = newPos;
+
+	lightPos += this->mCamera->getRight() * 0.7f;
+	lightPos += this->mCamera->getUp() * -1.f;
+
+	this->mLight->update(lightPos, this->mCamera->getForward());
 }
 
 void Player::handleJumping() {

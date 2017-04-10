@@ -18,10 +18,10 @@ cbuffer lightBuffer
 
 float4 main(VS_OUT input) : SV_TARGET
 {
-    float4 lightToPos = lightPos - input.wPos;
+    float4 lightToPos = input.wPos - lightPos;
     float specularIntensity = 3000.f;
     float outerCone = 0.8f;
-    float innerCone = 0.94f;
+    float innerCone = 0.95f;
     float innerMinusOuter = innerCone - outerCone;
     
     float diffuse = 0;
@@ -29,15 +29,15 @@ float4 main(VS_OUT input) : SV_TARGET
     float ambient = 0.1;
 
     //Kanske ska vara negativ
-    float cosAngle = dot(normalize(-lightToPos), normalize(lightDir));
+    float cosAngle = dot(normalize(lightToPos.xyz), normalize(lightDir.xyz));
 
     float falloff = saturate((cosAngle - outerCone) / innerMinusOuter);
 
-    float lambert = max(dot(input.normal, normalize(lightToPos.xyz)), 0.f);
+    float lambert = max(dot(input.normal, normalize(-lightToPos.xyz)), 0.f);
 
-    if (cosAngle > 0.6f)
+    if (lambert > 0)
     {
-        diffuse = lambert; //* falloff;
+        diffuse = lambert * falloff;
         float3 cameraToPos = lightPos.xyz - input.wPos.xyz;
         float3 H = normalize(input.normal + cameraToPos);
 
