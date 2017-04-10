@@ -18,15 +18,37 @@ cbuffer lightBuffer
 
 float4 main(VS_OUT input) : SV_TARGET
 {
-    float4 lightToPos = lightPos - input.wPos;
-    float specularIntensity = 0.3;
+    float4 lightToPos = input.wPos - lightPos;
+    float specularIntensity = 3000.f;
+    float outerCone = 0.8f;
+    float innerCone = 0.95f;
+    float innerMinusOuter = innerCone - outerCone;
+    
+    float diffuse = 0;
+    float specularity = 0;
+    float ambient = 0.1;
 
-  //  if (length(lightToPos) > 7.f)
-    //    return 0;
+    //Kanske ska vara negativ
+    float cosAngle = dot(normalize(lightToPos.xyz), normalize(lightDir.xyz));
 
-    //float specularity = pow(saturate(dot(norm.xyz, H)), specularIntensity);
+    float falloff = saturate((cosAngle - outerCone) / innerMinusOuter);
 
-    float diffuse = saturate(dot(normalize(lightToPos.xyz), input.normal) - 0.3);
+    float lambert = max(dot(input.normal, normalize(-lightToPos.xyz)), 0.f);
 
-    return tex.Sample(sSampler, input.uv) * diffuse;
+    if (lambert > 0)
+    {
+        diffuse = lambert * falloff;
+        float3 cameraToPos = lightPos.xyz - input.wPos.xyz;
+        float3 H = normalize(input.normal + cameraToPos);
+
+        specularity = pow(saturate(dot(input.normal.xyz, H)), specularIntensity) * falloff;
+    }
+
+
+
+
+
+   
+
+    return tex.Sample(sSampler, input.uv) * saturate(diffuse + specularity + ambient);
 }

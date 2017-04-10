@@ -19,7 +19,6 @@ namespace EntityStruct
 class GraphicsData
 {
 private:
-	
 	std::map<int, ID3D11Buffer*> mBuffers;
 	std::map<int, ID3D11ShaderResourceView*> mSrvs;
 
