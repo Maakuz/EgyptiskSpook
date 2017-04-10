@@ -1,8 +1,14 @@
 Egyptian_Horror_Story/.vs/
 Egyptian_Horror_Story/Egyptian_Horror_Story/Debug/
+Egyptian_Horror_Story/Egyptian_Horror_Story/Release/
+Egyptian_Horror_Story//Release/
 Egyptian_Horror_Story/Debug/Egyptian_Horror_Story.pdb
 Egyptian_Horror_Story/Debug/Egyptian_Horror_Story.ilk
 Egyptian_Horror_Story/Debug/Egyptian_Horror_Story.exe
 *.sdf
 *.opensdf
 *.cso
+Egyptian_Horror_Story/Release/Egyptian_Horror_Story.exe
+Egyptian_Horror_Story/Release/Egyptian_Horror_Story.iobj
+Egyptian_Horror_Story/Release/Egyptian_Horror_Story.ipdb
+Egyptian_Horror_Story/Release/Egyptian_Horror_Story.pdb

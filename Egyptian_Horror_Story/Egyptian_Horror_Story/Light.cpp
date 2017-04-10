@@ -1,26 +1,9 @@
 #include "Light.h"
 
-void Light::createLightMatrixBuffer(ID3D11Device* device)
+Light::Light(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 direction, ID3D11Device* device, ID3D11DeviceContext* context, GraphicsData* gData)
 {
-	D3D11_BUFFER_DESC desc;
-	ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
-	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	desc.ByteWidth = sizeof(VP);
-	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	desc.Usage = D3D11_USAGE_DYNAMIC;
-
-	D3D11_SUBRESOURCE_DATA data;
-	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
-	data.pSysMem = &this->mMatrices;
-
-	HRESULT hr = device->CreateBuffer(&desc, &data, &this->mLightMatixBuffer);
-
-}
-
-Light::Light(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 direction, ID3D11Device* device)
-{
-	this->mPos = pos;
-	this->mDirection = direction;
+	this->mPosDir.pos = DirectX::SimpleMath::Vector4(pos.x, pos.y, pos.z, 1);
+	this->mPosDir.dir = DirectX::SimpleMath::Vector4(direction.x, direction.y, direction.z, 1);
 
 	this->mLightFOV = M_PI * 0.23f;
 	this->mWidth = 8000;
@@ -30,13 +13,39 @@ Light::Light(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 dire
 
 	this->mMatrices.projection = DirectX::XMMatrixPerspectiveFovLH(mLightFOV, this->mWidth / this->mHeight, 0.1, 200);
 
-	this->createLightMatrixBuffer(device);
+	this->mLightBufferKey = 300;
+	this->mMatrixBufferKey = 301;
+
+	this->mGData = gData;
+	this->mContext = context;
+
+	D3D11_SUBRESOURCE_DATA data;
+	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
+	data.pSysMem = &this->mMatrices;
+
+	gData->createConstantBuffer(this->mMatrixBufferKey, sizeof(lightStructs::VP), &data, device, true);
+
+	data.pSysMem = &this->mPosDir;
+	gData->createConstantBuffer(this->mLightBufferKey, sizeof(lightStructs::lightPosDir), &data, device, true);
 }
 
 Light::~Light()
 {
-	if (this->mLightMatixBuffer)
-		this->mLightMatixBuffer->Release();
+}
+
+void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 dir)
+{
+	this->mPosDir.pos = DirectX::SimpleMath::Vector4(pos.x, pos.y, pos.z, 1);
+	this->mPosDir.dir = DirectX::SimpleMath::Vector4(dir.x, dir.y, dir.z, 1);
+
+	D3D11_MAPPED_SUBRESOURCE data;
+
+	this->mContext->Map(this->mGData->getBuffer(this->mLightBufferKey), 
+		0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+
+	memcpy(data.pData, &this->mPosDir, sizeof(lightStructs::lightPosDir));
+
+	this->mContext->Unmap(this->mGData->getBuffer(this->mLightBufferKey), 0);
 }
 
 float Light::getHeight() const
@@ -47,9 +56,4 @@ float Light::getHeight() const
 float Light::getWidth() const
 {
 	return this->mWidth;
-}
-
-ID3D11Buffer* Light::getMatrixBuffer() const
-{
-	return this->mLightMatixBuffer;
 }

@@ -15,9 +15,9 @@ EntityHandler::~EntityHandler()
 	}
 }
 
-void EntityHandler::setupPlayer(ID3D11Device* device, CameraClass* camera)
+void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera, GraphicsData* gData)
 {
-	this->mPlayer = new Player(camera, device, this->mNrOfKeys++);
+	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, gData);
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
 }
 
@@ -36,27 +36,27 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 			EntityStruct::VertexStruct testData[] = {
 				DirectX::SimpleMath::Vector3(-10.f + (2 * i), -2.f + (2 * j), 10.f),
-				DirectX::SimpleMath::Vector3(),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f),
 				DirectX::SimpleMath::Vector2(0.f, 1.f),
 
 				DirectX::SimpleMath::Vector3(-10.f + (2 * i), 0.f + (2 * j), 10.f),
-				DirectX::SimpleMath::Vector3(),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f),
 				DirectX::SimpleMath::Vector2(0.f, 0.f),
 
 				DirectX::SimpleMath::Vector3(-8.f + (2 * i), -2.f + (2 * j), 10.f),
-				DirectX::SimpleMath::Vector3(),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f),
 				DirectX::SimpleMath::Vector2(1.f, 1.f),
 
 				DirectX::SimpleMath::Vector3(-8.f + (2 * i), -2.f + (2 * j), 10.f),
-				DirectX::SimpleMath::Vector3(),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f),
 				DirectX::SimpleMath::Vector2(1.f, 1.f),
 
 				DirectX::SimpleMath::Vector3(-8.f + (2 * i), 0.f + (2 * j), 10.f),
-				DirectX::SimpleMath::Vector3(),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f),
 				DirectX::SimpleMath::Vector2(1.f, 0.f),
 
 				DirectX::SimpleMath::Vector3(-10.f + (2 * i), 0.f + (2 * j), 10.f),
-				DirectX::SimpleMath::Vector3(),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f),
 				DirectX::SimpleMath::Vector2(0.f, 0.f)
 			};
 			this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, L"../Resource/Textures/pyramidStone.png");
@@ -77,27 +77,27 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 			EntityStruct::VertexStruct testData[] = {
 				DirectX::SimpleMath::Vector3(10.f, -2.f + (2 * j), 10.f - (2 * i)),
-				DirectX::SimpleMath::Vector3(),
+				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector2(0.f, 1.f),
 
 				DirectX::SimpleMath::Vector3(10.f, 0.f + (2 * j), 10.f - (2 * i)),
-				DirectX::SimpleMath::Vector3(),
+				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector2(0.f, 0.f),
 
 				DirectX::SimpleMath::Vector3(10.f, -2.f + (2 * j), 8.f - (2 * i)),
-				DirectX::SimpleMath::Vector3(),
+				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector2(1.f, 1.f),
 
 				DirectX::SimpleMath::Vector3(10.f, -2.f + (2 * j), 8.f - (2 * i)),
-				DirectX::SimpleMath::Vector3(),
+				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector2(1.f, 1.f),
 
 				DirectX::SimpleMath::Vector3(10.f, 0.f + (2 * j), 8.f - (2 * i)),
-				DirectX::SimpleMath::Vector3(),
+				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector2(1.f, 0.f),
 
 				DirectX::SimpleMath::Vector3(10.f, 0.f + (2 * j), 10.f - (2 * i)),
-				DirectX::SimpleMath::Vector3(),
+				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector2(0.f, 0.f)
 			};
 			this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, L"../Resource/Textures/pyramidStone.png");
@@ -112,27 +112,27 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 	EntityStruct::VertexStruct testData2[] = {
 		DirectX::SimpleMath::Vector3(-10.f, -2.f, -10.f),
-		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector3(0, 1, 0),
 		DirectX::SimpleMath::Vector2(0.f, 1.f),
 
 		DirectX::SimpleMath::Vector3(-10.f, -2.f, 10.f),
-		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector3(0, 1, 0),
 		DirectX::SimpleMath::Vector2(0.f, 0.f),
 
 		DirectX::SimpleMath::Vector3(10.f, -2.f, 10.f),
-		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector3(0, 1, 0),
 		DirectX::SimpleMath::Vector2(1.f, 0.f),
 
 		DirectX::SimpleMath::Vector3(-10.f, -2.f, -10.f),
-		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector3(0, 1, 0),
 		DirectX::SimpleMath::Vector2(0.f, 1.f),
 
 		DirectX::SimpleMath::Vector3(10.f, -2.f, -10.f),
-		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector3(0, 1, 0),
 		DirectX::SimpleMath::Vector2(1.f, 1.f),
 
 		DirectX::SimpleMath::Vector3(10.f, -2.f, 10.f),
-		DirectX::SimpleMath::Vector3(),
+		DirectX::SimpleMath::Vector3(0, 1, 0),
 		DirectX::SimpleMath::Vector2(1.f, 0.f)
 	};
 

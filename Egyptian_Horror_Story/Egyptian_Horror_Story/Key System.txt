@@ -12,10 +12,13 @@ Default: 0
 ShadowRenderer: 1
 EntityRenderer: 2
 ParticleRenderer: 3
+GUI: 4
 
 
 Same goes for booking space in the GraphicsData!
 
 player: 0
 wall: 1
-entity: 2
+entity: 2 - 202
+Camera Matrix Buffer: 300
+Camera Pos & Dir Buffer: 301
