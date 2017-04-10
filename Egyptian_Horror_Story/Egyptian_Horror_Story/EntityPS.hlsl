@@ -35,9 +35,9 @@ float4 main(VS_OUT input) : SV_TARGET
 
     float lambert = max(dot(input.normal, normalize(lightToPos.xyz)), 0.f);
 
-    if (lambert > 0.f)
+    if (cosAngle > 0.6f)
     {
-        diffuse = lambert * falloff;
+        diffuse = lambert; //* falloff;
         float3 cameraToPos = lightPos.xyz - input.wPos.xyz;
         float3 H = normalize(input.normal + cameraToPos);
 
