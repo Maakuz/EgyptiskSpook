@@ -24,8 +24,15 @@ Player::~Player()
 
 void Player::updatePosition()
 {
+	using namespace DirectX::SimpleMath;
+	Vector3 normal = Vector3(0, 1, 0);
+	Vector3 forward = this->mCamera->getForward();
+
+	Vector3 proj = forward - normal * (forward.Dot(normal) / normal.LengthSquared());
+	proj.Normalize();
+
 	this->mVelocity = this->mDirection.x * this->mCamera->getRight();
-	this->mVelocity += this->mDirection.y * this->mCamera->getForward();
+	this->mVelocity += this->mDirection.y * proj;
 	handleJumping();
 
 	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed;
