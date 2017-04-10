@@ -86,6 +86,11 @@ void GraphicsData::createVerticeArray(int key, EntityStruct::VertexStruct* verti
 	}
 }
 
+void GraphicsData::addConstantBuffer(int key, ID3D11Buffer* buffer)
+{
+	this->mBuffers[key] = buffer;
+}
+
 ID3D11Buffer* GraphicsData::getBuffer(int key)
 {
 	return this->mBuffers.at(key);

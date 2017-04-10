@@ -20,7 +20,7 @@ public:
 	EntityHandler();
 	virtual ~EntityHandler();
 
-	void setupPlayer(ID3D11Device* device, CameraClass* camera);
+	void setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera, GraphicsData* gData);
 	void setupEntities(ID3D11Device* device);
 
 	void update();
