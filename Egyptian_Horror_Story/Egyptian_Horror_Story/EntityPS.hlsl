@@ -28,20 +28,20 @@ float4 main(VS_OUT input) : SV_TARGET
     float specularity = 0;
     float ambient = 0.1;
 
-    float cosAngle = dot(-normalize(lightToPos), normalize(lightDir));
+    //Kanske ska vara negativ
+    float cosAngle = dot(normalize(-lightToPos), normalize(lightDir));
 
-    float spot = saturate((cosAngle - outerCone) / innerMinusOuter);
+    float falloff = saturate((cosAngle - outerCone) / innerMinusOuter);
 
-    float lambert = max(dot(input.normal, normalize(lightToPos)), 0.f);
+    float lambert = max(dot(input.normal, normalize(lightToPos.xyz)), 0.f);
 
-    if (cosAngle > 0.6f)
+    if (lambert > 0.f)
     {
-        diffuse = saturate(dot(normalize(lightToPos.xyz), input.normal) - 0.3); //* spot; //* lambert
-       
+        diffuse = lambert * falloff;
         float3 cameraToPos = lightPos.xyz - input.wPos.xyz;
         float3 H = normalize(input.normal + cameraToPos);
 
-        specularity = pow(saturate(dot(input.normal.xyz, H)), specularIntensity);  //* spot;
+        specularity = pow(saturate(dot(input.normal.xyz, H)), specularIntensity) * falloff;
     }
 
 
