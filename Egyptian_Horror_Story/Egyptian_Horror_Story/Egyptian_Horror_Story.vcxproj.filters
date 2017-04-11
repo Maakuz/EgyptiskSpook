@@ -207,7 +207,7 @@
     </ClInclude>
     <ClInclude Include="Enemy.h">
       <Filter>Header Files\Entities</Filter>
-    </ClCompile>
+    </ClInclude>
     <ClInclude Include="AnimationHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>

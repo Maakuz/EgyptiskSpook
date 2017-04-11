@@ -1,4 +1,4 @@
-enemySpeed = 0.1
+enemySpeed = 0.075
 
 SeesPlayer = function(lengthBeetwen)
 	if (lengthBeetwen < 20)
