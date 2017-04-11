@@ -1,15 +1,17 @@
 #include "ParticleRenderer.h"
 #include <math.h> 
+#include "Enemy.h" // FOR TESTING
 #define SHADERS 30
 #define DIVIDE 8 // should be divisible by 2
 #define START_SIZE 8096  // should be divisible by 2
 
 using namespace DirectX::SimpleMath;
 
-ParticleRenderer::ParticleRenderer(CameraClass *camera) 
+ParticleRenderer::ParticleRenderer(CameraClass *camera, Enemy *enemy) 
 	: mCamera(camera) {
 	this->mGraphicsData = new GraphicsData();
 	frame = 0;
+	this->enemy = enemy;
 }
 
 ParticleRenderer::~ParticleRenderer() {
@@ -65,6 +67,16 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 			data->direction = Vector3(temp, temp, temp);
 		}
 	}
+
+	/* TEEST TETSTTETET REMOVE BEFORE MERGING */
+	ParticleVertex *vertex = &this->mParticleVertices[mParticleVertices.size() - 1];
+	ParticleData *data = &this->mParticleData[mParticleVertices.size() - 1];
+	vertex->dimensions.x = 2.f;
+	vertex->dimensions.y = 4.f;
+	vertex->position = enemy->getPosition();
+	/* TEEST TETSTTETET */
+
+
 	timeCheck(start, piece);
 
 	D3D11_MAPPED_SUBRESOURCE res;
