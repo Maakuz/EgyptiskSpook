@@ -22,3 +22,4 @@ wall: 1
 entity: 2 - 202
 Camera Matrix Buffer: 300 only buffer
 Camera Pos & Dir Buffer: 301 only buffer
+Enemy: 400

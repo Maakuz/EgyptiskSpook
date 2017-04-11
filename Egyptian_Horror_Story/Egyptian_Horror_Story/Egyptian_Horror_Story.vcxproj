@@ -86,6 +86,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationHandler.cpp" />
     <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityHandler.cpp" />
@@ -106,6 +107,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationHandler.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="Direct3DHeader.h" />
     <ClInclude Include="Entity.h" />
