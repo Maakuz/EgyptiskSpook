@@ -140,6 +140,9 @@
     <ClCompile Include="AIHandler.cpp">
       <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -198,6 +201,9 @@
     </ClInclude>
     <ClInclude Include="AIHandler.h">
       <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header Files\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

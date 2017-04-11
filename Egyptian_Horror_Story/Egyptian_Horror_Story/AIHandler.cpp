@@ -1,17 +1,29 @@
 #include "AIHandler.h"
 #include <SDL.h> //for printing errors and stuff
 #define TEST "scripts/test.lua"
+#define AI "scripts/EnemyAI.lua"
 
-AIHandler::AIHandler() {
+AIHandler::AIHandler(Enemy *enemy, Player *player) :
+	mEnemy(enemy), mPlayer(player) {
 	mState = luaL_newstate();
 
-	testScript();
+	setupAI();
 }
 
 AIHandler::~AIHandler() {
 	lua_close(mState);
 }
 
+void AIHandler::setupAI() {
+
+}
+
+void AIHandler::update() {
+	int error = luaL_loadfile(mState, TEST) || lua_pcall(mState, 0, 0, 0);
+	handleError(error);
+}
+
+// private
 bool inline AIHandler::handleError(int error) {
 	if (error) {
 			SDL_Log("Error: %s", lua_tostring(mState, -1));

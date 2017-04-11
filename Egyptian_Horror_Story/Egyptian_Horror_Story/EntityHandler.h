@@ -3,6 +3,7 @@
 #include <vector>
 #include "EntityRenderer.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Wall.h"
 
 class EntityHandler
@@ -10,6 +11,7 @@ class EntityHandler
 private:
 	std::vector<Entity*> mEntities;
 	Player* mPlayer;
+	Enemy* mEnemy;
 	
 	//Will be removed in GraphicsHandler
 	EntityRenderer* mEntityRenderer;
@@ -27,6 +29,7 @@ public:
 
 	EntityRenderer* getRenderer();
 	Player* getPlayer();
+	Enemy* getEnemy();
 };
 
 

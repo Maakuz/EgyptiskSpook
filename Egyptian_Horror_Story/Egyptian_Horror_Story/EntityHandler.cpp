@@ -8,6 +8,7 @@ EntityHandler::EntityHandler()
 EntityHandler::~EntityHandler()
 {
 	delete this->mPlayer;
+	delete this->mEnemy;
 
 	for (size_t i = 0; i < this->mEntities.size(); i++)
 	{
@@ -19,6 +20,10 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 {
 	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, gData);
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
+
+	// TEMP
+	this->mEnemy = new Enemy(-1); // THIS KEY MUST BE CHANGED !!!! !!! !(/#(!/#()"8927398ha8ubhfwuaf8gh5782gq589hfuanfo9u
+	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
 }
 
 void EntityHandler::setupEntities(ID3D11Device* device)
@@ -147,7 +152,6 @@ void EntityHandler::update()
 
 	this->mPlayer->updatePosition();
 
-
 	//Wall intersection test
 	for (Entity *wall : this->mEntities) 
 	{
@@ -168,4 +172,9 @@ EntityRenderer* EntityHandler::getRenderer()
 Player* EntityHandler::getPlayer()
 {
 	return this->mPlayer;
+}
+
+Enemy* EntityHandler::getEnemy()
+{
+	return this->mEnemy;
 }

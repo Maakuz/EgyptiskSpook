@@ -21,7 +21,7 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 
 	this->mGraphics->setupRenderers();
 
-	this->mAIHandler = new AIHandler();
+	this->mAIHandler = new AIHandler(mEntityHandler->getEnemy(), mEntityHandler->getPlayer());
 	//this->mGraphics->addRenderer(new ShadowRenderer(this->mEntityHandler->getPlayer()->getLight()));
 }
 
@@ -40,6 +40,8 @@ void Game::update()
 	this->mGraphics->clear();
 	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer());
 	this->mGraphics->present();
+
+	this->mAIHandler->update();
 }
 
 bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)

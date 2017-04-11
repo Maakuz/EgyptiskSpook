@@ -3,19 +3,24 @@
 
 #include "Entity.h"
 #include <lua.hpp>
+#include "Enemy.h"
+#include "Player.h"
 
 class AIHandler {
 	private:
-		Entity *mEnemy; //pointer to enemy that will use the AI
+		Enemy *mEnemy; //pointer to enemy that will use the AI
+		Player *mPlayer;
 		lua_State *mState;
 
 		void testScript(); //For testing
+		bool handleError(int error);
+		void setupAI();
 	public:
-		AIHandler();
+		AIHandler(Enemy *enemy, Player *player);
 		~AIHandler();
 		AIHandler(AIHandler const &aiHandler) = delete;
 
-		bool handleError(int error);
+		void update();
 
 		AIHandler* operator=(AIHandler const &aiHandler) = delete;
 };
