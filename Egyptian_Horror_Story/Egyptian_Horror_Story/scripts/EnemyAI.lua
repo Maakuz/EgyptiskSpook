@@ -1,0 +1,1 @@
+enemySpeed = 0.2
