@@ -91,6 +91,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityHandler.cpp" />
     <ClCompile Include="EntityRenderer.cpp" />
+    <ClCompile Include="FBXLoader.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GraphicsData.cpp" />
     <ClCompile Include="GraphicsHandler.cpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityHandler.h" />
     <ClInclude Include="EntityRenderer.h" />
+    <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GraphicsData.h" />
     <ClInclude Include="GraphicsHandler.h" />
@@ -186,7 +188,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>SDL2-2.0.5\include;$(IncludePath)</IncludePath>
+    <IncludePath>SDL2-2.0.5\include;$(solutiondir)\packages\FBX\include;$(IncludePath)</IncludePath>
     <LibraryPath>SDL2-2.0.5\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -216,7 +218,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(solutionDir)Packages/FBX;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
