@@ -1,13 +1,13 @@
 #include "Player.h"
 #define GROUND_Y 0.f //change later ok
 #define GRAVITY 0.025f //change later ok
-#define JUMP_START_VELOCITY 4.f //change later ok FOR TESTING PURPOSES JUMPING BY LW
+#define JUMP_START_VELOCITY 1.f //change later ok FOR TESTING PURPOSES JUMPING BY LW
 
 Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int key, GraphicsData* gData)
 	:Entity(key)
 {
 	this->mCamera = camera;
-	this->mSpeed = 0.3f;
+	this->mSpeed = 0.15f;
 
 	// jumping stuff
 	this->mJumping = false;
@@ -25,10 +25,10 @@ Player::~Player()
 void Player::updatePosition()
 {
 	using namespace DirectX::SimpleMath;
-	Vector3 normal = Vector3(0, 1, 0);
+	Vector3 normal = Vector3(0, 1, 0); //Normal of plane, shouldn't change
 	Vector3 forward = this->mCamera->getForward();
 
-	Vector3 proj = forward - normal * (forward.Dot(normal) / normal.LengthSquared());
+	Vector3 proj = forward - normal * (forward.Dot(normal) / normal.LengthSquared()); // Project forward vector on plane
 	proj.Normalize();
 
 	this->mVelocity = this->mDirection.x * this->mCamera->getRight();
