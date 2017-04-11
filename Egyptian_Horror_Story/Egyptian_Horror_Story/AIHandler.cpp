@@ -49,6 +49,11 @@ void AIHandler::update() {
 	mEnemy->update();
 }
 
+// LUA
+int AIHandler::setEnemySpeed(lua_State *state, int speed) {
+
+}
+
 // private
 bool inline AIHandler::handleError(int error) {
 	if (error) {
