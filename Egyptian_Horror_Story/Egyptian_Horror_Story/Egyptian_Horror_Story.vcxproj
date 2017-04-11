@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AIHandler.cpp" />
+    <ClCompile Include="AnimationHandler.cpp" />
     <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -109,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIHandler.h" />
+    <ClInclude Include="AnimationHandler.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="Direct3DHeader.h" />
     <ClInclude Include="Enemy.h" />
