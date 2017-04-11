@@ -23,12 +23,10 @@ class ParticleRenderer : public Renderer {
 		std::vector<ParticleVertex> mParticleVertices;
 		std::vector<ParticleData> mParticleData;
 		CameraClass *mCamera;
-		ID3D11BlendState *blendState;
 		UINT frame;
 
 		void updateCameraBuffer(ID3D11DeviceContext *context);
 		void updateParticles(ID3D11DeviceContext *context);
-		void setupBlendState(ID3D11Device *device);
 
 		UINT getSize() const;
 		void addRandomParticle();

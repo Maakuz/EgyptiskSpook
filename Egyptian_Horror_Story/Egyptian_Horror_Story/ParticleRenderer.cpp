@@ -14,8 +14,6 @@ ParticleRenderer::ParticleRenderer(CameraClass *camera)
 
 ParticleRenderer::~ParticleRenderer() {
 	delete this->mGraphicsData;
-
-	blendState->Release();
 }
 
 void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
@@ -38,29 +36,6 @@ void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	mGraphicsData->createVertexBuffer(0, getSize(), &data, device, true);
 	mGraphicsData->createConstantBuffer(1, sizeof(Vector4), nullptr, device, true);
 	mGraphicsData->loadTexture(0, L"../Resource/Textures/sand.png", device);
-
-	setupBlendState(device);
-}
-
-void ParticleRenderer::setupBlendState(ID3D11Device *device) {
-	D3D11_RENDER_TARGET_BLEND_DESC rtbDesc;
-	ZeroMemory(&rtbDesc, sizeof(rtbDesc));
-	rtbDesc.BlendEnable = true;
-	rtbDesc.SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	rtbDesc.DestBlend = D3D11_BLEND_INV_SRC_COLOR;
-	rtbDesc.BlendOp = D3D11_BLEND_OP_ADD;
-	rtbDesc.SrcBlendAlpha = D3D11_BLEND_ONE;
-	rtbDesc.DestBlendAlpha = D3D11_BLEND_ZERO;
-	rtbDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	rtbDesc.RenderTargetWriteMask = 0x0f;
-
-	D3D11_BLEND_DESC desc;
-	ZeroMemory(&desc, sizeof(desc));
-	desc.AlphaToCoverageEnable = true;
-	desc.IndependentBlendEnable = true;
-	desc.RenderTarget[0] = rtbDesc;
-
-	device->CreateBlendState(&desc, &this->blendState);
 }
 
 void ParticleRenderer::updateCameraBuffer(ID3D11DeviceContext *context) {
@@ -83,6 +58,7 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 		ParticleVertex *particle = &this->mParticleVertices[i];
 		ParticleData *data = &this->mParticleData[i];
 
+		// TEMP
 		particle->position += data->direction / 1000.f;
 		if (rand() % 1000 == 0) {
 			temp = rand() % 4 - 1;
@@ -127,7 +103,12 @@ void ParticleRenderer::addRandomParticle() {
 	ParticleVertex particle;
 	ParticleData partData;
 
-	particle.position = Vector3(rand() % 20 - 10, rand() % 25, rand() % 20 - 10);
+	//TEMP
+	particle.position = Vector3(
+		(rand() % 200) / 10.f - 10,
+		(rand() % 250) / 10.f,
+		(rand() % 200) / 10.f - 10
+	);
 	particle.dimensions = Vector2(0.01f, 0.01f);
 
 	partData.direction = Vector3(rand() % 4 - 1, rand() % 4 - 1, rand() % 4 - 1);
