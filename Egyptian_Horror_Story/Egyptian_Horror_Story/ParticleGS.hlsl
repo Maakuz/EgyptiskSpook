@@ -6,7 +6,9 @@ struct GS_IN {
 struct GS_OUT
 {
 	float4 pos : SV_POSITION;
-	float2 uv : TEX_COORD;
+	float4 wPos : WORLDPOS;
+	float3 normal : NORMAL;
+	float2 uv : TEXCOORD;
 };
 
 cbuffer VP : register(b0)
@@ -33,24 +35,29 @@ void main(
 	float4 pos;
 
 	GS_OUT element = (GS_OUT) 0;
+	element.normal = normalize((camera - input[0].pos).xyz);
 	// somethign is wrong with the textures
 	pos = input[0].pos - up - right;
 	element.pos = mul(pos, vpMatrix);
 	element.uv = float2(0, 1);
+	element.wPos = pos;
 	output.Append(element);
 
 	pos = input[0].pos + up - right;
 	element.pos = mul(pos, vpMatrix);
 	element.uv = float2(0, 0);
+	element.wPos = pos;
 	output.Append(element);
 	
 	pos = input[0].pos - up + right;
 	element.pos = mul(pos, vpMatrix);
 	element.uv = float2(1, 1);
+	element.wPos = pos;
 	output.Append(element);
 
 	pos = input[0].pos + up + right;
 	element.pos = mul(pos, vpMatrix);
 	element.uv = float2(1, 0);
+	element.wPos = pos;
 	output.Append(element);
 }

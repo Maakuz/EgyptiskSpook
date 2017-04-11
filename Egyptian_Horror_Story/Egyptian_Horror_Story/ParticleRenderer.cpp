@@ -104,7 +104,7 @@ void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shade
 						   *cam = this->mGraphicsData->getBuffer(1),
 						   *vp = this->mCamera->getMatrixBuffer();
 	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
-	shaders.setShaders(context, SHADERS, SHADERS, SHADERS);
+	shaders.setShaders(context, SHADERS, 20, SHADERS); //20 is from entity shader, change later
 
 	updateCameraBuffer(context);
 	updateParticles(context);
@@ -128,7 +128,7 @@ void ParticleRenderer::addRandomParticle() {
 	ParticleData partData;
 
 	particle.position = Vector3(rand() % 20 - 10, rand() % 25, rand() % 20 - 10);
-	particle.dimensions = Vector2(0.008f, 0.008f);
+	particle.dimensions = Vector2(0.01f, 0.01f);
 
 	partData.direction = Vector3(rand() % 4 - 1, rand() % 4 - 1, rand() % 4 - 1);
 	partData.timeLeft = rand() % 100 + 100;
