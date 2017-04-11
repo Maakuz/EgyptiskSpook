@@ -1,4 +1,5 @@
 #include "EntityHandler.h"
+#define ENEMY_KEY 400
 
 EntityHandler::EntityHandler()
 {
@@ -22,8 +23,8 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
 
 	// TEMP
-	this->mEnemy = new Enemy(-1); // THIS KEY MUST BE CHANGED !!!! !!! !(/#(!/#()"8927398ha8ubhfwuaf8gh5782gq589hfuanfo9u
-	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
+	this->mEnemy = new Enemy(ENEMY_KEY);
+	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
 }
 
 void EntityHandler::setupEntities(ID3D11Device* device)
