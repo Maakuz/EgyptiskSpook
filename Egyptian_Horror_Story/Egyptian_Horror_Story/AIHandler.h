@@ -14,13 +14,13 @@ class AIHandler {
 
 		void testScript(); //For testing
 		bool handleError(int error);
-		void setupAI();
 	public:
 		AIHandler(Enemy *enemy, Player *player);
 		~AIHandler();
 		AIHandler(AIHandler const &aiHandler) = delete;
 
 		void update();
+		void setupAI();
 
 		AIHandler* operator=(AIHandler const &aiHandler) = delete;
 };

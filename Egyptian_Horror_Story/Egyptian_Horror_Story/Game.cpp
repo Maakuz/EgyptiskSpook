@@ -59,3 +59,7 @@ void Game::handleMouseMotion(SDL_MouseMotionEvent const &motion)
 	this->mEntityHandler->getPlayer()->handleMouseMotion(motion);
 	this->mCamera->updateRotation(this->mGraphics->getDeviceContext());
 }
+
+void Game::updateLua() {
+	this->mAIHandler->setupAI();
+}

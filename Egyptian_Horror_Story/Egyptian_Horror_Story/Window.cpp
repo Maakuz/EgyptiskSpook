@@ -68,6 +68,9 @@ bool Window::handleEvent(SDL_Event const &event) {
 
 bool Window::handleKeyPress(SDL_KeyboardEvent const &key) {
 	switch (key.keysym.scancode) {
+		case SDL_SCANCODE_L:
+			this->mGame->updateLua();
+			break;
 		case SDL_SCANCODE_ESCAPE:
 			return false;
 		case SDL_SCANCODE_RSHIFT:
