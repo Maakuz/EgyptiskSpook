@@ -22,6 +22,8 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	this->mGraphics->setupRenderers();
 
 
+
+
 	//this->mGraphics->addRenderer(new ShadowRenderer(this->mEntityHandler->getPlayer()->getLight()));
 }
 

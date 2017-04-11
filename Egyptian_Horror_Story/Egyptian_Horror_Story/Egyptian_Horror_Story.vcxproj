@@ -126,6 +126,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ShaderHandler.h" />
     <ClInclude Include="ShadowRenderer.h" />
+    <ClInclude Include="Structs.h" />
     <ClInclude Include="Wall.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

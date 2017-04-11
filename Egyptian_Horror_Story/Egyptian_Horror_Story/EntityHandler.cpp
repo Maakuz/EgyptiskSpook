@@ -280,6 +280,17 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 	this->mEntities.push_back(ent);
 	this->mEntityRenderer->loadObject(device, ent->getKey(), testData21, 6, L"../Resource/Textures/pyramidStone.png");
+
+
+
+	std::vector<EntityStruct::VertexStruct> test;
+
+	this->mLoader.loadMesh(test);
+
+	Entity* testEnt = new Entity(this->mNrOfKeys++);
+
+	this->mEntities.push_back(testEnt);
+	this->mEntityRenderer->loadObject(device, testEnt->getKey(), test.data(), test.size());
 }
 
 void EntityHandler::update()

@@ -7,18 +7,15 @@
 #include "Direct3DHeader.h"
 
 #include <math.h>
-#include "SimpleMath.h"
-struct WVP
-{
-	DirectX::SimpleMath::Matrix world, view, projection;
-};
+#include"Structs.h"
+
 
 class CameraClass
 {
 private:
 	const double DEGTORADIANS = M_PI / 180;
 	
-	WVP mMatrices;
+	camera::WVP mMatrices;
 
 	ID3D11Buffer* mWVPBuffer;
 

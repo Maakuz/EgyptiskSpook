@@ -4,13 +4,15 @@
 #include "EntityRenderer.h"
 #include "Player.h"
 #include "Wall.h"
+#include "FBXLoader.h"
 
 class EntityHandler
 {
 private:
 	std::vector<Entity*> mEntities;
 	Player* mPlayer;
-	
+	FBXLoader mLoader;
+
 	//Will be removed in GraphicsHandler
 	EntityRenderer* mEntityRenderer;
 
