@@ -4,21 +4,43 @@
 
 AIHandler::AIHandler() {
 	mState = luaL_newstate();
-	luaL_loadfile(mState, TEST);
-	luaL_openlibs(mState);
-	int error = luaL_loadstring(mState, "printWorld()");
-	
-	if (error) {
-		SDL_Log("Error: %s", lua_tostring(mState, -1));
-		lua_pop(mState, -1);
-	} else {
-		lua_pcall(mState, 0, 1, 0);
-		SDL_Log("Text: %s", lua_tostring(mState, -1));
-		lua_pop(mState, -1);
-	}
-	lua_pop(mState, -1);
+
+	testScript();
 }
 
 AIHandler::~AIHandler() {
 	lua_close(mState);
+}
+
+bool inline AIHandler::handleError(int error) {
+	if (error) {
+			SDL_Log("Error: %s", lua_tostring(mState, -1));
+			lua_pop(mState, 1);
+			return false;
+	}
+	
+	return true;
+}
+
+// FOR TESTING
+void AIHandler::testScript() {
+	lua_State *test = luaL_newstate();
+
+	int error = luaL_loadfile(mState, TEST) || lua_pcall(mState, 0, 0, 0);
+	if (handleError(error)) {
+		luaL_openlibs(mState);
+
+		lua_getglobal(mState, "hello");
+		SDL_Log("Text1: %s", lua_tostring(mState, -1));
+		lua_pop(mState, 1);
+
+		lua_getglobal(mState, "PrintWorld");
+		error = lua_pcall(mState, 0, 1, 0);
+		if (handleError(error)) {
+			SDL_Log("Text2: %s", lua_tostring(mState, -1));
+			lua_pop(mState, 1);
+		}
+	}
+
+	lua_close(test);
 }
