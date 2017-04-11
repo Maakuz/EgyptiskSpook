@@ -22,7 +22,7 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 
 	this->mGraphics->setupRenderers();
 
-
+	this->mAIHandler = new AIHandler();
 	//this->mGraphics->addRenderer(new ShadowRenderer(this->mEntityHandler->getPlayer()->getLight()));
 }
 
@@ -30,6 +30,7 @@ Game::~Game()
 {
 	delete this->mCamera;
 	delete this->mEntityHandler;
+	delete this->mAIHandler;
 }
 
 void Game::update()
