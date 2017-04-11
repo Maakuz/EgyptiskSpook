@@ -20,6 +20,8 @@ public:
 
 	bool loadObject(ID3D11Device *device, int key, EntityStruct::VertexStruct* vertices, int nrOfVertices, wchar_t* texturePath = L"../Resource/Textures/placeholder.png");
 
+	GraphicsData* getGraphicsData();
+
 };
 
 

@@ -29,7 +29,7 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 
 	int key = 0;
 
-	for (auto const &item : *this->mGraphicsData.getBufferMap()) 
+	for (auto const &item : *this->mGraphicsData.getVertexMap()) 
 	{
 		key = item.first;
 
@@ -37,6 +37,9 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 		UINT stride = sizeof(EntityStruct::VertexStruct), offset = 0;
 
 		context->IASetVertexBuffers(0, 1, &temp, &stride, &offset);
+
+		temp = mGraphicsData.getBuffer(300);
+		context->PSSetConstantBuffers(0, 1, &temp);
 		
 		ID3D11ShaderResourceView* texTemp = this->mGraphicsData.getSRV(key);
 		context->PSSetShaderResources(0, 1, &texTemp);
@@ -64,4 +67,9 @@ bool EntityRenderer::loadObject(ID3D11Device* device, int key, EntityStruct::Ver
 	}
 
 	return true;
+}
+
+GraphicsData* EntityRenderer::getGraphicsData()
+{
+	return &this->mGraphicsData;
 }

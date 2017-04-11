@@ -82,8 +82,6 @@ void ShadowRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaders
 	context->OMSetRenderTargets(0, nullptr, this->mDSV);
 	context->RSSetViewports(1, &this->mViewport);
 
-	ID3D11Buffer* temp = this->mLight->getMatrixBuffer();
-	context->VSSetConstantBuffers(0, 1, &temp);
 	
 	shaders.setShaders(context, VERTEX_SHADER,
 		shaders.UNBIND_SHADER, shaders.UNBIND_SHADER);

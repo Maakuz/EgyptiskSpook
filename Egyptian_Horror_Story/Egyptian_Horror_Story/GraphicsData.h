@@ -19,7 +19,6 @@ namespace EntityStruct
 class GraphicsData
 {
 private:
-	
 	std::map<int, ID3D11Buffer*> mBuffers;
 	std::map<int, ID3D11ShaderResourceView*> mSrvs;
 
@@ -37,6 +36,9 @@ public:
 	HRESULT createConstantBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device, bool isDynamic = false);
 	HRESULT createVertexBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device, bool isDynamic = false);
 	void createVerticeArray(int key, EntityStruct::VertexStruct* vertices, int nrOfVertices);
+
+	//Adds a cBuffer to that index
+	void addConstantBuffer(int key, ID3D11Buffer* buffer);
 
 	ID3D11Buffer* getBuffer(int key);
 	ID3D11ShaderResourceView* getSRV(int key);

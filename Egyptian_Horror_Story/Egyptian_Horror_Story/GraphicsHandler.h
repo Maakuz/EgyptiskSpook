@@ -12,7 +12,6 @@
 class GraphicsHandler {
 private:
 	ShaderHandler mShaderHandler;
-	GraphicsData mGraphicsData;
 
 	IDXGISwapChain *mSwapChain;
 	ID3D11RenderTargetView *mBackBufferRTV;

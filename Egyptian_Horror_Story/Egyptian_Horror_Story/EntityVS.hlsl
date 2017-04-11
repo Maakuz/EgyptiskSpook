@@ -9,6 +9,7 @@ struct VS_IN
 struct VS_OUT
 {
     float4 pos : SV_POSITION;
+    float4 wPos : WORLDPOS;
     float3 normal : NORMAL;
     float2 uv : TEXCOORD;
 };
@@ -27,6 +28,9 @@ VS_OUT main(VS_IN input)
     output.pos = float4(input.pos, 1);
 
     output.pos = mul(output.pos, world);
+    
+    output.wPos = output.pos;
+
     output.pos = mul(output.pos, view);
     output.pos = mul(output.pos, projection);
 

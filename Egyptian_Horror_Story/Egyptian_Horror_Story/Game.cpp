@@ -9,11 +9,15 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	
 	this->mEntityHandler = new EntityHandler();
 
-	this->mEntityHandler->setupPlayer(this->mGraphics->getDevice(), this->mCamera);
+	this->mEntityHandler->setupPlayer(this->mGraphics->getDevice(), 
+		this->mGraphics->getDeviceContext(),
+		this->mCamera, 
+		this->mEntityHandler->getRenderer()->getGraphicsData());
+
 	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
 
+	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera));
 	this->mGraphics->addRenderer(this->mEntityHandler->getRenderer());
-	this->mGraphics->addRenderer(new ParticleRenderer()); // temp
 
 	this->mGraphics->setupRenderers();
 
