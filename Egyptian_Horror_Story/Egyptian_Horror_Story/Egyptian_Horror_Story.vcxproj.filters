@@ -92,9 +92,6 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
-    <ClCompile Include="OBB.cpp">
-      <Filter>Source Files\Game Classes</Filter>
-    </ClCompile>
     <ClCompile Include="CameraClass.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -139,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="AnimationHandler.cpp">
       <Filter>Source Files</Filter>
+</ClCompile>
+    <ClCompile Include="Colliders.cpp">
+      <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -172,9 +172,6 @@
     <ClInclude Include="ShaderHandler.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="OBB.h">
-      <Filter>Header Files\Game classes</Filter>
-    </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
@@ -198,6 +195,9 @@
     </ClInclude>
     <ClInclude Include="AnimationHandler.h">
       <Filter>Header Files</Filter>
+	  </ClInclude>
+    <ClInclude Include="Colliders.h">
+      <Filter>Header Files\Game classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
