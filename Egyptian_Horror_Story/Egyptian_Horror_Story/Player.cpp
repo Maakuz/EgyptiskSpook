@@ -8,7 +8,8 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 {
 	this->mCamera = camera;
 	this->mSpeed = 0.15f;
-
+	//REMOVE
+	this->col = new Capsule(this->mCamera->getPos(), 2, 1);
 	// jumping stuff
 	this->mJumping = false;
 	this->jumpingVelocity = 0;
@@ -24,6 +25,7 @@ Player::~Player()
 
 void Player::updatePosition()
 {
+	this->prevPos = this->getPosition();
 	using namespace DirectX::SimpleMath;
 	Vector3 normal = Vector3(0, 1, 0); //Normal of plane, shouldn't change
 	Vector3 forward = this->mCamera->getForward();
@@ -46,6 +48,11 @@ void Player::updatePosition()
 	lightPos += this->mCamera->getUp() * -1.f;
 
 	this->mLight->update(lightPos, this->mCamera->getForward());
+
+
+	//ASDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+	this->col->mPoint = this->mCamera->getPos();
+
 }
 
 void Player::handleJumping() {
@@ -142,4 +149,14 @@ void Player::setPosition(DirectX::SimpleMath::Vector3 pos)
 {
 	Entity::setPosition(pos);
 	this->mCamera->setPos(pos);
+}
+
+DirectX::SimpleMath::Vector3 Player::getPrevPos()
+{
+	return this->prevPos;
+}
+
+void Player::setPrevPos(DirectX::SimpleMath::Vector3 pos)
+{
+	this->prevPos = pos;
 }

@@ -147,14 +147,23 @@ void EntityHandler::update()
 
 	this->mPlayer->updatePosition();
 
-
 	//Wall intersection test
 	for (Entity *wall : this->mEntities) 
 	{
 		Wall* ptr = dynamic_cast<Wall*>(wall);
-		if (ptr && ptr->getOBB().obbVSPoint(this->mPlayer->getPosition()))
-		{
-			this->mPlayer->setPosition(this->mPlayer->getPosition() + ptr->getNormal() * 0.03f);
+		if (ptr) {
+			DirectX::SimpleMath::Vector3 norm = this->mPlayer->col->capsuleVSObb(ptr->getOBB());
+			if (norm != DirectX::SimpleMath::Vector3(0, 0, 0)) {
+				DirectX::SimpleMath::Vector3 ptop = this->mPlayer->getPrevPos() - this->mPlayer->getPosition();
+
+				ptop = ptop -
+					(ptr->getNormal().Dot(ptop) / (ptr->getNormal().Dot(ptr->getNormal())
+					) * ptr->getNormal());
+				//this->mPlayer->setPrevPos(this->mPlayer->getPrevPos() + ptop);
+				ptop = -ptop;
+				this->mPlayer->setPosition(this->mPlayer->getPrevPos() + ptop);
+
+			}
 		}
 	}
 	
