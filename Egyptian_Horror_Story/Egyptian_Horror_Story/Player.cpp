@@ -7,6 +7,7 @@
 #define SPRINT_MULTIPLIER 2.f // temp change later ok
 #define TIRED_MULTIPLIER 0.6f // temp change later ok
 #define START_STAMINA 3.f // temp change later ok
+#define SNEAK_MULTIPLIER 0.35f;
 
 using namespace DirectX::SimpleMath;
 
@@ -15,10 +16,13 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 {
 	this->mCamera = camera;
 
-	// sprinting
+	// movement
+	this->mSneaking = false;
+	this->mSprinting = false;
+
 	this->mMaxStamina = 15.f;
+	this->mSpeed = 0.15f; //magic numbers
 	this->mStamina = this->mMaxStamina;
-	this->mSpeed = 0.15f;
 
 	//REMOVE
 	this->col = new Capsule(this->mCamera->getPos(), 2, 1);
@@ -40,15 +44,12 @@ Player::~Player()
 
 void Player::updatePosition()
 {
-	this->prevPos = this->getPosition();
+	this->mPrevPos = this->getPosition();
 	computeVelocity();
 	handleJumping();
 	handleSprinting();
 
-	float sprintMultiplier = (mSprinting ? SPRINT_MULTIPLIER :
-		mStamina < START_STAMINA ? TIRED_MULTIPLIER : 1.f);
-
-	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed * sprintMultiplier;
+	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed * getMovementMultiplier();
 
 	this->setPosition(newPos);
 	this->mCamera->setPos(newPos);
@@ -104,6 +105,9 @@ bool Player::handleMouseKeyPress(SDL_KeyboardEvent const &key)
 		case SDL_SCANCODE_LSHIFT:
 			startSprint();
 			break;
+		case SDL_SCANCODE_LCTRL:
+			startSneaking();
+			break;
 	}
 
 	return true;
@@ -130,6 +134,9 @@ bool Player::handleMouseKeyRelease(SDL_KeyboardEvent const &key)
 			break;
 		case SDL_SCANCODE_LSHIFT:
 			this->mSprinting = false;
+			break;
+		case SDL_SCANCODE_LCTRL:
+			this->mSneaking = false;
 			break;
 	}
 
@@ -162,12 +169,12 @@ void Player::setPosition(DirectX::SimpleMath::Vector3 pos)
 
 DirectX::SimpleMath::Vector3 Player::getPrevPos()
 {
-	return this->prevPos;
+	return this->mPrevPos;
 }
 
 void Player::setPrevPos(DirectX::SimpleMath::Vector3 pos)
 {
-	this->prevPos = pos;
+	this->mPrevPos = pos;
 }
 
 // private
@@ -205,9 +212,27 @@ void Player::handleSprinting() {
 }
 
 void Player::startSprint() {
-	if (!this->mSprinting && this->mStamina > START_STAMINA) {
+	if (!this->mSprinting &&
+		this->mStamina > START_STAMINA && !this->mSneaking) {
 		this->mSprinting = true;
 		this->mStamina -= START_STAMINA;
 		this->mJumpingVelocity = JUMP_START_VELOCITY;
 	}
+}
+
+void inline Player::startSneaking() {
+	if (!this->mSprinting)
+		this->mSneaking = true;
+}
+
+float inline Player::getMovementMultiplier() {
+	if (this->mSneaking) {
+		return SNEAK_MULTIPLIER;
+	} else if (this->mSprinting) {
+		return SPRINT_MULTIPLIER;
+	} else if (this->mStamina < START_STAMINA) {
+		return TIRED_MULTIPLIER;
+	}
+	
+	return 1.f;
 }

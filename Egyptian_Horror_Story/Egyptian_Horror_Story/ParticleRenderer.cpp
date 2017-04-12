@@ -2,7 +2,7 @@
 #include <math.h> 
 #define SHADERS 30
 #define DIVIDE 4 // should be divisible by 2
-#define START_SIZE 2048  // should be divisible by 2
+#define START_SIZE 4096  // should be divisible by 2
 
 using namespace DirectX::SimpleMath;
 
@@ -109,7 +109,7 @@ void ParticleRenderer::addRandomParticle(bool timeIsRandom) {
 	particle.dimensions = Vector2(0.01f, 0.01f);
 
 	partData.direction = Vector3(getRandomNr() * 2 - 1, getRandomNr() * 2 - 1, 2 - 1);
-	partData.timeLeft = timeIsRandom ? getRandomNr() * 6 : 6;
+	partData.timeLeft = timeIsRandom ? getRandomNr() * 3.5f : 3.5f;
 
 	this->mParticleVertices.push_back(particle);
 	this->mParticleData.push_back(partData);
