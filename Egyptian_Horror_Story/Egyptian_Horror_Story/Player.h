@@ -13,12 +13,15 @@ private:
 	CameraClass* mCamera;
 	DirectX::SimpleMath::Vector2 mDirection;
 
-	float mSpeed, jumpingVelocity;
-	bool mJumping;
+	float mSpeed, mJumpingVelocity, mStamina, mMaxStamina;
+	bool mJumping, mSprinting;
 	DirectX::SimpleMath::Vector3 mVelocity;
 
 	Light* mLight;
 
+	void updateLightPosition();
+	void computeVelocity();
+	void handleSprinting();
 public:
 	Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int grapchicsKey, GraphicsData* gData);
 	virtual ~Player();
