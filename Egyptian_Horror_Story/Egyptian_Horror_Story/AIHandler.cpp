@@ -24,31 +24,25 @@ void AIHandler::setupAI() {
 	lua_pushlightuserdata(mState, mEnemy);
 	lua_pushcclosure(mState, setEnemySpeed, 1);
 	lua_setglobal(mState, "SetEnemySpeed");
+
+	lua_getglobal(mState, "enemySpeed");
+	float speed = 0;
+
+	if (lua_isnumber(mState, -1)) {
+		speed = lua_tonumber(mState, -1);
+		mEnemy->setSpeed(speed);
+	} else {
+		mEnemy->setSpeed(0);
+	}
+
+	lua_pop(mState, 1);
 }
 
 void AIHandler::update() {
-	lua_getglobal(mState, "enemySpeed");
-	float speed = 0;
-	
-	if (lua_isnumber(mState, -1))
-		speed = lua_tonumber(mState, -1);
-
-	lua_pop(mState, 1);
-
 	Vector3 enemyToPlayer = mPlayer->getPosition() - mEnemy->getPosition();
-
-	lua_getglobal(mState, "SeesPlayer");
-	lua_pushnumber(mState, enemyToPlayer.Length());
-	if (handleError(lua_pcall(mState, 1, 1, 0))) {
-		/*
-		if (lua_isboolean(mState, -1))
-			if (!lua_toboolean(mState, -1)) //doesnt see player
-				mEnemy->setSpeed(0);
-			else
-				mEnemy->setSpeed(speed);
-		lua_pop(mState, 1);
-		*/
-	}
+	
+	lua_getglobal(mState, "update");
+	lua_pcall(mState, 0, 0, 0);
 
 	enemyToPlayer.Normalize();
 	mEnemy->setVelocity(enemyToPlayer);
