@@ -24,11 +24,8 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 void EntityHandler::setupEntities(ID3D11Device* device)
 {
 	//test
-	/*for (size_t j = 0; j < 3; j++)
-	{
-		for (size_t i = 0; i < 5; i++)
-		{*/
-			Wall* wall = new Wall(
+
+/*			Wall* wall = new Wall(
 				DirectX::SimpleMath::Vector3(-10.f, -2.f, 10.f),
 				DirectX::SimpleMath::Vector3(7.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
@@ -62,13 +59,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 			this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, L"../Resource/Textures/pyramidStone.png");
 
 			this->mEntities.push_back(wall);
-	/*	}
-	}*/
 
-	/*for (size_t j = 0; j < 3; j++)
-	{
-		for (size_t i = 0; i < 25; i++)
-		{*/
 			 wall = new Wall(
 				DirectX::SimpleMath::Vector3(-3, -2.f, 10.f),
 				DirectX::SimpleMath::Vector3(2.f, 0.f, 0.f),
@@ -104,11 +95,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 			this->mEntityRenderer->loadObject(device, wall->getKey(), testData3, 6, L"../Resource/Textures/pyramidStone.png");
 
 			this->mEntities.push_back(wall);
-	/*	}
-	}*/
-	
-	/*for (int i = 0; i < 30; i++) {
-		for (int j = 0; j < 3; j++) {*/
+
 			 wall = new Wall(
 				DirectX::SimpleMath::Vector3(-10, -2 , -50 ),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 2.f),
@@ -142,12 +129,8 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 			};
 			this->mEntityRenderer->loadObject(device, wall->getKey(), testData4, 6, L"../Resource/Textures/pyramidStone.png");
 			this->mEntities.push_back(wall);
-	/*	}
-	}*/
 
 
-	//for (int i = 0; i < 30; i++) {
-	//	for (int j = 0; j < 3; j++) {
 			 wall = new Wall(
 				DirectX::SimpleMath::Vector3(-10, -2 , -50),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 2.f),
@@ -181,8 +164,6 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 			};
 			this->mEntityRenderer->loadObject(device, wall->getKey(), testData5, 6, L"../Resource/Textures/pyramidStone.png");
 			this->mEntities.push_back(wall);
-	/*	}
-	}*/
 
 			wall = new Wall(
 				DirectX::SimpleMath::Vector3(-10, -2, -50),
@@ -281,7 +262,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 	this->mEntities.push_back(ent);
 	this->mEntityRenderer->loadObject(device, ent->getKey(), testData21, 6, L"../Resource/Textures/pyramidStone.png");
 
-
+	*/
 
 	std::vector<EntityStruct::VertexStruct> test;
 

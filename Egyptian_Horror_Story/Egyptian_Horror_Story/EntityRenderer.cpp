@@ -25,7 +25,7 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 	shaderHandler.setShaders(context, 20, 20, -1);
 
 	context->IASetInputLayout(shaderHandler.getInputLayout(20));
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	int key = 0;
 

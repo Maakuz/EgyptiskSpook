@@ -11,7 +11,7 @@ CameraClass::CameraClass(ID3D11Device* device, float width, float height)
 	this->mYaw = 0;
 
 	DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(
-		fovAngle, aspectRatio, 0.1f, 100.f);
+		fovAngle, aspectRatio, 0.1f, 10000.f);
 
 	projection = DirectX::XMMatrixTranspose(projection);
 
