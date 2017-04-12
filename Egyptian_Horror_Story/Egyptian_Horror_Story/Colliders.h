@@ -3,9 +3,11 @@
 #include "Direct3DHeader.h"
 
 #include "SimpleMath.h"
-class OBB
-{
-private:
+
+class Capsule;
+
+class OBB {
+public:
 	DirectX::SimpleMath::Vector3 mPoint;
 	DirectX::SimpleMath::Vector3 mLengthU;
 	DirectX::SimpleMath::Vector3 mLengthV;
@@ -21,5 +23,23 @@ public:
 
 	bool obbVSPoint(DirectX::SimpleMath::Vector3 point);
 	bool obbVsObb(const OBB& other);
+	bool obbVSCylinder(const Capsule &other);
+
+};
+
+class Capsule {
+private:
+	DirectX::SimpleMath::Vector3 calculateNormal(OBB other);
+public:
+	DirectX::SimpleMath::Vector3 mPoint;
+	float mRadius;
+	float mHeight;
+public:
+	Capsule(DirectX::SimpleMath::Vector3 point, float height, float radius);
+	virtual ~Capsule();
+
+	bool capsuleVSPoint(DirectX::SimpleMath::Vector3 point);
+	DirectX::SimpleMath::Vector3 capsuleVSObb(OBB &other);
+	bool capsuleVSCCapsule();
 
 };
