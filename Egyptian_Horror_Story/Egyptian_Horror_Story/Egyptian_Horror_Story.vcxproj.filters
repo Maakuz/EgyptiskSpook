@@ -193,13 +193,11 @@
     <ClInclude Include="GUIRenderer.h">
       <Filter>Header Files\Renderers</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="AnimationHandler.h">
       <Filter>Header Files</Filter>
-=======
+	  </ClInclude>
     <ClInclude Include="Colliders.h">
       <Filter>Header Files\Game classes</Filter>
->>>>>>> Colliders
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

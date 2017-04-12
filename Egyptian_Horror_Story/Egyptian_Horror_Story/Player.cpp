@@ -22,6 +22,8 @@ Player::~Player()
 {
 	if (this->mLight)
 	delete this->mLight;
+
+	delete this->col;
 }
 
 void Player::updatePosition()
