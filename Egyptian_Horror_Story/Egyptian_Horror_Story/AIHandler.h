@@ -23,7 +23,7 @@ class AIHandler {
 		void setupAI();
 
 		// lua functions
-		static int setEnemySpeed(lua_State *state, int speed);
+		static int setEnemySpeed(lua_State *state);
 
 		AIHandler* operator=(AIHandler const &aiHandler) = delete;
 };

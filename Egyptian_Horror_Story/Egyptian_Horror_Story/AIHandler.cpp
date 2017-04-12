@@ -20,6 +20,10 @@ AIHandler::~AIHandler() {
 void AIHandler::setupAI() {
 	int error = luaL_loadfile(mState, AI) || lua_pcall(mState, 0, 0, 0);
 	handleError(error);
+
+	lua_pushlightuserdata(mState, mEnemy);
+	lua_pushcclosure(mState, setEnemySpeed, 1);
+	lua_setglobal(mState, "SetEnemySpeed");
 }
 
 void AIHandler::update() {
@@ -36,12 +40,14 @@ void AIHandler::update() {
 	lua_getglobal(mState, "SeesPlayer");
 	lua_pushnumber(mState, enemyToPlayer.Length());
 	if (handleError(lua_pcall(mState, 1, 1, 0))) {
+		/*
 		if (lua_isboolean(mState, -1))
 			if (!lua_toboolean(mState, -1)) //doesnt see player
 				mEnemy->setSpeed(0);
 			else
 				mEnemy->setSpeed(speed);
 		lua_pop(mState, 1);
+		*/
 	}
 
 	enemyToPlayer.Normalize();
@@ -50,8 +56,16 @@ void AIHandler::update() {
 }
 
 // LUA
-int AIHandler::setEnemySpeed(lua_State *state, int speed) {
+int AIHandler::setEnemySpeed(lua_State *state) {
+	Enemy *enemy = static_cast<Enemy*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
 
+	if (lua_isnumber(state, -1)) {
+		enemy->setSpeed(lua_tonumber(state, -1));
+		lua_pop(state, 1);
+	}
+
+	return 0;
 }
 
 // private
