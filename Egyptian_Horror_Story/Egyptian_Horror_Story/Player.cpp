@@ -8,6 +8,7 @@
 #define TIRED_MULTIPLIER 0.6f // temp change later ok
 #define START_STAMINA 3.f // temp change later ok
 #define SNEAK_MULTIPLIER 0.35f;
+#define SNEAK_Y -0.5f; // Camera change while sneaking
 
 using namespace DirectX::SimpleMath;
 
@@ -52,6 +53,7 @@ void Player::updatePosition()
 	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed * getMovementMultiplier();
 
 	this->setPosition(newPos);
+	if (this->mSneaking) newPos.y += SNEAK_Y;
 	this->mCamera->setPos(newPos);
 	updateLightPosition();
 	
@@ -180,7 +182,7 @@ void Player::setPrevPos(DirectX::SimpleMath::Vector3 pos)
 
 // private
 void Player::updateLightPosition() {
-	DirectX::SimpleMath::Vector3 lightPos = getPosition();
+	DirectX::SimpleMath::Vector3 lightPos = this->mCamera->getPos();
 
 	lightPos += this->mCamera->getRight() * 0.7f;
 	lightPos += this->mCamera->getUp() * -1.f;
