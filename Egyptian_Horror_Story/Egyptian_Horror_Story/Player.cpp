@@ -1,18 +1,31 @@
 #include "Player.h"
-#define GROUND_Y 0.f //change later ok
-#define GRAVITY 0.005f //change later ok
-#define JUMP_START_VELOCITY 1.f //change later ok FOR TESTING PURPOSES JUMPING BY LW
+#define GRAVITY 0.025f //change later ok
+#define GROUND_Y 0.f
+#define JUMP_START_VELOCITY 1.1f //change later ok FOR TESTING PURPOSES JUMPING BY LW
+
+#define MAX_STAMINA 15.f // temp change later ok
+#define SPRINT_MULTIPLIER 2.f // temp change later ok
+#define TIRED_MULTIPLIER 0.6f // temp change later ok
+#define START_STAMINA 3.f // temp change later ok
+
+using namespace DirectX::SimpleMath;
 
 Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int key, GraphicsData* gData)
 	:Entity(key)
 {
 	this->mCamera = camera;
+
+	// sprinting
+	this->mMaxStamina = 15.f;
+	this->mStamina = this->mMaxStamina;
 	this->mSpeed = 0.15f;
+
 	//REMOVE
 	this->col = new Capsule(this->mCamera->getPos(), 2, 1);
+
 	// jumping stuff
 	this->mJumping = false;
-	this->jumpingVelocity = 0;
+	this->mJumpingVelocity = 0;
 
 	this->mLight = new Light(this->getPosition(), this->mCamera->getForward(), device, context, gData);
 }
@@ -28,33 +41,21 @@ Player::~Player()
 void Player::updatePosition()
 {
 	this->prevPos = this->getPosition();
-	using namespace DirectX::SimpleMath;
-	Vector3 normal = Vector3(0, 1, 0); //Normal of plane, shouldn't change
-	Vector3 forward = this->mCamera->getForward();
-
-	Vector3 proj = forward - normal * (forward.Dot(normal) / normal.LengthSquared()); // Project forward vector on plane
-	proj.Normalize();
-
-	this->mVelocity = this->mDirection.x * this->mCamera->getRight();
-	this->mVelocity += this->mDirection.y * proj;
+	computeVelocity();
 	handleJumping();
+	handleSprinting();
 
-	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed;
+	float sprintMultiplier = (mSprinting ? SPRINT_MULTIPLIER :
+		mStamina < START_STAMINA ? TIRED_MULTIPLIER : 1.f);
+
+	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed * sprintMultiplier;
 
 	this->setPosition(newPos);
 	this->mCamera->setPos(newPos);
-
-	DirectX::SimpleMath::Vector3 lightPos = newPos;
-
-	lightPos += this->mCamera->getRight() * 0.7f;
-	lightPos += this->mCamera->getUp() * -1.f;
-
-	this->mLight->update(lightPos, this->mCamera->getForward());
-
-
+	updateLightPosition();
+	
 	//ASDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
 	this->col->mPoint = this->mCamera->getPos();
-
 }
 
 void Player::handleJumping() {
@@ -62,8 +63,8 @@ void Player::handleJumping() {
 	this->mVelocity.Normalize(); // Norm to make speed forward speed same if you look up or down
 
 	if (this->mJumping) {
-		this->jumpingVelocity -= GRAVITY; // delta time should be used
-		this->mVelocity.y = jumpingVelocity;
+		this->mJumpingVelocity -= GRAVITY; // delta time should be used
+		this->mVelocity.y = mJumpingVelocity;
 
 		if (getPosition().y + this->mVelocity.y * mSpeed <= GROUND_Y) {
 			// set position to ground y
@@ -97,8 +98,11 @@ bool Player::handleMouseKeyPress(SDL_KeyboardEvent const &key)
 		case SDL_SCANCODE_SPACE:
 			if (!this->mJumping) {
 				this->mJumping = true;
-				this->jumpingVelocity = JUMP_START_VELOCITY;
+				this->mJumpingVelocity = JUMP_START_VELOCITY;
 			}
+			break;
+		case SDL_SCANCODE_LSHIFT:
+			startSprint();
 			break;
 	}
 
@@ -123,6 +127,9 @@ bool Player::handleMouseKeyRelease(SDL_KeyboardEvent const &key)
 		case SDL_SCANCODE_S:
 			if (this->mDirection.y == -1)
 				this->mDirection.y = 0;
+			break;
+		case SDL_SCANCODE_LSHIFT:
+			this->mSprinting = false;
 			break;
 	}
 
@@ -161,4 +168,46 @@ DirectX::SimpleMath::Vector3 Player::getPrevPos()
 void Player::setPrevPos(DirectX::SimpleMath::Vector3 pos)
 {
 	this->prevPos = pos;
+}
+
+// private
+void Player::updateLightPosition() {
+	DirectX::SimpleMath::Vector3 lightPos = getPosition();
+
+	lightPos += this->mCamera->getRight() * 0.7f;
+	lightPos += this->mCamera->getUp() * -1.f;
+
+	this->mLight->update(lightPos, this->mCamera->getForward());
+}
+
+void Player::computeVelocity() {
+	Vector3 normal = Vector3(0, 1, 0); //Normal of plane, shouldn't change
+	Vector3 forward = this->mCamera->getForward();
+
+	Vector3 proj = forward - normal * (forward.Dot(normal) / normal.LengthSquared()); // Project forward vector on plane
+	proj.Normalize();
+
+	this->mVelocity = this->mDirection.x * this->mCamera->getRight();
+	this->mVelocity += this->mDirection.y * proj;
+}
+
+void Player::handleSprinting() {
+	if (this->mSprinting) {
+		this->mStamina -= 0.01f; //change later
+		if (this->mStamina <= 0) {
+			this->mStamina = 0;
+			this->mSprinting = false;
+		}
+	}
+	else {
+		this->mStamina += 0.003f; //change later
+	}
+}
+
+void Player::startSprint() {
+	if (!this->mSprinting && this->mStamina > START_STAMINA) {
+		this->mSprinting = true;
+		this->mStamina -= START_STAMINA;
+		this->mJumpingVelocity = JUMP_START_VELOCITY;
+	}
 }

@@ -23,6 +23,7 @@ private:
 	void updateLightPosition();
 	void computeVelocity();
 	void handleSprinting();
+	void startSprint();
 public:
 	//WTF
 	Capsule* col;
