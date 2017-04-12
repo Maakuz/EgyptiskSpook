@@ -29,9 +29,10 @@ class ParticleRenderer : public Renderer {
 		void updateParticles(ID3D11DeviceContext *context);
 
 		UINT getSize() const;
-		void addRandomParticle();
+		void addRandomParticle(bool timeIsRandom = false);
 		//check life time, if <= 0, remove and add new one
 		void timeCheck(int start, int piece);
+		static float getRandomNr();
 	public:
 		ParticleRenderer(CameraClass *camera);
 		ParticleRenderer(ParticleRenderer const &renderer) = delete;
