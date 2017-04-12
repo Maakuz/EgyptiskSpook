@@ -95,6 +95,7 @@ bool Player::handleMouseKeyPress(SDL_KeyboardEvent const &key)
 			break;
 		case SDL_SCANCODE_S:
 			this->mDirection.y = -1;
+			this->mSprinting = false;
 			break;
 		case SDL_SCANCODE_SPACE:
 			if (!this->mJumping) {
@@ -212,7 +213,7 @@ void Player::handleSprinting() {
 }
 
 void Player::startSprint() {
-	if (!this->mSprinting &&
+	if (!this->mSprinting && this->mDirection.y != -1 && //no backsies
 		this->mStamina > START_STAMINA && !this->mSneaking) {
 		this->mSprinting = true;
 		this->mStamina -= START_STAMINA;
