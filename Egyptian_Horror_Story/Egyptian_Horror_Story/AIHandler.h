@@ -20,7 +20,9 @@ class AIHandler {
 		void addLuaFunction(lua_State *state, const char *name,
 			lua_CFunction func, void *userData[], int size);
 		static int setEnemySpeed(lua_State *state);
+		static int setEntityPosition(lua_State *state);
 		static int getEntityPosition(lua_State *state);
+		static int getPlayerForward(lua_State *state);
 		static int getDistanceBetween(lua_State *state);
 	public:
 		AIHandler(Enemy *enemy, Player *player);

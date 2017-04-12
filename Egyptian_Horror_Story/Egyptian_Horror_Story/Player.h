@@ -33,6 +33,7 @@ public:
 
 	void setPosition(DirectX::SimpleMath::Vector3 pos);
 
+	DirectX::SimpleMath::Vector3 getVelocity() const;
 };
 
 #endif

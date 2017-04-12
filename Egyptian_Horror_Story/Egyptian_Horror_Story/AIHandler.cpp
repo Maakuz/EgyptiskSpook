@@ -37,16 +37,18 @@ void AIHandler::setupAI() {
 }
 
 void AIHandler::addLuaFunctions(lua_State *state) {
-	// ENEMY SPEED & POSITION
+	// ENEMY FUNC
 	void *userData[] = { mEnemy };
 	addLuaFunction(state, "SetEnemySpeed", setEnemySpeed, userData, ARRAYSIZE(userData));
 	addLuaFunction(state, "GetEnemyPosition", getEntityPosition, userData, ARRAYSIZE(userData));
+	addLuaFunction(state, "SetEnemyPosition", setEntityPosition, userData, ARRAYSIZE(userData));
 	
-	// PLAYER POSITION
+	// PLAYER FUNC
 	void *userData2[] = { mPlayer };
 	addLuaFunction(state, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(state, "GetPlayerForward", getPlayerForward, userData2, ARRAYSIZE(userData2));
 	
-	// GET DISTANCE BEETWEN
+	// PLAYER & ENEMY FUNC
 	void *userData3[] = { mEnemy, mPlayer };
 	addLuaFunction(state, "GetDistanceBetween", getDistanceBetween, userData3, ARRAYSIZE(userData3));
 }
@@ -94,6 +96,32 @@ int AIHandler::getEntityPosition(lua_State *state) {
 	lua_pushnumber(state, position.x);
 	lua_pushnumber(state, position.y);
 	lua_pushnumber(state, position.z);
+	return 3;
+}
+
+int AIHandler::setEntityPosition(lua_State *state) {
+	Entity *entity = static_cast<Entity*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+	if (lua_isnumber(state, -1) && lua_isnumber(state, -2) & lua_isnumber(state, -3)) {
+		entity->setPosition(Vector3(lua_tonumber(state, -3), lua_tonumber(state, -2)
+			, lua_tonumber(state, -1))); //it is a stack, so first para is -3!
+	} else {
+		// bad
+	}
+
+	return 0;
+}
+
+int AIHandler::getPlayerForward(lua_State *state) {
+	Player *player = static_cast<Player*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+
+	Vector3 vel = player->getVelocity();
+	vel.Normalize(); //to be sure
+	lua_pushnumber(state, vel.x);
+	lua_pushnumber(state, vel.y);
+	lua_pushnumber(state, vel.z);
+
 	return 3;
 }
 

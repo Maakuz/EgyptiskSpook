@@ -139,6 +139,10 @@ Light* Player::getLight()
 	return this->mLight;
 }
 
+DirectX::SimpleMath::Vector3 Player::getVelocity() const {
+	return this->mVelocity;
+}
+
 void Player::setPosition(DirectX::SimpleMath::Vector3 pos)
 {
 	Entity::setPosition(pos);
