@@ -14,6 +14,14 @@ class AIHandler {
 
 		void testScript(); //For testing
 		bool handleError(int error);
+
+		// lua functions
+		void addLuaFunctions(lua_State *state);
+		void addLuaFunction(lua_State *state, const char *name,
+			lua_CFunction func, void *userData[], int size);
+		static int setEnemySpeed(lua_State *state);
+		static int getEntityPosition(lua_State *state);
+		static int getDistanceBetween(lua_State *state);
 	public:
 		AIHandler(Enemy *enemy, Player *player);
 		~AIHandler();
@@ -21,9 +29,6 @@ class AIHandler {
 
 		void update();
 		void setupAI();
-
-		// lua functions
-		static int setEnemySpeed(lua_State *state);
 
 		AIHandler* operator=(AIHandler const &aiHandler) = delete;
 };
