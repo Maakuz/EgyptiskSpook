@@ -12,14 +12,20 @@ class Player : public Entity
 private:
 	CameraClass* mCamera;
 	DirectX::SimpleMath::Vector2 mDirection;
-	DirectX::SimpleMath::Vector3 prevPos;
+	DirectX::SimpleMath::Vector3 mPrevPos;
 
-	float mSpeed, jumpingVelocity;
-	bool mJumping;
+	float mSpeed, mJumpingVelocity, mStamina, mMaxStamina;
+	bool mJumping, mSprinting, mSneaking;
 	DirectX::SimpleMath::Vector3 mVelocity;
 
 	Light* mLight;
 
+	void updateLightPosition();
+	void computeVelocity();
+	void handleSprinting();
+	void startSprint();
+	void startSneaking();
+	float getMovementMultiplier();
 public:
 	//WTF
 	Capsule* col;
