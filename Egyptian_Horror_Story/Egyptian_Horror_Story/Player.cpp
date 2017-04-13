@@ -100,7 +100,7 @@ bool Player::handleMouseKeyPress(SDL_KeyboardEvent const &key)
 			this->mSprinting = false;
 			break;
 		case SDL_SCANCODE_SPACE:
-			if (!this->mJumping) {
+			if (!this->mJumping && getMovementMultiplier() == 1.f) {
 				this->mJumping = true;
 				this->mJumpingVelocity = JUMP_START_VELOCITY;
 			}
@@ -216,7 +216,7 @@ void Player::handleSprinting() {
 
 void Player::startSprint() {
 	if (!this->mSprinting && this->mDirection.y != -1 && //no backsies
-		this->mStamina > START_STAMINA && !this->mSneaking) {
+		this->mStamina > START_STAMINA && !this->mSneaking && !this->mJumping) {
 		this->mSprinting = true;
 		this->mStamina -= START_STAMINA;
 	}
