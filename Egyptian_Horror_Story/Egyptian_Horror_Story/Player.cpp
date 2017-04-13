@@ -33,8 +33,13 @@ void Player::updatePosition()
 	proj.Normalize();
 
 	this->mVelocity = this->mDirection.x * this->mCamera->getRight();
-	this->mVelocity += this->mDirection.y * proj;
-	handleJumping();
+	
+	//Normal walk
+	//this->mVelocity += this->mDirection.y * proj;
+	//handleJumping();
+
+	//Noclip
+	this->mVelocity += this->mDirection.y * forward;
 
 	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed;
 

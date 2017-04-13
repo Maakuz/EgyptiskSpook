@@ -9,17 +9,22 @@ struct VS_OUT
     float2 uv : TEXCOORD;
 };
 
-cbuffer lightBuffer
+cbuffer lightBuffer : register(b0)
 {
     float4 lightPos;
     float4 lightDir;
 };
 
+cbuffer cameraPos : register(b1)
+{
+    float4 camPos;
+}
+
 
 float4 main(VS_OUT input) : SV_TARGET
 {
     float4 lightToPos = input.wPos - lightPos;
-    float specularIntensity = 3000.f;
+    float specularIntensity = 400.f;
     float outerCone = 0.8f;
     float innerCone = 0.95f;
     float innerMinusOuter = innerCone - outerCone;
@@ -38,17 +43,19 @@ float4 main(VS_OUT input) : SV_TARGET
     if (lambert > 0)
     {
         diffuse = lambert * falloff;
-        float3 cameraToPos = lightPos.xyz - input.wPos.xyz;
-        float3 H = normalize(input.normal + cameraToPos);
+
+
+        //Skrik på Jakob Nyberg var formeln kommer ifrån!
+        float3 posToCam = camPos.xyz - input.wPos.xyz;
+        float3 H = normalize(posToCam - lightDir.xyz);
 
         specularity = pow(saturate(dot(input.normal.xyz, H)), specularIntensity) * falloff;
+
+        //float3 posToLight = lightPos.xyz - input.wPos.xyz;
+        //float3 r = reflect(normalize(posToLight), input.normal.xyz);
+        //specularity = pow(dot(normalize(posToCam), normalize(r)), specularIntensity) * falloff;
+
     }
 
-
-
-
-
-   
-
-    return tex.Sample(sSampler, input.uv) * saturate(diffuse + specularity + ambient);
+    return tex.Sample(sSampler, input.uv) * (saturate(diffuse + ambient) + specularity);
 }

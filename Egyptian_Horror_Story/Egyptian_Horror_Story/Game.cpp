@@ -5,14 +5,16 @@
 Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 {
 	this->mGraphics = mGraphicsHandler;
-	this->mCamera = new CameraClass(this->mGraphics->getDevice(), width, height);
-	
+
 	this->mEntityHandler = new EntityHandler();
+
+	this->mCamera = new CameraClass(this->mGraphics->getDevice(),
+		this->mEntityHandler->getRenderer()->getGraphicsData(), width, height);
+	
 
 	this->mEntityHandler->setupPlayer(this->mGraphics->getDevice(), 
 		this->mGraphics->getDeviceContext(),
-		this->mCamera, 
-		this->mEntityHandler->getRenderer()->getGraphicsData());
+		this->mCamera);
 
 	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
 

@@ -14,6 +14,10 @@ private:
 	FbxManager* mFbxManager;
 	FbxIOSettings* mIOSettings;
 
+	const int SPLIT_ARRAY[6] = {0, 1, 2, 2, 3, 0};
+
+	FbxVector4 getNormal(int index, FbxGeometryElementNormal* normalElem);
+
 public:
 	FBXLoader();
 	virtual ~FBXLoader();

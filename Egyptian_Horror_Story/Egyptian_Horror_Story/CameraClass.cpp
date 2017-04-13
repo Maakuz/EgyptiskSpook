@@ -1,9 +1,9 @@
 #include "CameraClass.h"
 
-CameraClass::CameraClass(ID3D11Device* device, float width, float height)
+CameraClass::CameraClass(ID3D11Device* device, GraphicsData* gData, float width, float height)
 {
 	this->mWVPBuffer = nullptr;
-
+	this->mGraphicsData = gData;
 	float fovAngle = static_cast<float> (M_PI) * 0.45f;
 	float aspectRatio = width / height;
 
@@ -30,6 +30,12 @@ CameraClass::CameraClass(ID3D11Device* device, float width, float height)
 	this->mMatrices.view = view;
 
 	this->createVWPBuffer(device);
+
+	D3D11_SUBRESOURCE_DATA data;
+	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
+	data.pSysMem = &this->mPos;
+
+	gData->createConstantBuffer(CAMPOSKEY, sizeof(DirectX::SimpleMath::Vector4), &data, device, true);
 }
 
 CameraClass::~CameraClass()
@@ -75,6 +81,13 @@ void CameraClass::update(ID3D11DeviceContext* context)
 		memcpy(data.pData, &this->mMatrices, sizeof(camera::WVP));
 
 		context->Unmap(this->mWVPBuffer, 0);
+
+
+		context->Map(this->mGraphicsData->getBuffer(CAMPOSKEY), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+
+		memcpy(data.pData, &this->mPos, sizeof(DirectX::SimpleMath::Vector4));
+
+		context->Unmap(this->mGraphicsData->getBuffer(CAMPOSKEY), 0);
 	}
 }
 
