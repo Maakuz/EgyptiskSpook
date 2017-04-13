@@ -433,7 +433,7 @@ AABB::AABB(DirectX::SimpleMath::Vector3 point, DirectX::SimpleMath::Vector3 x, D
 {
 	this->mPoint = (x + y + z) / 2;
 	this->mPoint = point + this->mPoint;
-	this->mScale = DirectX::SimpleMath::Vector3(x.x / 2, y.y / 2, z.z / 2);
+	this->mScale = DirectX::SimpleMath::Vector3(abs(x.x) / 2, abs(y.y) / 2, abs(z.z) / 2);
 }
 
 DirectX::SimpleMath::Vector3 AABB::calculateNormal(Capsule & other)
