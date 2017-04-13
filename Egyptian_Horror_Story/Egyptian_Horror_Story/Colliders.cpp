@@ -72,6 +72,8 @@ DirectX::SimpleMath::Vector3 Capsule::calculateNormal(OBB other) {
 		max = result;
 	}
 
+	float sadijasidj = DirectX::SimpleMath::Vector3(0, 1, 0).Dot(DirectX::SimpleMath::Vector3(0, -1, 0));
+
 	temp = -other.mLengthU;
 	temp.Normalize();
 	result = capToBox.Dot(temp);

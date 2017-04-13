@@ -8,7 +8,7 @@ private:
 	DirectX::SimpleMath::Vector3 mNormal;
 
 public:
-	Wall(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 U, DirectX::SimpleMath::Vector3 V, DirectX::SimpleMath::Vector3 W, int graphicsKey);
+	Wall(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 U, DirectX::SimpleMath::Vector3 V, DirectX::SimpleMath::Vector3 W, DirectX::SimpleMath::Vector3 n, int graphicsKey);
 	virtual ~Wall();
 
 
