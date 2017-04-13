@@ -18,6 +18,9 @@ private:
 
 	FbxVector4 getNormal(int index, FbxGeometryElementNormal* normalElem);
 
+	bool loadVertices(std::vector<EntityStruct::VertexStruct>& verticeArray, FbxMesh* mesh);
+	bool loadAnimation(FbxScene* scene);
+
 public:
 	FBXLoader();
 	virtual ~FBXLoader();
