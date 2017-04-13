@@ -2,8 +2,8 @@
 #include <math.h> 
 #include "Enemy.h" // FOR TESTING
 #define SHADERS 30
-#define DIVIDE 8 // should be divisible by 2
-#define START_SIZE 8096  // should be divisible by 2
+#define DIVIDE 4 // should be divisible by 2
+#define START_SIZE 4096  // should be divisible by 2
 
 using namespace DirectX::SimpleMath;
 
@@ -29,7 +29,7 @@ void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	shaders.setupGeometryShader(device, SHADERS, L"ParticleGS.hlsl", "main");
 
 	for (int i = 0; i < START_SIZE; i++) {
-		addRandomParticle();
+		addRandomParticle(true);
 	}
 
 	D3D11_SUBRESOURCE_DATA data;
@@ -64,7 +64,7 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 		// TEMP
 		particle->position += data->direction / 1000.f;
 		if (rand() % 1000 == 0) {
-			temp = rand() % 4 - 1;
+			temp = getRandomNr() * 2 - 1;
 			data->direction = Vector3(temp, temp, temp);
 		}
 	}
@@ -115,20 +115,17 @@ UINT ParticleRenderer::getSize() const {
 	return this->mParticleVertices.size() * sizeof(ParticleVertex);
 }
 
-void ParticleRenderer::addRandomParticle() {
+void ParticleRenderer::addRandomParticle(bool timeIsRandom) {
 	ParticleVertex particle;
 	ParticleData partData;
 
 	//TEMP
-	particle.position = Vector3(
-		(rand() % 200) / 10.f - 10,
-		(rand() % 250) / 10.f,
-		(rand() % 200) / 10.f - 10
-	);
+	particle.position = Vector3(getRandomNr() * 30 - 15, getRandomNr() * 20 - 5, getRandomNr() * 30 - 15);
+	particle.position += this->mCamera->getPos();
 	particle.dimensions = Vector2(0.01f, 0.01f);
 
-	partData.direction = Vector3(rand() % 4 - 1, rand() % 4 - 1, rand() % 4 - 1);
-	partData.timeLeft = rand() % 100 + 100;
+	partData.direction = Vector3(getRandomNr() * 2 - 1, getRandomNr() * 2 - 1, 2 - 1);
+	partData.timeLeft = timeIsRandom ? getRandomNr() * 3.5f : 3.5f;
 
 	this->mParticleVertices.push_back(particle);
 	this->mParticleData.push_back(partData);
@@ -139,7 +136,7 @@ void ParticleRenderer::timeCheck(int start, int piece) {
 		ParticleVertex *particle = &this->mParticleVertices[i];
 		ParticleData *data = &this->mParticleData[i];
 
-		data->timeLeft -= 0.0001f;
+		data->timeLeft -= 0.01f * DIVIDE; //CHANGE LATER
 		if (data->timeLeft <= 0) {
 			addRandomParticle();
 			std::swap(this->mParticleData[i], this->mParticleData[this->mParticleData.size() - 1]);
@@ -148,4 +145,8 @@ void ParticleRenderer::timeCheck(int start, int piece) {
 			this->mParticleVertices.pop_back();
 		}
 	}
+}
+
+inline float ParticleRenderer::getRandomNr() {
+	return rand() / (RAND_MAX + 1.f);
 }

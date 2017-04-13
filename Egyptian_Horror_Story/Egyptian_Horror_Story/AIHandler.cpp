@@ -2,6 +2,7 @@
 #include <SDL.h> //for printing errors and stuff
 #define TEST "scripts/test.lua"
 #define AI "scripts/EnemyAI.lua"
+#define tof(x) static_cast<float> (x)
 #include "SimpleMath.h"
 
 using namespace DirectX::SimpleMath;
@@ -27,7 +28,7 @@ void AIHandler::setupAI() {
 	float speed = 0;
 
 	if (lua_isnumber(mState, -1)) {
-		speed = lua_tonumber(mState, -1);
+		speed = static_cast<float> (lua_tonumber(mState, -1));
 		mEnemy->setSpeed(speed);
 	} else {
 		mEnemy->setSpeed(0);
@@ -82,7 +83,7 @@ int AIHandler::setEnemySpeed(lua_State *state) {
 		(lua_touserdata(state, lua_upvalueindex(1)));
 
 	if (lua_isnumber(state, -1)) {
-		enemy->setSpeed(lua_tonumber(state, -1));
+		enemy->setSpeed(tof(lua_tonumber(state, -1)));
 		lua_pop(state, 1);
 	}
 
@@ -103,8 +104,8 @@ int AIHandler::setEntityPosition(lua_State *state) {
 	Entity *entity = static_cast<Entity*>
 		(lua_touserdata(state, lua_upvalueindex(1)));
 	if (lua_isnumber(state, -1) && lua_isnumber(state, -2) & lua_isnumber(state, -3)) {
-		entity->setPosition(Vector3(lua_tonumber(state, -3), lua_tonumber(state, -2)
-			, lua_tonumber(state, -1))); //it is a stack, so first para is -3!
+		entity->setPosition(Vector3(tof(lua_tonumber(state, -3)), tof(lua_tonumber(state, -2))
+			, tof(lua_tonumber(state, -1)))); //it is a stack, so first para is -3!
 	} else {
 		// bad
 	}

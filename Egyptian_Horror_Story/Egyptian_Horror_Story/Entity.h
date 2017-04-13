@@ -1,7 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "OBB.h"
+#include "Colliders.h"
 
 class Entity
 {
