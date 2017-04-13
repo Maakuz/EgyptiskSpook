@@ -1,10 +1,10 @@
 #include "Wall.h"
 
-Wall::Wall(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 dir, DirectX::SimpleMath::Vector3 up, DirectX::SimpleMath::Vector3 scale, int key)
+Wall::Wall(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 dir, DirectX::SimpleMath::Vector3 up, DirectX::SimpleMath::Vector3 scale, DirectX::SimpleMath::Vector3 norm, int key)
 : Entity(key)
 {
-	this->createOBB(pos, dir, up, scale);
-	this->mNormal = dir;
+	this->createAABB(pos, dir, up, scale);
+	this->mNormal = norm;
 	this->mNormal.Normalize();
 }
 

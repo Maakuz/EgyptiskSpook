@@ -51,14 +51,16 @@ DirectX::SimpleMath::Vector3 OBB::getNormal(Capsule & other) {
 
 	DirectX::SimpleMath::Vector3 tmp = DirectX::SimpleMath::Vector3(other.mPoint.x, other.mPoint.y + (other.mHeight / 2), other.mPoint.z);
 
-	DirectX::SimpleMath::Vector3 btoc = DirectX::SimpleMath::Vector3::Transform(tmp, mInvWorld);
-	btoc = btoc - this->mPoint;
+	DirectX::SimpleMath::Vector3 btoc = tmp - this->mPoint;
+
+	btoc = DirectX::SimpleMath::Vector3::Transform(btoc, mInvWorld);
+	
 
 	DirectX::SimpleMath::Matrix scale;
 	scale = scale.CreateScale(this->mScale);
 	scale = scale.Invert();
 
-	btoc = DirectX::SimpleMath::Vector3::Transform(btoc, scale);
+	//btoc = DirectX::SimpleMath::Vector3::Transform(btoc, scale);
 
 	DirectX::SimpleMath::Vector3 res = { btoc.x, 0, 0 };
 	float size = mScale.x;
@@ -420,5 +422,86 @@ bool Capsule::capsuleVSObb(OBB & other) {
 
 bool Capsule::capsuleVSCapsule()
 {
+	return false;
+}
+
+AABB::AABB(DirectX::SimpleMath::Vector3 point, DirectX::SimpleMath::Vector3 scale) {
+	this->mPoint = point; this->mScale = scale;
+}
+
+AABB::AABB(DirectX::SimpleMath::Vector3 point, DirectX::SimpleMath::Vector3 x, DirectX::SimpleMath::Vector3 y, DirectX::SimpleMath::Vector3 z)
+{
+	this->mPoint = (x + y + z) / 2;
+	this->mPoint = point + this->mPoint;
+	this->mScale = DirectX::SimpleMath::Vector3(x.x / 2, y.y / 2, z.z / 2);
+}
+
+DirectX::SimpleMath::Vector3 AABB::calculateNormal(Capsule & other)
+{
+	DirectX::SimpleMath::Vector3 tmp = DirectX::SimpleMath::Vector3(other.mPoint.x, other.mPoint.y + (other.mHeight / 2), other.mPoint.z);
+
+	DirectX::SimpleMath::Vector3 btoc = tmp - this->mPoint;
+
+	//btoc = DirectX::SimpleMath::Vector3::Transform(btoc, scale);
+
+	DirectX::SimpleMath::Vector3 res = { btoc.x, 0, 0 };
+	float size = mScale.x;
+	if (abs(btoc.y) > abs(res.x)) {
+		res = DirectX::SimpleMath::Vector3(0, btoc.y, 0);
+		size = mScale.y;
+	}
+	if (abs(btoc.z) > abs(res.x) || abs(btoc.z) > abs(res.y)) {
+		res = DirectX::SimpleMath::Vector3(0, 0, btoc.z);
+		size = mScale.z;
+	}
+
+	res.Normalize();
+
+	return res;
+}
+
+bool AABB::aabbVSCapsule(Capsule & other)
+{
+	DirectX::SimpleMath::Vector3 newPoint = this->mPoint;
+	
+	if (newPoint.y <= other.mPoint.y + other.mHeight && (newPoint.y >= other.mPoint.y)) {
+	
+		DirectX::SimpleMath::Vector3 ptop = newPoint - DirectX::SimpleMath::Vector3(other.mPoint.x, newPoint.y, other.mPoint.z);
+		ptop.Normalize();
+		ptop = ptop * other.mRadius;
+		if (this->aabbVSPoint(ptop))
+			return true;
+	}
+	
+	DirectX::SimpleMath::Vector3 ptop;
+	ptop = (newPoint - other.mPoint);
+	ptop.Normalize();
+	ptop = ptop * other.mRadius;
+	ptop = ptop + other.mPoint;
+	
+	if (this->aabbVSPoint(ptop))
+		return true;
+	
+	ptop = newPoint - (DirectX::SimpleMath::Vector3(other.mPoint.x, other.mPoint.y + other.mHeight, other.mPoint.z));
+	ptop.Normalize();
+	ptop = ptop * other.mRadius;
+	ptop = ptop + other.mPoint;
+	
+	if (this->aabbVSPoint(ptop))
+		return true;
+	
+	
+	return false;
+}
+
+bool AABB::aabbVSPoint(DirectX::SimpleMath::Vector3 point)
+{
+	if (point.x > this->mPoint.x - this->mScale.x && point.x < this->mPoint.x + this->mScale.x) {
+		if (point.y > this->mPoint.y - this->mScale.y && point.y < this->mPoint.y + this->mScale.y) {
+			if (point.z > this->mPoint.z - this->mScale.z && point.z < this->mPoint.z + this->mScale.z) {
+				return true;
+			}
+		}
+	}
 	return false;
 }
