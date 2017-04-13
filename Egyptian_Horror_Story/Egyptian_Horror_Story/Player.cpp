@@ -219,7 +219,6 @@ void Player::startSprint() {
 		this->mStamina > START_STAMINA && !this->mSneaking) {
 		this->mSprinting = true;
 		this->mStamina -= START_STAMINA;
-		this->mJumpingVelocity = JUMP_START_VELOCITY;
 	}
 }
 
