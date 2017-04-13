@@ -7,23 +7,37 @@
 class Capsule;
 
 class OBB {
+private:
+	void UpdateMatrix();
 public:
+	//DirectX::SimpleMath::Vector3 mPoint;
+	//DirectX::SimpleMath::Vector3 mLengthU;
+	//DirectX::SimpleMath::Vector3 mLengthV;
+	//DirectX::SimpleMath::Vector3 mLengthW;
+	//DirectX::SimpleMath::Vector3 mU;
+	//DirectX::SimpleMath::Vector3 mV;
+	//DirectX::SimpleMath::Vector3 mW;
+
+	//TA BORT OVAN
+
 	DirectX::SimpleMath::Vector3 mPoint;
-	DirectX::SimpleMath::Vector3 mLengthU;
-	DirectX::SimpleMath::Vector3 mLengthV;
-	DirectX::SimpleMath::Vector3 mLengthW;
-	DirectX::SimpleMath::Vector3 mU;
-	DirectX::SimpleMath::Vector3 mV;
-	DirectX::SimpleMath::Vector3 mW;
+	DirectX::SimpleMath::Vector3 mDir;
+	DirectX::SimpleMath::Vector3 mUp;
+	DirectX::SimpleMath::Vector3 mScale;
+	
+	DirectX::SimpleMath::Matrix mInvWorld;
 
 public:
-	OBB(DirectX::SimpleMath::Vector3 point, DirectX::SimpleMath::Vector3 lengthU, DirectX::SimpleMath::Vector3 lengthV, DirectX::SimpleMath::Vector3 lengthW);
+	OBB(DirectX::SimpleMath::Vector3 point, DirectX::SimpleMath::Vector3 dir, DirectX::SimpleMath::Vector3 up, DirectX::SimpleMath::Vector3 scale);
 	virtual ~OBB();
 
-
+	DirectX::SimpleMath::Vector3 getNormal(Capsule& other);
 	bool obbVSPoint(DirectX::SimpleMath::Vector3 point);
-	bool obbVsObb(const OBB& other);
-	bool obbVSCylinder(const Capsule &other);
+	bool obbVsObb(OBB& other);
+	bool obbVSCapsule(const Capsule &other);
+	void setPos(DirectX::SimpleMath::Vector3 point);
+	void setDir(DirectX::SimpleMath::Vector3 dir, DirectX::SimpleMath::Vector3 up);
+	void setScale(DirectX::SimpleMath::Vector3 scale);
 
 };
 
@@ -39,7 +53,7 @@ public:
 	virtual ~Capsule();
 
 	bool capsuleVSPoint(DirectX::SimpleMath::Vector3 point);
-	DirectX::SimpleMath::Vector3 capsuleVSObb(OBB &other);
-	bool capsuleVSCCapsule();
+	bool capsuleVSObb(OBB &other);
+	bool capsuleVSCapsule();
 
 };

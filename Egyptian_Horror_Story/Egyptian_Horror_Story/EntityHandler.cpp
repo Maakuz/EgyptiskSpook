@@ -29,12 +29,13 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 		for (size_t i = 0; i < 5; i++)
 		{*/
 			Wall* wall = new Wall(
-				DirectX::SimpleMath::Vector3(-10.f, -2.f, 10.f),
-				DirectX::SimpleMath::Vector3(7.f, 0.f, 0.f),
-				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
-				DirectX::SimpleMath::Vector3(0.f, 0.f, 2.f), this->mNrOfKeys++);
-
+				DirectX::SimpleMath::Vector3(-5.f, 0.f, 15.f),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f),
+				DirectX::SimpleMath::Vector3(0.f, 1.f, 0.f),
+				DirectX::SimpleMath::Vector3(5.f, 5.f, 5.f), this->mNrOfKeys++);
+				
 			EntityStruct::VertexStruct testData[] = {
+				/*
 				DirectX::SimpleMath::Vector3(-10.f , -2.f , 10.f),
 				DirectX::SimpleMath::Vector3(0, 0, -1),
 				DirectX::SimpleMath::Vector2(0.f, 1.f),
@@ -58,8 +59,34 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(-10.f , 4.f , 10.f),
 				DirectX::SimpleMath::Vector3(0, 0, -1),
 				DirectX::SimpleMath::Vector2(0.f, 0.f)
+				*/
+
+
+				DirectX::SimpleMath::Vector3(-10.f , -5.f , 20.f),
+				DirectX::SimpleMath::Vector3(0, 0, -1),
+				DirectX::SimpleMath::Vector2(0.f, 1.f),
+
+				DirectX::SimpleMath::Vector3(-10.f, 5.f , 10.f),
+				DirectX::SimpleMath::Vector3(0, 0, -1),
+				DirectX::SimpleMath::Vector2(1.f, 1.f),
+
+				DirectX::SimpleMath::Vector3(-10.f, -5.f , 10.f),
+				DirectX::SimpleMath::Vector3(0, 0, -1),
+				DirectX::SimpleMath::Vector2(0.f, 0.f),
+
+				/*DirectX::SimpleMath::Vector3(-3  , -2.f  , 10.f),
+				DirectX::SimpleMath::Vector3(0, 0, -1),
+				DirectX::SimpleMath::Vector2(1.f, 1.f),
+
+				DirectX::SimpleMath::Vector3(-3  , 4.f  , 10.f),
+				DirectX::SimpleMath::Vector3(0, 0, -1),
+				DirectX::SimpleMath::Vector2(1.f, 0.f),
+
+				DirectX::SimpleMath::Vector3(-10.f , 4.f , 10.f),
+				DirectX::SimpleMath::Vector3(0, 0, -1),
+				DirectX::SimpleMath::Vector2(0.f, 0.f)*/
 			};
-			this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, L"../Resource/Textures/pyramidStone.png");
+			this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 3, L"../Resource/Textures/pyramidStone.png");
 
 			this->mEntities.push_back(wall);
 	/*	}
@@ -1265,19 +1292,38 @@ void EntityHandler::update()
 	for (Entity *wall : this->mEntities) 
 	{
 		Wall* ptr = dynamic_cast<Wall*>(wall);
-		if (ptr) {
-			DirectX::SimpleMath::Vector3 norm = this->mPlayer->col->capsuleVSObb(ptr->getOBB());
-			if (norm != DirectX::SimpleMath::Vector3(0, 0, 0)) {
-				DirectX::SimpleMath::Vector3 ptop = this->mPlayer->getPrevPos() - this->mPlayer->getPosition();
+		if (ptr && ptr->getOBB().obbVSCapsule(*this->getPlayer()->col)) {
+			//DirectX::SimpleMath::Vector3 ptop = this->mPlayer->getPrevPos() - this->mPlayer->getPosition();
+			
+			DirectX::SimpleMath::Vector3 norm = ptr->getOBB().getNormal(*this->getPlayer()->col);
 
-				ptop = ptop -
-					(ptr->getNormal().Dot(ptop) / (ptr->getNormal().Dot(ptr->getNormal())
-					) * ptr->getNormal());
-				//this->mPlayer->setPrevPos(this->mPlayer->getPrevPos() + ptop);
-				ptop = -ptop;
-				this->mPlayer->setPosition(this->mPlayer->getPrevPos() + ptop);
+			DirectX::SimpleMath::Vector3 diff;
+			diff = mPlayer->getPosition() - ptr->getOBB().mPoint;
 
-			}
+			DirectX::SimpleMath::Vector3 tmp1 = diff;
+			DirectX::SimpleMath::Vector3 tmp2 = norm;
+
+			tmp1.Normalize();
+			tmp2.Normalize();
+
+			diff = (tmp2.Dot(tmp1) * diff); //STÄMMER KAPPA
+			diff = norm - diff;
+			norm.Normalize();
+			this->mPlayer->setPosition(mPlayer->getPosition() + diff + norm * mPlayer->col->mRadius);
+
+
+
+			//ptop = ptop - (norm.Dot(ptop) * norm);
+
+			//ptop = ptop - (ptr->getNormal().Dot(ptop) / (ptr->getNormal().Dot(ptr->getNormal())
+			//	) * ptr->getNormal());
+			//this->mPlayer->setPrevPos(this->mPlayer->getPrevPos() + ptop);
+			//ptop = -ptop;
+			//this->mPlayer->setPosition(this->mPlayer->getPrevPos()/* + ptop*/);
+			
+			//this->mPlayer->setPosition(ptr->getOBB().mPoint);
+			
+					
 		}
 	}
 	
