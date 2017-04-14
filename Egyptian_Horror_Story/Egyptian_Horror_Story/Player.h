@@ -12,14 +12,24 @@ class Player : public Entity
 private:
 	CameraClass* mCamera;
 	DirectX::SimpleMath::Vector2 mDirection;
+	DirectX::SimpleMath::Vector3 mPrevPos;
 
-	float mSpeed, jumpingVelocity;
-	bool mJumping;
+	float mSpeed, mJumpingVelocity, mStamina, mMaxStamina;
+	bool mJumping, mSprinting, mSneaking;
 	DirectX::SimpleMath::Vector3 mVelocity;
 
 	Light* mLight;
 
+	void updateLightPosition();
+	void computeVelocity();
+	void handleSprinting();
+	void startSprint();
+	void startSneaking();
+	float getMovementMultiplier();
 public:
+	//WTF
+	Capsule* col;
+	//WTF
 	Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int grapchicsKey, GraphicsData* gData);
 	virtual ~Player();
 
@@ -32,7 +42,8 @@ public:
 	Light* getLight();
 
 	void setPosition(DirectX::SimpleMath::Vector3 pos);
-
+	DirectX::SimpleMath::Vector3 getPrevPos();
+	void setPrevPos(DirectX::SimpleMath::Vector3 pos);
 };
 
 #endif
