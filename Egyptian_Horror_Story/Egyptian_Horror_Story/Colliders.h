@@ -6,6 +6,18 @@
 
 class Capsule;
 
+class AABB {
+public:
+	DirectX::SimpleMath::Vector3 mPoint;
+	DirectX::SimpleMath::Vector3 mScale;
+public:
+	AABB(DirectX::SimpleMath::Vector3 point, DirectX::SimpleMath::Vector3 scale);
+	AABB(DirectX::SimpleMath::Vector3 point, DirectX::SimpleMath::Vector3 x, DirectX::SimpleMath::Vector3 y, DirectX::SimpleMath::Vector3 z);
+	DirectX::SimpleMath::Vector3 calculateNormal(Capsule& other);
+	bool aabbVSCapsule(Capsule& other);
+	bool aabbVSPoint(DirectX::SimpleMath::Vector3 point);
+};
+
 class OBB {
 private:
 	void UpdateMatrix();

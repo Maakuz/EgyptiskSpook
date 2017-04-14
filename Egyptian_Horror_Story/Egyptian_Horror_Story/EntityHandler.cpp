@@ -29,22 +29,14 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 		for (size_t i = 0; i < 5; i++)
 		{*/
 			Wall* wall = new Wall(
-<<<<<<< HEAD
 				DirectX::SimpleMath::Vector3(-10.f, -2.f, 10.f),
 				DirectX::SimpleMath::Vector3(7.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
-				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f), 
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f), 
 				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f), this->mNrOfKeys++);
 
-=======
-				DirectX::SimpleMath::Vector3(-5.f, 0.f, 15.f),
-				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f),
-				DirectX::SimpleMath::Vector3(0.f, 1.f, 0.f),
-				DirectX::SimpleMath::Vector3(5.f, 5.f, 5.f), this->mNrOfKeys++);
-				
->>>>>>> 7e58a1c3cdaf767f52eee7a2cec60f0d8d0d0c94
 			EntityStruct::VertexStruct testData[] = {
-				/*
+				
 				DirectX::SimpleMath::Vector3(-10.f , -2.f , 10.f),
 				DirectX::SimpleMath::Vector3(0, 0, -1),
 				DirectX::SimpleMath::Vector2(0.f, 1.f),
@@ -68,34 +60,9 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(-10.f , 4.f , 10.f),
 				DirectX::SimpleMath::Vector3(0, 0, -1),
 				DirectX::SimpleMath::Vector2(0.f, 0.f)
-				*/
 
-
-				DirectX::SimpleMath::Vector3(-10.f , -5.f , 20.f),
-				DirectX::SimpleMath::Vector3(0, 0, -1),
-				DirectX::SimpleMath::Vector2(0.f, 1.f),
-
-				DirectX::SimpleMath::Vector3(-10.f, 5.f , 10.f),
-				DirectX::SimpleMath::Vector3(0, 0, -1),
-				DirectX::SimpleMath::Vector2(1.f, 1.f),
-
-				DirectX::SimpleMath::Vector3(-10.f, -5.f , 10.f),
-				DirectX::SimpleMath::Vector3(0, 0, -1),
-				DirectX::SimpleMath::Vector2(0.f, 0.f),
-
-				/*DirectX::SimpleMath::Vector3(-3  , -2.f  , 10.f),
-				DirectX::SimpleMath::Vector3(0, 0, -1),
-				DirectX::SimpleMath::Vector2(1.f, 1.f),
-
-				DirectX::SimpleMath::Vector3(-3  , 4.f  , 10.f),
-				DirectX::SimpleMath::Vector3(0, 0, -1),
-				DirectX::SimpleMath::Vector2(1.f, 0.f),
-
-				DirectX::SimpleMath::Vector3(-10.f , 4.f , 10.f),
-				DirectX::SimpleMath::Vector3(0, 0, -1),
-				DirectX::SimpleMath::Vector2(0.f, 0.f)*/
 			};
-			this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 3, L"../Resource/Textures/pyramidStone.png");
+			this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, L"../Resource/Textures/pyramidStone.png");
 
 			this->mEntities.push_back(wall);
 	/*	}
@@ -106,8 +73,8 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 		for (size_t i = 0; i < 25; i++)
 		{*/
 			 wall = new Wall(
-				DirectX::SimpleMath::Vector3(-4, -2.f, -43.f),
-				DirectX::SimpleMath::Vector3(1.f, 0.f, 0.f),
+				DirectX::SimpleMath::Vector3(-3, -2.f, -43.f),
+				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 46.f),
 				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f), this->mNrOfKeys++);
@@ -147,11 +114,13 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 	/*for (int i = 0; i < 30; i++) {
 		for (int j = 0; j < 3; j++) {*/
 			 wall = new Wall(
+
 				DirectX::SimpleMath::Vector3(-10, -2 , -78 ),
 				DirectX::SimpleMath::Vector3(1.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 88.f),
 				DirectX::SimpleMath::Vector3(1.f, 0.f, 0.f), this->mNrOfKeys++);
+
 
 			EntityStruct::VertexStruct testData4[] = {
 				DirectX::SimpleMath::Vector3(-10, -2 , -78),
@@ -194,6 +163,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f), this->mNrOfKeys++);
 
+
 			EntityStruct::VertexStruct testData5[] = {
 				DirectX::SimpleMath::Vector3(40, -2 , -50),
 				DirectX::SimpleMath::Vector3(0, 0, 1),
@@ -230,6 +200,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(2.f, 0.f, 1.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f), this->mNrOfKeys++);
 
+
 			EntityStruct::VertexStruct testData10[] = {
 				DirectX::SimpleMath::Vector3(15, -2 , -50),
 				DirectX::SimpleMath::Vector3(0, 0, 1),
@@ -261,10 +232,11 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 			//Rum
 			wall = new Wall(
 				DirectX::SimpleMath::Vector3(30, -2, -70),
-				DirectX::SimpleMath::Vector3(1.f, 0.f, 0.f),
+				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
-				DirectX::SimpleMath::Vector3(2.f, 0.f, 20.f),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, 20.f),
 				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f), this->mNrOfKeys++);
+
 
 			EntityStruct::VertexStruct testData11[] = {
 				DirectX::SimpleMath::Vector3(30, -2.f , -50),
@@ -369,7 +341,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(5, -2, -50),
 				DirectX::SimpleMath::Vector3(10.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
-				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f), this->mNrOfKeys++);
 
 			EntityStruct::VertexStruct testData14[] = {
@@ -404,8 +376,9 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(20, -2, -50),
 				DirectX::SimpleMath::Vector3(10.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
-				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f), this->mNrOfKeys++);
+
 
 			EntityStruct::VertexStruct testData15[] = {
 				DirectX::SimpleMath::Vector3(20, -2 , -50),
@@ -442,8 +415,9 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(-3, -2, -43),
 				DirectX::SimpleMath::Vector3(43.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
-				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f), this->mNrOfKeys++);
+
 
 			EntityStruct::VertexStruct testData6[] = {
 				DirectX::SimpleMath::Vector3(-3, -2 , -43),
@@ -510,10 +484,11 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 			wall = new Wall(
 				DirectX::SimpleMath::Vector3(47, -2, -78),
-				DirectX::SimpleMath::Vector3(1.f, 0.f, 0.f),
+				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 28.f),
 				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f), this->mNrOfKeys++);
+
 
 			EntityStruct::VertexStruct testData8[] = {
 				DirectX::SimpleMath::Vector3(47, -2 , -50),
@@ -545,10 +520,11 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 			wall = new Wall(
 				DirectX::SimpleMath::Vector3(47, -2, -43),
-				DirectX::SimpleMath::Vector3(1.f, 0.f, 0.f),
+				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 53.f),
 				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f), this->mNrOfKeys++);
+
 
 			EntityStruct::VertexStruct testData16[] = {
 				DirectX::SimpleMath::Vector3(47, -2 , 10),
@@ -585,6 +561,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 21.f),
 				DirectX::SimpleMath::Vector3(1.f, 0.f, 0.f), this->mNrOfKeys++);
 
+
 			EntityStruct::VertexStruct testData9[] = {
 				DirectX::SimpleMath::Vector3(40, -2 , -71),
 				DirectX::SimpleMath::Vector3(1, 0, 0),
@@ -617,8 +594,9 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(47, -2, -43),
 				DirectX::SimpleMath::Vector3(33.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
-				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f), this->mNrOfKeys++);
+
 
 			EntityStruct::VertexStruct testData17[] = {
 				DirectX::SimpleMath::Vector3(47, -2 , -43),
@@ -655,6 +633,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f), this->mNrOfKeys++);
 
+
 			EntityStruct::VertexStruct testData18[] = {
 				DirectX::SimpleMath::Vector3(80, -2 , -50),
 				DirectX::SimpleMath::Vector3(0, 0, 1),
@@ -690,6 +669,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f), this->mNrOfKeys++);
 
+
 			EntityStruct::VertexStruct testData19[] = {
 				DirectX::SimpleMath::Vector3(40, -2 , 3),
 				DirectX::SimpleMath::Vector3(0, 0, 1),
@@ -722,8 +702,9 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(-3, -2, 10),
 				DirectX::SimpleMath::Vector3(50.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
-				DirectX::SimpleMath::Vector3(2.f, 0.f, 1.f),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f), this->mNrOfKeys++);
+
 
 			EntityStruct::VertexStruct testData40[] = {
 				DirectX::SimpleMath::Vector3(-3, -2 , 10),
@@ -755,10 +736,11 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 			wall = new Wall(
 				DirectX::SimpleMath::Vector3(-3, -2.f, -71.f),
-				DirectX::SimpleMath::Vector3(1.f, 0.f, 0.f),
+				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 21.f),
 				DirectX::SimpleMath::Vector3(-1.f, 0.f, 0.f), this->mNrOfKeys++);
+
 
 
 			EntityStruct::VertexStruct testData41[] = {
@@ -794,8 +776,9 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(-3, -2, -71),
 				DirectX::SimpleMath::Vector3(43.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
-				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f),
+				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, -1.f), this->mNrOfKeys++);
+
 
 			EntityStruct::VertexStruct testData42[] = {
 				DirectX::SimpleMath::Vector3(-3, -2 , -71),
@@ -831,6 +814,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f),
 				DirectX::SimpleMath::Vector3(0.f, 0.f, 1.f), this->mNrOfKeys++);
+
 
 			EntityStruct::VertexStruct testData44[] = {
 				DirectX::SimpleMath::Vector3(47, -2 , -78),
@@ -1400,55 +1384,45 @@ void EntityHandler::update()
 	for (Entity *wall : this->mEntities) 
 	{
 		Wall* ptr = dynamic_cast<Wall*>(wall);
-<<<<<<< HEAD
-		if (ptr) {
-			DirectX::SimpleMath::Vector3 norm = this->mPlayer->col->capsuleVSObb(ptr->getOBB());
-			if (norm != DirectX::SimpleMath::Vector3(0, 0, 0)) {
-				DirectX::SimpleMath::Vector3 ptop = this->mPlayer->getPrevPos() - this->mPlayer->getPosition();
-				norm.Normalize();
-				//ptop = ptop - (norm.Dot(ptop) / (norm.Dot(norm)) * norm);
-				
-				
-				ptop = ptop - (ptr->getNormal().Dot(ptop) / (ptr->getNormal().Dot(ptr->getNormal())) * ptr->getNormal());
-				//this->mPlayer->setPrevPos(this->mPlayer->getPrevPos() + ptop);
-				ptop = -ptop;
-				this->mPlayer->setPosition(this->mPlayer->getPrevPos() + ptop);
 
-			}
-=======
-		if (ptr && ptr->getOBB().obbVSCapsule(*this->getPlayer()->col)) {
-			//DirectX::SimpleMath::Vector3 ptop = this->mPlayer->getPrevPos() - this->mPlayer->getPosition();
+		if (ptr && ptr->getAABB().aabbVSCapsule(*this->getPlayer()->col)) {
+			DirectX::SimpleMath::Vector3 ptop = this->mPlayer->getPrevPos() - this->mPlayer->getPosition();
+
 			
-			DirectX::SimpleMath::Vector3 norm = ptr->getOBB().getNormal(*this->getPlayer()->col);
 
-			DirectX::SimpleMath::Vector3 diff;
-			diff = mPlayer->getPosition() - ptr->getOBB().mPoint;
+			DirectX::SimpleMath::Vector3 norm = ptr->getNormal();
+			//DirectX::SimpleMath::Vector3 norm = ptr->getAABB().calculateNormal(*this->mPlayer->col);
 
-			DirectX::SimpleMath::Vector3 tmp1 = diff;
-			DirectX::SimpleMath::Vector3 tmp2 = norm;
-
-			tmp1.Normalize();
-			tmp2.Normalize();
-
-			diff = (tmp2.Dot(tmp1) * diff); //STÄMMER KAPPA
-			diff = norm - diff;
-			norm.Normalize();
-			this->mPlayer->setPosition(mPlayer->getPosition() + diff + norm * mPlayer->col->mRadius);
+			//DirectX::SimpleMath::Vector3 norm = ptr->getAABB().getNormal(*this->getPlayer()->col);
+			//DirectX::SimpleMath::Vector3 diff;
+			//diff = mPlayer->getPosition() - ptr->getAABB().mPoint;
+			//
+			//DirectX::SimpleMath::Vector3 tmp1 = diff;
+			//DirectX::SimpleMath::Vector3 tmp2 = norm;
+			//
+			//tmp1.Normalize();
+			//tmp2.Normalize();
+			//
+			//diff = (tmp2.Dot(tmp1) * diff); //STÄMMER KAPPA
+			//diff = norm - diff;
+			//norm.Normalize();
+			//this->mPlayer->setPosition(mPlayer->getPosition() + diff + norm * mPlayer->col->mRadius);
 
 
 
 			//ptop = ptop - (norm.Dot(ptop) * norm);
 
-			//ptop = ptop - (ptr->getNormal().Dot(ptop) / (ptr->getNormal().Dot(ptr->getNormal())
-			//	) * ptr->getNormal());
+			ptop = ptop - (ptr->getNormal().Dot(ptop) * norm);
+
 			//this->mPlayer->setPrevPos(this->mPlayer->getPrevPos() + ptop);
-			//ptop = -ptop;
-			//this->mPlayer->setPosition(this->mPlayer->getPrevPos()/* + ptop*/);
+			
+			ptop = -ptop;
+			this->mPlayer->setPosition(this->mPlayer->getPrevPos() + ptop);
 			
 			//this->mPlayer->setPosition(ptr->getOBB().mPoint);
 			
 					
->>>>>>> 7e58a1c3cdaf767f52eee7a2cec60f0d8d0d0c94
+
 		}
 	}
 	
