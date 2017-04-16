@@ -25,12 +25,14 @@ void AIHandler::setupTraps() {
 
 }
 
-
-void AIHandler::setupAI() {
+void AIHandler::setupEnemy() {
 	int error = luaL_loadfile(mEnemyState, AI) || lua_pcall(mEnemyState, 0, 0, 0);
 	handleError(mEnemyState, error);
+	luaL_openlibs(mEnemyState);
 
 	addLuaFunctionsEnemy();
+	lua_getglobal(mEnemyState, "onStart");
+	handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
 
 	lua_getglobal(mEnemyState, "enemySpeed");
 	float speed = 0;
@@ -38,11 +40,17 @@ void AIHandler::setupAI() {
 	if (lua_isnumber(mEnemyState, -1)) {
 		speed = lua_tonumber(mEnemyState, -1);
 		mEnemy->setSpeed(speed);
-	} else {
+	}
+	else {
 		mEnemy->setSpeed(0);
 	}
 
 	lua_pop(mEnemyState, 1);
+}
+
+
+void AIHandler::setupAI() {
+	setupEnemy();
 }
 
 void AIHandler::addLuaFunctionsEnemy() {
@@ -50,6 +58,7 @@ void AIHandler::addLuaFunctionsEnemy() {
 	void *userData[] = { mEnemy };
 	addLuaFunction(mEnemyState, "SetEnemySpeed", setEnemySpeed, userData, ARRAYSIZE(userData));
 	addLuaFunction(mEnemyState, "GetEnemyPosition", getEntityPosition, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "SetEnemyWaypoint", Enemy::updateWaypoint, userData, ARRAYSIZE(userData));
 	
 	// PLAYER POSITION
 	void *userData2[] = { mPlayer };
@@ -58,6 +67,7 @@ void AIHandler::addLuaFunctionsEnemy() {
 	// GET DISTANCE BEETWEN
 	void *userData3[] = { mEnemy, mPlayer };
 	addLuaFunction(mEnemyState, "GetDistanceBetween", getDistanceBetween, userData3, ARRAYSIZE(userData3));
+	addLuaFunction(mEnemyState, "SeesPlayer", Enemy::seesPlayer, userData3, ARRAYSIZE(userData3));
 }
 
 void AIHandler::addLuaFunctionsTraps() {
@@ -65,15 +75,13 @@ void AIHandler::addLuaFunctionsTraps() {
 		lua_State *state = script.state;
 		// TRAP FUNCTIONS
 		void *userData[] = { script.trap };
-		addLuaFunction(state, "SetEnemySpeed", setEnemySpeed, userData, ARRAYSIZE(userData));
-		addLuaFunction(state, "GetEnemyPosition", getEntityPosition, userData, ARRAYSIZE(userData));
+		addLuaFunction(state, "GetPosition", getEntityPosition, userData, ARRAYSIZE(userData));
 
 		// PLAYER FUNCTIONS
 		void *userData2[] = { mPlayer };
 		addLuaFunction(state, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
 	}
 }
-
 
 void AIHandler::addLuaFunction(lua_State *state, const char *name,
 	lua_CFunction func, void *userData[], int size) {
@@ -88,14 +96,13 @@ void AIHandler::addLuaFunction(lua_State *state, const char *name,
 }
 
 void AIHandler::update() {
-	Vector3 enemyToPlayer = mPlayer->getPosition() - mEnemy->getPosition();
-	
 	lua_getglobal(mEnemyState, "update");
 	lua_pcall(mEnemyState, 0, 0, 0);
 
-	enemyToPlayer.Normalize();
-	mEnemy->setVelocity(enemyToPlayer);
-	mEnemy->update();
+	if (mEnemy->update() == 1) {
+		lua_getglobal(mEnemyState, "onReachingWaypoint");
+		handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
+	}// on waypoint 
 }
 
 // LUA

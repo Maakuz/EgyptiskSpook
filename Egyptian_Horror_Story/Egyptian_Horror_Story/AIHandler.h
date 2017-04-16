@@ -24,6 +24,7 @@ class AIHandler {
 		// helper
 		void testScript(); //For testing
 		void setupTraps();
+		void setupEnemy();
 		bool handleError(lua_State *state, int error);
 
 		// lua functions
