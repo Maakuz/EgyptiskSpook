@@ -8,48 +8,72 @@ using namespace DirectX::SimpleMath;
 
 AIHandler::AIHandler(Enemy *enemy, Player *player) :
 	mEnemy(enemy), mPlayer(player) {
-	mState = luaL_newstate();
+	mEnemyState = luaL_newstate();
 
 	setupAI();
 }
 
 AIHandler::~AIHandler() {
-	lua_close(mState);
+	lua_close(mEnemyState);
+
+	for (TrapScript &trap : mTraps) {
+		lua_close(trap.state);
+	}
 }
 
+void AIHandler::setupTraps() {
+
+}
+
+
 void AIHandler::setupAI() {
-	int error = luaL_loadfile(mState, AI) || lua_pcall(mState, 0, 0, 0);
-	handleError(error);
+	int error = luaL_loadfile(mEnemyState, AI) || lua_pcall(mEnemyState, 0, 0, 0);
+	handleError(mEnemyState, error);
 
-	addLuaFunctions(mState);
+	addLuaFunctionsEnemy();
 
-	lua_getglobal(mState, "enemySpeed");
+	lua_getglobal(mEnemyState, "enemySpeed");
 	float speed = 0;
 
-	if (lua_isnumber(mState, -1)) {
-		speed = lua_tonumber(mState, -1);
+	if (lua_isnumber(mEnemyState, -1)) {
+		speed = lua_tonumber(mEnemyState, -1);
 		mEnemy->setSpeed(speed);
 	} else {
 		mEnemy->setSpeed(0);
 	}
 
-	lua_pop(mState, 1);
+	lua_pop(mEnemyState, 1);
 }
 
-void AIHandler::addLuaFunctions(lua_State *state) {
+void AIHandler::addLuaFunctionsEnemy() {
 	// ENEMY SPEED & POSITION
 	void *userData[] = { mEnemy };
-	addLuaFunction(state, "SetEnemySpeed", setEnemySpeed, userData, ARRAYSIZE(userData));
-	addLuaFunction(state, "GetEnemyPosition", getEntityPosition, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "SetEnemySpeed", setEnemySpeed, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "GetEnemyPosition", getEntityPosition, userData, ARRAYSIZE(userData));
 	
 	// PLAYER POSITION
 	void *userData2[] = { mPlayer };
-	addLuaFunction(state, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(mEnemyState, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
 	
 	// GET DISTANCE BEETWEN
 	void *userData3[] = { mEnemy, mPlayer };
-	addLuaFunction(state, "GetDistanceBetween", getDistanceBetween, userData3, ARRAYSIZE(userData3));
+	addLuaFunction(mEnemyState, "GetDistanceBetween", getDistanceBetween, userData3, ARRAYSIZE(userData3));
 }
+
+void AIHandler::addLuaFunctionsTraps() {
+	for (TrapScript &script : mTraps) {
+		lua_State *state = script.state;
+		// TRAP FUNCTIONS
+		void *userData[] = { script.trap };
+		addLuaFunction(state, "SetEnemySpeed", setEnemySpeed, userData, ARRAYSIZE(userData));
+		addLuaFunction(state, "GetEnemyPosition", getEntityPosition, userData, ARRAYSIZE(userData));
+
+		// PLAYER FUNCTIONS
+		void *userData2[] = { mPlayer };
+		addLuaFunction(state, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
+	}
+}
+
 
 void AIHandler::addLuaFunction(lua_State *state, const char *name,
 	lua_CFunction func, void *userData[], int size) {
@@ -66,8 +90,8 @@ void AIHandler::addLuaFunction(lua_State *state, const char *name,
 void AIHandler::update() {
 	Vector3 enemyToPlayer = mPlayer->getPosition() - mEnemy->getPosition();
 	
-	lua_getglobal(mState, "update");
-	lua_pcall(mState, 0, 0, 0);
+	lua_getglobal(mEnemyState, "update");
+	lua_pcall(mEnemyState, 0, 0, 0);
 
 	enemyToPlayer.Normalize();
 	mEnemy->setVelocity(enemyToPlayer);
@@ -111,10 +135,10 @@ int AIHandler::getDistanceBetween(lua_State *state) {
 }
 
 // private
-bool inline AIHandler::handleError(int error) {
+bool inline AIHandler::handleError(lua_State *state, int error) {
 	if (error) {
-			SDL_Log("Error: %s", lua_tostring(mState, -1));
-			lua_pop(mState, 1);
+			SDL_Log("Error: %s", lua_tostring(state, -1));
+			lua_pop(state, 1);
 			return false;
 	}
 	
@@ -126,7 +150,7 @@ void AIHandler::testScript() {
 	lua_State *test = luaL_newstate();
 
 	int error = luaL_loadfile(test, TEST) || lua_pcall(test, 0, 0, 0);
-	if (handleError(error)) {
+	if (handleError(test, error)) {
 		luaL_openlibs(test);
 
 		lua_getglobal(test, "hello");
@@ -135,7 +159,7 @@ void AIHandler::testScript() {
 
 		lua_getglobal(test, "PrintWorld");
 		error = lua_pcall(test, 0, 1, 0);
-		if (handleError(error)) {
+		if (handleError(test, error)) {
 			SDL_Log("Text2: %s", lua_tostring(test, -1));
 			lua_pop(test, 1);
 		}

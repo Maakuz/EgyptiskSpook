@@ -5,20 +5,34 @@
 #include <lua.hpp>
 #include "Enemy.h"
 #include "Player.h"
+#include "Trap.h"
+#include <vector>
 
 class AIHandler {
 	private:
+		struct TrapScript {
+			Trap* trap;
+			lua_State *state;
+		};
+
 		Enemy *mEnemy; //pointer to enemy that will use the AI
 		Player *mPlayer;
-		lua_State *mState;
+		lua_State *mEnemyState;
 
+		std::vector<TrapScript> mTraps;
+
+		// helper
 		void testScript(); //For testing
-		bool handleError(int error);
+		void setupTraps();
+		bool handleError(lua_State *state, int error);
 
 		// lua functions
-		void addLuaFunctions(lua_State *state);
+		void addLuaFunctionsEnemy();
+		void addLuaFunctionsTraps();
+
 		void addLuaFunction(lua_State *state, const char *name,
 			lua_CFunction func, void *userData[], int size);
+
 		static int setEnemySpeed(lua_State *state);
 		static int getEntityPosition(lua_State *state);
 		static int getDistanceBetween(lua_State *state);
@@ -29,6 +43,8 @@ class AIHandler {
 
 		void update();
 		void setupAI();
+
+		void addTrap(Trap *trap);
 
 		AIHandler* operator=(AIHandler const &aiHandler) = delete;
 };
