@@ -23,7 +23,9 @@ public:
 	DirectX::SimpleMath::Vector3 getWaypoint() const;
 	bool isHuntingPlayer() const;
 
-
+	// lua
+	static int setHuntingPlayerLua(lua_State *state);
+	static int isHuntingPlayerLua(lua_State *state);
 	static int updateWaypoint(lua_State *state);
 	static int seesPlayer(lua_State *state);
 };

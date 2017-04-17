@@ -33,19 +33,6 @@ void AIHandler::setupEnemy() {
 	addLuaFunctionsEnemy();
 	lua_getglobal(mEnemyState, "onStart");
 	handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
-
-	lua_getglobal(mEnemyState, "enemySpeed");
-	float speed = 0;
-
-	if (lua_isnumber(mEnemyState, -1)) {
-		speed = lua_tonumber(mEnemyState, -1);
-		mEnemy->setSpeed(speed);
-	}
-	else {
-		mEnemy->setSpeed(0);
-	}
-
-	lua_pop(mEnemyState, 1);
 }
 
 
@@ -54,11 +41,16 @@ void AIHandler::setupAI() {
 }
 
 void AIHandler::addLuaFunctionsEnemy() {
+	// For testing
+	addLuaFunction(mEnemyState, "Log", log, nullptr, 0);
+
 	// ENEMY SPEED & POSITION
 	void *userData[] = { mEnemy };
 	addLuaFunction(mEnemyState, "SetEnemySpeed", setEnemySpeed, userData, ARRAYSIZE(userData));
 	addLuaFunction(mEnemyState, "GetEnemyPosition", getEntityPosition, userData, ARRAYSIZE(userData));
 	addLuaFunction(mEnemyState, "SetEnemyWaypoint", Enemy::updateWaypoint, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "IsEnemyHuntingPlayer", Enemy::isHuntingPlayerLua, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "SetEnemyHuntingPlayer", Enemy::setHuntingPlayerLua, userData, ARRAYSIZE(userData));
 	
 	// PLAYER POSITION
 	void *userData2[] = { mPlayer };
@@ -139,6 +131,14 @@ int AIHandler::getDistanceBetween(lua_State *state) {
 	lua_pushnumber(state, eToE2.Length());
 
 	return 1;
+}
+
+int AIHandler::log(lua_State *state) {
+	if (lua_isstring(state, -1)) {
+		SDL_Log(lua_tostring(state, -1));
+	}
+
+	return 0;
 }
 
 // private

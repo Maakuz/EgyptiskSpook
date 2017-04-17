@@ -1,10 +1,11 @@
 #include "Enemy.h"
 #include "Player.h"
 #include <SDL.h>
-#define HALF_PATH_SIZE 1
+#define HALF_PATH_SIZE 2.5f
 using namespace DirectX::SimpleMath;
 
 Enemy::Enemy(int graphicsKey) : Entity(graphicsKey) {
+	mHuntingPlayer = false;
 }
 
 Enemy::~Enemy() {
@@ -16,7 +17,24 @@ void Enemy::setVelocity(DirectX::SimpleMath::Vector3 velocity) {
 }
 
 void Enemy::setHuntingPlayer(bool huntingPlayer) {
-	setHuntingPlayer(huntingPlayer);
+	mHuntingPlayer = huntingPlayer;
+}
+
+int Enemy::setHuntingPlayerLua(lua_State *state) {
+	Enemy *enemy = static_cast<Enemy*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+
+	if (lua_isboolean(state, -1))
+		enemy->setHuntingPlayer(lua_toboolean(state, -1) == 1);
+	return 0;
+}
+
+int Enemy::isHuntingPlayerLua(lua_State *state) {
+	Enemy *enemy = static_cast<Enemy*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+
+	lua_pushboolean(state, enemy->isHuntingPlayer());
+	return 1;
 }
 
 int Enemy::updateWaypoint(lua_State *state) {
@@ -83,7 +101,7 @@ int Enemy::seesPlayer(lua_State *state) {
 	float dot = toPlayer.Dot(enemy->mVelocity);
 
 	if (dot < 0) lua_pushboolean(state, false); //Behind enemy
-	else if (player->getPosition().Length() * (HALF_PATH_SIZE - dot)
+	else if (player->getPosition().Length() * (1 - dot)
 		< HALF_PATH_SIZE) lua_pushboolean(state, true);
 						/* calculates if player is inside path monster
 						 facing, ONLY FOR PATHS NOT ROOMES YET */

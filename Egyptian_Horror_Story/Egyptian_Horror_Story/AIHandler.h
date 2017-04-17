@@ -37,6 +37,7 @@ class AIHandler {
 		static int setEnemySpeed(lua_State *state);
 		static int getEntityPosition(lua_State *state);
 		static int getDistanceBetween(lua_State *state);
+		static int log(lua_State *state);
 	public:
 		AIHandler(Enemy *enemy, Player *player);
 		~AIHandler();
