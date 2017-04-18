@@ -8,11 +8,9 @@ FbxVector4 FBXLoader::getNormal(int ctrlPointIndex, int polygonVertexIndex, FbxG
 
 	if (normalElem->GetMappingMode() == FbxGeometryElement::eByControlPoint)
 	{
-		//reference mode is direct, the normal index is same as lIndexByPolygonVertex.
 		if (normalElem->GetReferenceMode() == FbxGeometryElement::eDirect)
 			lNormalIndex = ctrlPointIndex;
 
-		//reference mode is index-to-direct, get normals by the index-to-direct
 		if (normalElem->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
 			lNormalIndex = normalElem->GetIndexArray().GetAt(ctrlPointIndex);
 
@@ -24,11 +22,9 @@ FbxVector4 FBXLoader::getNormal(int ctrlPointIndex, int polygonVertexIndex, FbxG
 
 	else if (normalElem->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
 	{
-		//reference mode is direct, the normal index is same as lIndexByPolygonVertex.
 		if (normalElem->GetReferenceMode() == FbxGeometryElement::eDirect)
 			lNormalIndex = polygonVertexIndex;
 
-		//reference mode is index-to-direct, get normals by the index-to-direct
 		if (normalElem->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
 			lNormalIndex = normalElem->GetIndexArray().GetAt(polygonVertexIndex);
 
@@ -50,11 +46,9 @@ FbxVector2 FBXLoader::getUV(int ctrlPointIndex, int polygonVertexIndex, FbxGeome
 
 	if (uvElem->GetMappingMode() == FbxGeometryElement::eByControlPoint)
 	{
-		//reference mode is direct, the normal index is same as lIndexByPolygonVertex.
 		if (uvElem->GetReferenceMode() == FbxGeometryElement::eDirect)
 			uvIndex = ctrlPointIndex;
 
-		//reference mode is index-to-direct, get normals by the index-to-direct
 		if (uvElem->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
 			uvIndex = uvElem->GetIndexArray().GetAt(ctrlPointIndex);
 
@@ -66,11 +60,9 @@ FbxVector2 FBXLoader::getUV(int ctrlPointIndex, int polygonVertexIndex, FbxGeome
 
 	else if (uvElem->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
 	{
-		//reference mode is direct, the normal index is same as lIndexByPolygonVertex.
 		if (uvElem->GetReferenceMode() == FbxGeometryElement::eDirect)
 			uvIndex = polygonVertexIndex;
 
-		//reference mode is index-to-direct, get normals by the index-to-direct
 		if (uvElem->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
 			uvIndex = uvElem->GetIndexArray().GetAt(polygonVertexIndex);
 
