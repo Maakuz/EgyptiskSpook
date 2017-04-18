@@ -2,56 +2,77 @@
 #include <SDL.h> //for printing errors and stuff
 #define TEST "scripts/test.lua"
 #define AI "scripts/EnemyAI.lua"
-#define tof(x) static_cast<float> (x)
 #include "SimpleMath.h"
 
 using namespace DirectX::SimpleMath;
 
 AIHandler::AIHandler(Enemy *enemy, Player *player) :
 	mEnemy(enemy), mPlayer(player) {
-	mState = luaL_newstate();
+	mEnemyState = luaL_newstate();
 
 	setupAI();
 }
 
 AIHandler::~AIHandler() {
-	lua_close(mState);
+	lua_close(mEnemyState);
+
+	for (TrapScript &trap : mTraps) {
+		lua_close(trap.state);
+	}
 }
+
+void AIHandler::setupTraps() {
+
+}
+
+void AIHandler::setupEnemy() {
+	int error = luaL_loadfile(mEnemyState, AI) || lua_pcall(mEnemyState, 0, 0, 0);
+	handleError(mEnemyState, error);
+	luaL_openlibs(mEnemyState);
+
+	addLuaFunctionsEnemy();
+	lua_getglobal(mEnemyState, "onStart");
+	handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
+}
+
 
 void AIHandler::setupAI() {
-	int error = luaL_loadfile(mState, AI) || lua_pcall(mState, 0, 0, 0);
-	handleError(error);
-
-	addLuaFunctions(mState);
-
-	lua_getglobal(mState, "enemySpeed");
-	float speed = 0;
-
-	if (lua_isnumber(mState, -1)) {
-		speed = static_cast<float> (lua_tonumber(mState, -1));
-		mEnemy->setSpeed(speed);
-	} else {
-		mEnemy->setSpeed(0);
-	}
-
-	lua_pop(mState, 1);
+	setupEnemy();
 }
 
-void AIHandler::addLuaFunctions(lua_State *state) {
-	// ENEMY FUNC
+void AIHandler::addLuaFunctionsEnemy() {
+	// For testing
+	addLuaFunction(mEnemyState, "Log", log, nullptr, 0);
+
+	// ENEMY SPEED & POSITION
 	void *userData[] = { mEnemy };
-	addLuaFunction(state, "SetEnemySpeed", setEnemySpeed, userData, ARRAYSIZE(userData));
-	addLuaFunction(state, "GetEnemyPosition", getEntityPosition, userData, ARRAYSIZE(userData));
-	addLuaFunction(state, "SetEnemyPosition", setEntityPosition, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "SetEnemySpeed", setEnemySpeed, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "GetEnemyPosition", getEntityPosition, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "SetEnemyWaypoint", Enemy::updateWaypoint, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "IsEnemyHuntingPlayer", Enemy::isHuntingPlayerLua, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "SetEnemyHuntingPlayer", Enemy::setHuntingPlayerLua, userData, ARRAYSIZE(userData));
 	
-	// PLAYER FUNC
+	// PLAYER POSITION
 	void *userData2[] = { mPlayer };
-	addLuaFunction(state, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
-	addLuaFunction(state, "GetPlayerForward", getPlayerForward, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(mEnemyState, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
 	
-	// PLAYER & ENEMY FUNC
+	// GET DISTANCE BEETWEN
 	void *userData3[] = { mEnemy, mPlayer };
-	addLuaFunction(state, "GetDistanceBetween", getDistanceBetween, userData3, ARRAYSIZE(userData3));
+	addLuaFunction(mEnemyState, "GetDistanceBetween", getDistanceBetween, userData3, ARRAYSIZE(userData3));
+	addLuaFunction(mEnemyState, "SeesPlayer", Enemy::seesPlayer, userData3, ARRAYSIZE(userData3));
+}
+
+void AIHandler::addLuaFunctionsTraps() {
+	for (TrapScript &script : mTraps) {
+		lua_State *state = script.state;
+		// TRAP FUNCTIONS
+		void *userData[] = { script.trap };
+		addLuaFunction(state, "GetPosition", getEntityPosition, userData, ARRAYSIZE(userData));
+
+		// PLAYER FUNCTIONS
+		void *userData2[] = { mPlayer };
+		addLuaFunction(state, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
+	}
 }
 
 void AIHandler::addLuaFunction(lua_State *state, const char *name,
@@ -67,14 +88,13 @@ void AIHandler::addLuaFunction(lua_State *state, const char *name,
 }
 
 void AIHandler::update() {
-	Vector3 enemyToPlayer = mPlayer->getPosition() - mEnemy->getPosition();
-	
-	lua_getglobal(mState, "update");
-	lua_pcall(mState, 0, 0, 0);
+	lua_getglobal(mEnemyState, "update");
+	lua_pcall(mEnemyState, 0, 0, 0);
 
-	enemyToPlayer.Normalize();
-	mEnemy->setVelocity(enemyToPlayer);
-	mEnemy->update();
+	if (mEnemy->update() == 1) {
+		lua_getglobal(mEnemyState, "onReachingWaypoint");
+		handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
+	}// on waypoint 
 }
 
 // LUA
@@ -83,7 +103,7 @@ int AIHandler::setEnemySpeed(lua_State *state) {
 		(lua_touserdata(state, lua_upvalueindex(1)));
 
 	if (lua_isnumber(state, -1)) {
-		enemy->setSpeed(tof(lua_tonumber(state, -1)));
+		enemy->setSpeed(static_cast<float> (lua_tonumber(state, -1)));
 		lua_pop(state, 1);
 	}
 
@@ -100,32 +120,6 @@ int AIHandler::getEntityPosition(lua_State *state) {
 	return 3;
 }
 
-int AIHandler::setEntityPosition(lua_State *state) {
-	Entity *entity = static_cast<Entity*>
-		(lua_touserdata(state, lua_upvalueindex(1)));
-	if (lua_isnumber(state, -1) && lua_isnumber(state, -2) & lua_isnumber(state, -3)) {
-		entity->setPosition(Vector3(tof(lua_tonumber(state, -3)), tof(lua_tonumber(state, -2))
-			, tof(lua_tonumber(state, -1)))); //it is a stack, so first para is -3!
-	} else {
-		// bad
-	}
-
-	return 0;
-}
-
-int AIHandler::getPlayerForward(lua_State *state) {
-	Player *player = static_cast<Player*>
-		(lua_touserdata(state, lua_upvalueindex(1)));
-
-	Vector3 vel = player->getVelocity();
-	vel.Normalize(); //to be sure
-	lua_pushnumber(state, vel.x);
-	lua_pushnumber(state, vel.y);
-	lua_pushnumber(state, vel.z);
-
-	return 3;
-}
-
 int AIHandler::getDistanceBetween(lua_State *state) {
 	Entity *entity1 = static_cast<Entity*>
 		(lua_touserdata(state, lua_upvalueindex(1)));
@@ -139,11 +133,19 @@ int AIHandler::getDistanceBetween(lua_State *state) {
 	return 1;
 }
 
+int AIHandler::log(lua_State *state) {
+	if (lua_isstring(state, -1)) {
+		SDL_Log(lua_tostring(state, -1));
+	}
+
+	return 0;
+}
+
 // private
-bool inline AIHandler::handleError(int error) {
+bool inline AIHandler::handleError(lua_State *state, int error) {
 	if (error) {
-			SDL_Log("Error: %s", lua_tostring(mState, -1));
-			lua_pop(mState, 1);
+			SDL_Log("Error: %s", lua_tostring(state, -1));
+			lua_pop(state, 1);
 			return false;
 	}
 	
@@ -155,7 +157,7 @@ void AIHandler::testScript() {
 	lua_State *test = luaL_newstate();
 
 	int error = luaL_loadfile(test, TEST) || lua_pcall(test, 0, 0, 0);
-	if (handleError(error)) {
+	if (handleError(test, error)) {
 		luaL_openlibs(test);
 
 		lua_getglobal(test, "hello");
@@ -164,7 +166,7 @@ void AIHandler::testScript() {
 
 		lua_getglobal(test, "PrintWorld");
 		error = lua_pcall(test, 0, 1, 0);
-		if (handleError(error)) {
+		if (handleError(test, error)) {
 			SDL_Log("Text2: %s", lua_tostring(test, -1));
 			lua_pop(test, 1);
 		}

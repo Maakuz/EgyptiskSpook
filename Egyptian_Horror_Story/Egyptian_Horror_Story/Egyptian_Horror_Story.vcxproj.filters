@@ -142,9 +142,12 @@
     </ClCompile>
     <ClCompile Include="AnimationHandler.cpp">
       <Filter>Source Files</Filter>
-</ClCompile>
+    </ClCompile>
     <ClCompile Include="Colliders.cpp">
       <Filter>Source Files\Game Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Trap.cpp">
+      <Filter>Source Files\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -207,9 +210,12 @@
     </ClInclude>
     <ClInclude Include="AnimationHandler.h">
       <Filter>Header Files</Filter>
-	  </ClInclude>
+    </ClInclude>
     <ClInclude Include="Colliders.h">
       <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Trap.h">
+      <Filter>Header Files\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

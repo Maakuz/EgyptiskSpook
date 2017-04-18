@@ -105,6 +105,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ShaderHandler.cpp" />
     <ClCompile Include="ShadowRenderer.cpp" />
+    <ClCompile Include="Trap.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -128,6 +129,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ShaderHandler.h" />
     <ClInclude Include="ShadowRenderer.h" />
+    <ClInclude Include="Trap.h" />
     <ClInclude Include="Wall.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -153,7 +155,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
