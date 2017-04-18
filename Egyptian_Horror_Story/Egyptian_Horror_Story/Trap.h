@@ -6,7 +6,7 @@ class Trap : public Entity {
 private:
 
 public:
-	Trap(int graphicsKey);
+	Trap(int graphicsKey, float x, float y, float z);
 	virtual ~Trap();
 };
 

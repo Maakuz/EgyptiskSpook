@@ -10,6 +10,10 @@ AIHandler::AIHandler(Enemy *enemy, Player *player) :
 	mEnemy(enemy), mPlayer(player) {
 	mEnemyState = luaL_newstate();
 
+	// TESTING
+	testTrap = new Trap(0, 17, 0, -74);
+	addTrap("scripts/TrapStone.lua", testTrap);
+
 	setupAI();
 }
 
@@ -19,10 +23,39 @@ AIHandler::~AIHandler() {
 	for (TrapScript &trap : mTraps) {
 		lua_close(trap.state);
 	}
+
+	// TESTING
+	delete testTrap;
 }
 
 void AIHandler::setupTraps() {
+	for (TrapScript &trap : mTraps) {
+		lua_State *state = trap.state;
 
+		lua_getglobal(state, "onStart");
+		handleError(state, lua_pcall(state, 0, 0, 0));
+
+		lua_getglobal(state, "getSize");
+		handleError(state, lua_pcall(state, 0, 3, 0));
+
+		if (lua_isnumber(state, -1) && lua_isnumber(state, -2) &&
+			lua_isnumber(state, -3)) {
+			trap.trap->createAABB(trap.trap->getPosition(), Vector3(lua_tonumber(state, -3), 0, 0),
+								  Vector3(0, lua_tonumber(state, -2), 0), Vector3(0, 0, lua_tonumber(state, -1)));
+			lua_pop(state, 3);
+		}
+	}
+}
+
+void AIHandler::addTrap(char const *scriptPath, Trap *trap) {
+	lua_State *state = luaL_newstate();
+	int error = luaL_loadfile(state, scriptPath) || lua_pcall(state, 0, 0, 0);
+	handleError(state, error);
+	luaL_openlibs(state);
+
+	TrapScript script { trap, state };
+	addLuaFunctionsTrap(state, trap);
+	mTraps.push_back(script);
 }
 
 void AIHandler::setupEnemy() {
@@ -38,6 +71,7 @@ void AIHandler::setupEnemy() {
 
 void AIHandler::setupAI() {
 	setupEnemy();
+	setupTraps();
 }
 
 void AIHandler::addLuaFunctionsEnemy() {
@@ -62,17 +96,21 @@ void AIHandler::addLuaFunctionsEnemy() {
 	addLuaFunction(mEnemyState, "SeesPlayer", Enemy::seesPlayer, userData3, ARRAYSIZE(userData3));
 }
 
-void AIHandler::addLuaFunctionsTraps() {
-	for (TrapScript &script : mTraps) {
-		lua_State *state = script.state;
-		// TRAP FUNCTIONS
-		void *userData[] = { script.trap };
-		addLuaFunction(state, "GetPosition", getEntityPosition, userData, ARRAYSIZE(userData));
+void AIHandler::addLuaFunctionsTrap(lua_State *state, Trap *trap) {
+	// For testing
+	addLuaFunction(state, "Log", log, nullptr, 0);
 
-		// PLAYER FUNCTIONS
-		void *userData2[] = { mPlayer };
-		addLuaFunction(state, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
-	}
+	// TRAP FUNCTIONS
+	void *userData[] = { trap };
+	addLuaFunction(state, "GetPosition", getEntityPosition, userData, ARRAYSIZE(userData));
+
+	// PLAYER FUNCTIONS
+	void *userData2[] = { mPlayer };
+	addLuaFunction(state, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
+
+	// Enemy FUNCTIONS
+	void *userData3[] = { mEnemy };
+	addLuaFunction(state, "GetEnemyPosition", getEntityPosition, userData3, ARRAYSIZE(userData3));
 }
 
 void AIHandler::addLuaFunction(lua_State *state, const char *name,
@@ -95,6 +133,23 @@ void AIHandler::update() {
 		lua_getglobal(mEnemyState, "onReachingWaypoint");
 		handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
 	}// on waypoint 
+
+	for (TrapScript &script : mTraps) {
+		lua_State *state = script.state;
+		lua_getglobal(state, "update");
+		handleError(state, lua_pcall(state, 0, 0, 0));
+
+		// should not be checked every frame, change later
+		if (script.trap->getAABB().aabbVSCapsule(*mPlayer->col)) {
+			lua_getglobal(state, "onPlayerCollision");
+			handleError(state, lua_pcall(state, 0, 0, 0));
+		}
+
+		if (script.trap->getAABB().aabbVSPoint(mEnemy->getPosition())) {
+			lua_getglobal(state, "onEnemyCollision");
+			handleError(state, lua_pcall(state, 0, 0, 0));
+		}
+	}
 }
 
 // LUA

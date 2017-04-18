@@ -82,7 +82,7 @@ void Enemy::setSpeed(float speed) {
 
 int Enemy::update() {
 	move(mVelocity * mSpeed);
-	if ((mWaypoint - getPosition()).Length() < mSpeed) {
+	if ((mWaypoint - getPosition()).Length() <= mSpeed) {
 		setPosition(mWaypoint);
 		return 1; //On waypoint
 	}

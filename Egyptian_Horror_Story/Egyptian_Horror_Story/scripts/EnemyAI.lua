@@ -1,12 +1,16 @@
-walkSpeed = 0.001
-runSpeed = 0.05
+walkSpeed = 0.12
+runSpeed = 0.50
+prevWaypoint = 0
 currentWaypoint = 1
-nrOfWaypoints = 4
-waypoints = { 
-				{x = -6, y = 0, z = 6},
-				{x = -6, y = 0, z = -47},
-				{x = 45, y = 0, z = -47},
-				{x = 45, y = 0, z = 6}
+waypoints = { -- c = connections, length beetwen gets calc in c++
+				{x = -6, y = 0, z = 6, c = {2, 4}},
+				{x = -6, y = 0, z = -47, c = {1, 7, 5}},
+				{x = 45, y = 0, z = -47, c = {7, 4, 6}},
+				{x = 45, y = 0, z = 6, c = {1, 3}},
+				{x = -6, y = 0, z = -74, c = {2, 6}},
+				{x = 45, y = 0, z = -74, c = {5, 3}},
+				{x = 17, y = 0, z = -47, c = {2, 3, 8}},
+				{x = 17, y = 0, z = -61, c = {7}},
 			}
 
 onStart = function()
@@ -16,21 +20,18 @@ onStart = function()
 end
 
 onReachingWaypoint = function()
-	currentWaypoint = currentWaypoint + 1;
+	local toCon = math.random(1, #waypoints[currentWaypoint].c)
+	local temp = waypoints[currentWaypoint].c[toCon]
 	
-	if (currentWaypoint > nrOfWaypoints)
-		then currentWaypoint = 1
-	end
-	
-	if IsEnemyHuntingPlayer() and SeesPlayer()
-		then SetPlayerAsWaypoint()
-	else
-		SetEnemyWaypoint(waypoints[currentWaypoint])
-	end
+	if (#waypoints[currentWaypoint].c > 1 and temp == prevWaypoint)
+		then return onReachingWaypoint() end
+		
+	prevWaypoint = currentWaypoint
+	currentWaypoint = temp
+	SetEnemyWaypoint(waypoints[currentWaypoint])
 end
 
 update = function()
-	Log(string.format("Hunting Player! %s", IsEnemyHuntingPlayer()))
 	if not IsEnemyHuntingPlayer() and SeesPlayer()
 		then
 			SetEnemySpeed(runSpeed)
@@ -39,7 +40,6 @@ update = function()
 			SetEnemyHuntingPlayer(true)	
 	elseif IsEnemyHuntingPlayer() and not SeesPlayer()
 		then
-			Log("Player Lost!");
 			SetEnemySpeed(walkSpeed)
 			SetEnemyWaypoint(waypoints[currentWaypoint])
 			
@@ -57,5 +57,5 @@ function SetPlayerAsWaypoint()
 	local playerPos = {x = 0, y = 0, z = 0}
 	playerPos["x"], playerPos["y"], playerPos["z"] = GetPlayerPosition()
 	
-	SetEnemyWaypoint(playerPos)
+	--SetEnemyWaypoint(playerPos) search for player path not walk towards it :)
 end
