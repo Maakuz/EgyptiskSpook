@@ -98,7 +98,7 @@
     <ClCompile Include="GUIRenderer.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="OBB.cpp" />
+    <ClCompile Include="Colliders.cpp" />
     <ClCompile Include="ParticleRenderer.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -120,7 +120,7 @@
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="GUIRenderer.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="OBB.h" />
+    <ClInclude Include="Colliders.h" />
     <ClInclude Include="ParticleRenderer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Renderer.h" />
