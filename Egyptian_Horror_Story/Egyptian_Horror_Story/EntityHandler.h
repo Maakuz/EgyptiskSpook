@@ -16,6 +16,8 @@ private:
 
 	int mNrOfKeys;
 
+	void hardcodedMap(ID3D11Device* device);
+
 public:
 	EntityHandler();
 	virtual ~EntityHandler();
