@@ -199,6 +199,9 @@
     <ClInclude Include="Colliders.h">
       <Filter>Header Files\Game classes</Filter>
     </ClInclude>
+    <ClInclude Include="Structs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -2,26 +2,14 @@
 #define LIGHT_H
 
 #include "Direct3DHeader.h"
-#include "SimpleMath.h"
+#include "Structs.h"
 #include "GraphicsData.h"
 
 #define _USE_MATH_DEFINES
 
 #include <math.h>
 
-namespace lightStructs {
-	struct VP
-	{
-		DirectX::SimpleMath::Matrix view;
-		DirectX::SimpleMath::Matrix projection;
-	};
 
-	struct lightPosDir
-	{
-		DirectX::SimpleMath::Vector4 pos;
-		DirectX::SimpleMath::Vector4 dir;
-	};
-}
 class Light
 {
 private:

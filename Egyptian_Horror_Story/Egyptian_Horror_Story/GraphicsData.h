@@ -3,18 +3,12 @@
 
 #include "Direct3DHeader.h"
 #include "WICTextureLoader.h"
-#include "SimpleMath.h"
+#include "Structs.h"
 #include <map>
+#include <string>
 
-namespace EntityStruct
-{
-	struct VertexStruct
-	{
-		DirectX::SimpleMath::Vector3 pos;
-		DirectX::SimpleMath::Vector3 normal;
-		DirectX::SimpleMath::Vector2 uv;
-	};
-}
+#define TEXTUREPATH L"../Resource/Textures/"
+
 
 class GraphicsData
 {
