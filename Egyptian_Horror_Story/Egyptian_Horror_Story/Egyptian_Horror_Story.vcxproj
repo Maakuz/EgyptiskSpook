@@ -124,6 +124,7 @@
     <ClInclude Include="GUIRenderer.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Colliders.h" />
+    <ClInclude Include="NavMesh.h" />
     <ClInclude Include="ParticleRenderer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Renderer.h" />
@@ -143,13 +144,13 @@
     <ProjectGuid>{FF0FB6A1-E8EC-4896-BF80-4532FA45D94E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Egyptian_Horror_Story</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

@@ -10,6 +10,9 @@ private:
 	float mSpeed;
 	bool mHuntingPlayer;
 public:
+	// temp ? 
+	Capsule* mCapsule;
+
 	Enemy(int graphicsKey);
 	virtual ~Enemy();
 

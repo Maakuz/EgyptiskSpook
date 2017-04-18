@@ -145,7 +145,7 @@ void AIHandler::update() {
 			handleError(state, lua_pcall(state, 0, 0, 0));
 		}
 
-		if (script.trap->getAABB().aabbVSPoint(mEnemy->getPosition())) {
+		if (script.trap->getAABB().aabbVSCapsule(*mEnemy->mCapsule)) {
 			lua_getglobal(state, "onEnemyCollision");
 			handleError(state, lua_pcall(state, 0, 0, 0));
 		}

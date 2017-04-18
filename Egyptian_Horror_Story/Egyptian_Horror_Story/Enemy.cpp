@@ -6,6 +6,7 @@ using namespace DirectX::SimpleMath;
 
 Enemy::Enemy(int graphicsKey) : Entity(graphicsKey) {
 	mHuntingPlayer = false;
+	mCapsule = new Capsule(getPosition(), 2, 1);
 }
 
 Enemy::~Enemy() {
@@ -82,6 +83,7 @@ void Enemy::setSpeed(float speed) {
 
 int Enemy::update() {
 	move(mVelocity * mSpeed);
+	mCapsule->mPoint = getPosition();
 	if ((mWaypoint - getPosition()).Length() <= mSpeed) {
 		setPosition(mWaypoint);
 		return 1; //On waypoint
