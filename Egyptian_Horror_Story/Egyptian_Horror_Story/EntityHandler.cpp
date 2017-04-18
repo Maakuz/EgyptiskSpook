@@ -271,7 +271,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 	Entity* testEnt = new Entity(this->mNrOfKeys++);
 
 	this->mEntities.push_back(testEnt);
-	this->mEntityRenderer->loadObject(device, testEnt->getKey(), test.data(), test.size());
+	this->mEntityRenderer->loadObject(device, testEnt->getKey(), test.data(), test.size(), L"Sam.jpg");
 }
 
 void EntityHandler::update()

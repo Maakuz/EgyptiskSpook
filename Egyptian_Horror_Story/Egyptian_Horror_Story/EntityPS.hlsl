@@ -42,11 +42,12 @@ float4 main(VS_OUT input) : SV_TARGET
 
     if (lambert > 0)
     {
-        diffuse = lambert * falloff;
+        diffuse = lambert; //* falloff;
 
 
         //Skrik på Jakob Nyberg var formeln kommer ifrån!
         float3 posToCam = camPos.xyz - input.wPos.xyz;
+       // float3 H = normalize(lightDir.xyz + posToCam); // kanske rättare?
         float3 H = normalize(posToCam - lightDir.xyz);
 
         specularity = pow(saturate(dot(input.normal.xyz, H)), specularIntensity) * falloff;
