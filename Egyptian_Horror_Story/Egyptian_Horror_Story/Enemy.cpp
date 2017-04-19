@@ -6,11 +6,15 @@ using namespace DirectX::SimpleMath;
 
 Enemy::Enemy(int graphicsKey) : Entity(graphicsKey) {
 	mHuntingPlayer = false;
+	mCapsule = nullptr;
+
+	// hi
 	mCapsule = new Capsule(getPosition(), 2, 1);
 }
 
 Enemy::~Enemy() {
-
+	if (mCapsule)
+		delete mCapsule;
 }
 
 void Enemy::setVelocity(DirectX::SimpleMath::Vector3 velocity) {

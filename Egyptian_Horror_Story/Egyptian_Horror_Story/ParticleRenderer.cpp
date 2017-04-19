@@ -69,14 +69,13 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 		}
 	}
 
-	/* TEEST TETSTTETET REMOVE BEFORE MERGING */
+	/* TEEST TETSTTETET REMOVE LATER */
 	ParticleVertex *vertex = &this->mParticleVertices[mParticleVertices.size() - 1];
 	ParticleData *data = &this->mParticleData[mParticleVertices.size() - 1];
 	vertex->dimensions.x = 2.f;
 	vertex->dimensions.y = 4.f;
 	vertex->position = enemy->getPosition();
 	/* TEEST TETSTTETET */
-
 
 	timeCheck(start, piece);
 
