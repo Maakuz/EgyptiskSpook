@@ -15,9 +15,9 @@ EntityHandler::~EntityHandler()
 	}
 }
 
-void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera, GraphicsData* gData)
+void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera)
 {
-	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, gData);
+	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData());
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
 }
 
@@ -25,7 +25,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 {
 	//test
 
-/*			Wall* wall = new Wall(
+/*		Wall* wall = new Wall(
 				DirectX::SimpleMath::Vector3(-10.f, -2.f, 10.f),
 				DirectX::SimpleMath::Vector3(7.f, 0.f, 0.f),
 				DirectX::SimpleMath::Vector3(0.f, 6.f, 0.f),
@@ -271,7 +271,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 	Entity* testEnt = new Entity(this->mNrOfKeys++);
 
 	this->mEntities.push_back(testEnt);
-	this->mEntityRenderer->loadObject(device, testEnt->getKey(), test.data(), test.size());
+	this->mEntityRenderer->loadObject(device, testEnt->getKey(), test.data(), test.size(), L"Rock-Texture-Surface.jpg");
 }
 
 void EntityHandler::update()

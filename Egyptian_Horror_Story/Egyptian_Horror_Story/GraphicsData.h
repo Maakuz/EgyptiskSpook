@@ -5,6 +5,9 @@
 #include "WICTextureLoader.h"
 #include "Structs.h"
 #include <map>
+#include <string>
+
+#define TEXTUREPATH L"../Resource/Textures/"
 
 
 class GraphicsData

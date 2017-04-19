@@ -22,8 +22,17 @@ void EntityRenderer::setup(ID3D11Device* device, ShaderHandler& shaderHandler)
 
 void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderHandler)
 {
+	UINT stride = sizeof(EntityStruct::VertexStruct), offset = 0;
+
 	shaderHandler.setShaders(context, 20, 20, -1);
 
+	ID3D11Buffer* temp;
+	temp = mGraphicsData.getBuffer(300);
+	context->PSSetConstantBuffers(0, 1, &temp);
+
+	temp = mGraphicsData.getBuffer(302);
+	context->PSSetConstantBuffers(1, 1, &temp);
+	
 	context->IASetInputLayout(shaderHandler.getInputLayout(20));
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -33,14 +42,11 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 	{
 		key = item.first;
 
-		ID3D11Buffer* temp = this->mGraphicsData.getBuffer(key);
-		UINT stride = sizeof(EntityStruct::VertexStruct), offset = 0;
-
+		temp = this->mGraphicsData.getBuffer(key);
 		context->IASetVertexBuffers(0, 1, &temp, &stride, &offset);
 
-		temp = mGraphicsData.getBuffer(300);
-		context->PSSetConstantBuffers(0, 1, &temp);
-		
+
+
 		ID3D11ShaderResourceView* texTemp = this->mGraphicsData.getSRV(key);
 		context->PSSetShaderResources(0, 1, &texTemp);
 
