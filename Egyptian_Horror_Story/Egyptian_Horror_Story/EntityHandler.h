@@ -6,6 +6,8 @@
 #include "Wall.h"
 #include "FBXLoader.h"
 
+#define WALLTEXTURE L"pyramidStone.png"
+
 class EntityHandler
 {
 private:
