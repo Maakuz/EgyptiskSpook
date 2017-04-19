@@ -18,13 +18,12 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 
 	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
 
-	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera));
+	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera, mEntityHandler->getEnemy())); // temp
 	this->mGraphics->addRenderer(this->mEntityHandler->getRenderer());
 
 	this->mGraphics->setupRenderers();
 
-
-
+	this->mAIHandler = new AIHandler(mEntityHandler->getEnemy(), mEntityHandler->getPlayer());
 
 	//this->mGraphics->addRenderer(new ShadowRenderer(this->mEntityHandler->getPlayer()->getLight()));
 }
@@ -33,6 +32,7 @@ Game::~Game()
 {
 	delete this->mCamera;
 	delete this->mEntityHandler;
+	delete this->mAIHandler;
 }
 
 void Game::update()
@@ -43,6 +43,8 @@ void Game::update()
 	this->mGraphics->clear();
 	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer());
 	this->mGraphics->present();
+
+	this->mAIHandler->update();
 }
 
 bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
@@ -59,4 +61,8 @@ void Game::handleMouseMotion(SDL_MouseMotionEvent const &motion)
 {
 	this->mEntityHandler->getPlayer()->handleMouseMotion(motion);
 	this->mCamera->updateRotation(this->mGraphics->getDeviceContext());
+}
+
+void Game::updateLua() {
+	this->mAIHandler->setupAI();
 }

@@ -3,6 +3,7 @@
 #include <vector>
 #include "EntityRenderer.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Wall.h"
 #include "FBXLoader.h"
 
@@ -13,6 +14,8 @@ class EntityHandler
 private:
 	std::vector<Entity*> mEntities;
 	Player* mPlayer;
+	Enemy* mEnemy;
+	
 	FBXLoader mLoader;
 
 	//Will be removed in GraphicsHandler
@@ -21,7 +24,6 @@ private:
 	int mNrOfKeys;
 
 	void hardcodedMap(ID3D11Device* device);
-
 public:
 	EntityHandler();
 	virtual ~EntityHandler();
@@ -33,6 +35,7 @@ public:
 
 	EntityRenderer* getRenderer();
 	Player* getPlayer();
+	Enemy* getEnemy();
 };
 
 

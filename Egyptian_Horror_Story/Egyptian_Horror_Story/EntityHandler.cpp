@@ -1,9 +1,9 @@
 #include "EntityHandler.h"
+#define ENEMY_KEY 400
 
 void EntityHandler::hardcodedMap(ID3D11Device* device)
 {
 	using namespace DirectX::SimpleMath;
-
 	Wall* wall = new Wall(
 		Vector3(-10.f, -2.f, 10.f),
 		Vector3(7.f, 0.f, 0.f),
@@ -12,7 +12,6 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0.f, 0.f, -1.f), this->mNrOfKeys++);
 
 	EntityStruct::VertexStruct testData[] = {
-
 		Vector3(-10.f , -2.f , 10.f),
 		Vector3(0, 0, -1),
 		Vector2(0.f, 1.f),
@@ -1253,7 +1252,6 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	this->mEntities.push_back(wall);
 	this->mEntityRenderer->loadObject(device, wall->getKey(), testData33, 6, WALLTEXTURE);
 
-
 	wall = new Wall(
 		Vector3(-3, 4, -78),
 		Vector3(43.f, 0.f, 0.f),
@@ -1296,6 +1294,9 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 {
 	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData());
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, 4));
+
+	this->mEnemy = new Enemy(ENEMY_KEY);
+	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
 }
 
 EntityHandler::EntityHandler()
@@ -1306,6 +1307,7 @@ EntityHandler::EntityHandler()
 EntityHandler::~EntityHandler()
 {
 	delete this->mPlayer;
+	delete this->mEnemy;
 
 	for (size_t i = 0; i < this->mEntities.size(); i++)
 	{
@@ -1378,7 +1380,6 @@ void EntityHandler::update()
 
 		}
 	}
-	
 }
 
 EntityRenderer* EntityHandler::getRenderer()
@@ -1389,4 +1390,9 @@ EntityRenderer* EntityHandler::getRenderer()
 Player* EntityHandler::getPlayer()
 {
 	return this->mPlayer;
+}
+
+Enemy* EntityHandler::getEnemy()
+{
+	return this->mEnemy;
 }

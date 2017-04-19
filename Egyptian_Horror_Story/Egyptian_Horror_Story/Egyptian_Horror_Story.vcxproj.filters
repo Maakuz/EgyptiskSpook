@@ -134,10 +134,22 @@
     <ClCompile Include="GUIRenderer.cpp">
       <Filter>Source Files\Renderers</Filter>
     </ClCompile>
+    <ClCompile Include="AIHandler.cpp">
+      <Filter>Source Files\Game Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
     <ClCompile Include="AnimationHandler.cpp">
       <Filter>Source Files</Filter>
-</ClCompile>
+    </ClCompile>
     <ClCompile Include="Colliders.cpp">
+      <Filter>Source Files\Game Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Trap.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMesh.cpp">
       <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
   </ItemGroup>
@@ -193,10 +205,22 @@
     <ClInclude Include="GUIRenderer.h">
       <Filter>Header Files\Renderers</Filter>
     </ClInclude>
+    <ClInclude Include="AIHandler.h">
+      <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
     <ClInclude Include="AnimationHandler.h">
       <Filter>Header Files</Filter>
-	  </ClInclude>
+    </ClInclude>
     <ClInclude Include="Colliders.h">
+      <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Trap.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMesh.h">
       <Filter>Header Files\Game classes</Filter>
     </ClInclude>
     <ClInclude Include="Structs.h">
