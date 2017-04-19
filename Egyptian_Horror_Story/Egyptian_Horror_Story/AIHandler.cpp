@@ -68,8 +68,9 @@ void AIHandler::setupEnemy() {
 	handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
 }
 
-
 void AIHandler::setupAI() {
+	navMesh.loadGrid("navMesh.bmp");
+
 	setupEnemy();
 	setupTraps();
 }

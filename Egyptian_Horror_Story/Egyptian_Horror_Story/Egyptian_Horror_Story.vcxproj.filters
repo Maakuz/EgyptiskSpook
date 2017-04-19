@@ -149,6 +149,9 @@
     <ClCompile Include="Trap.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="NavMesh.cpp">
+      <Filter>Source Files\Game Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">

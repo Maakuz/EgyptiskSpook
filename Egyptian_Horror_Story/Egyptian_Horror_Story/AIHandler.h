@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Trap.h"
 #include <vector>
+#include "NavMesh.h"
 
 class AIHandler {
 	private:
@@ -19,6 +20,7 @@ class AIHandler {
 		Enemy *mEnemy; //pointer to enemy that will use the AI
 		Player *mPlayer;
 		lua_State *mEnemyState;
+		NavMesh navMesh;
 
 		std::vector<TrapScript> mTraps;
 
