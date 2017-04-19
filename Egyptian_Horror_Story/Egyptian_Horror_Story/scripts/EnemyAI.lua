@@ -1,5 +1,5 @@
 walkSpeed = 0.12
-runSpeed = 0.50
+runSpeed = 0.10
 prevWaypoint = 0
 currentWaypoint = 1
 waypoints = { -- c = connections, length beetwen gets calc in c++
@@ -20,6 +20,7 @@ onStart = function()
 end
 
 onReachingWaypoint = function()
+	--Log("Reached Waypoint")
 	local toCon = math.random(1, #waypoints[currentWaypoint].c)
 	local temp = waypoints[currentWaypoint].c[toCon]
 	
@@ -35,7 +36,6 @@ update = function()
 	if not IsEnemyHuntingPlayer() and SeesPlayer()
 		then
 			SetEnemySpeed(runSpeed)
-			SetPlayerAsWaypoint()
 			
 			SetEnemyHuntingPlayer(true)	
 	elseif IsEnemyHuntingPlayer() and not SeesPlayer()
@@ -49,17 +49,19 @@ update = function()
 	end
 end
 
-function returnStuff()
-	return 10, 10, 10
+function onReachingPathEnd()
+	--Log("Reached end")
+	
+	if SeesPlayer() then
+		onChasingPlayer()
+	else
+		SetOnPath(false)
+		SetEnemyWaypoint(waypoints[currentWaypoint])
+	end
 end
 
 function onChasingPlayer() 
-	SetPlayerAsWaypoint()
-end
-
-function SetPlayerAsWaypoint()
-	local playerPos = {x = 0, y = 0, z = 0}
-	playerPos["x"], playerPos["y"], playerPos["z"] = GetPlayerPosition()
-	
-	--SetEnemyWaypoint(playerPos) search for player path not walk towards it :)
+	SetCurrentPathNode(0)
+	SetPathToPlayer()
+	SetOnPath(true)
 end

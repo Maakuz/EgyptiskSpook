@@ -91,6 +91,12 @@ void AIHandler::addLuaFunctionsEnemy() {
 	addLuaFunction(mEnemyState, "IsEnemyHuntingPlayer", Enemy::isHuntingPlayerLua, userData, ARRAYSIZE(userData));
 	addLuaFunction(mEnemyState, "SetEnemyHuntingPlayer", Enemy::setHuntingPlayerLua, userData, ARRAYSIZE(userData));
 	
+	addLuaFunction(mEnemyState, "SetOnPath", Enemy::SetOnPathLua, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "IsEnemyOnPath", Enemy::onPathLua, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "GetPathSize", Enemy::getPathSizeLua, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "SetCurrentPathNode", Enemy::setCurrentPathNodeLua, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "GetNextEnemyWaypoint", Enemy::getNextWaypoint, userData, ARRAYSIZE(userData));
+
 	// PLAYER POSITION
 	void *userData2[] = { mPlayer };
 	addLuaFunction(mEnemyState, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
@@ -99,6 +105,9 @@ void AIHandler::addLuaFunctionsEnemy() {
 	void *userData3[] = { mEnemy, mPlayer };
 	addLuaFunction(mEnemyState, "GetDistanceBetween", getDistanceBetween, userData3, ARRAYSIZE(userData3));
 	addLuaFunction(mEnemyState, "SeesPlayer", Enemy::seesPlayer, userData3, ARRAYSIZE(userData3));
+
+	void *userData4[] = { mEnemy, mPlayer, &navMesh };
+	addLuaFunction(mEnemyState, "SetPathToPlayer", setPathToEntity, userData4, ARRAYSIZE(userData4));
 }
 
 void AIHandler::addLuaFunctionsTrap(lua_State *state, Trap *trap) {
@@ -134,10 +143,15 @@ void AIHandler::update() {
 	lua_getglobal(mEnemyState, "update");
 	lua_pcall(mEnemyState, 0, 0, 0);
 
-	if (mEnemy->update() == 1) {
+	Enemy::UPDATE_RETURNS ret = mEnemy->update();
+
+	if (ret == mEnemy->ON_WAYPOINT) {
 		lua_getglobal(mEnemyState, "onReachingWaypoint");
 		handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
-	}// on waypoint 
+	} else if (ret == mEnemy->ON_REACHED_PATH_DESTINATION) {
+		lua_getglobal(mEnemyState, "onReachingPathEnd");
+		handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
+	}
 
 	for (TrapScript &script : mTraps) {
 		lua_State *state = script.state;
@@ -192,6 +206,21 @@ int AIHandler::getDistanceBetween(lua_State *state) {
 
 	return 1;
 }
+
+int AIHandler::setPathToEntity(lua_State *state) {
+	Enemy *enemy = static_cast<Enemy*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+	Entity *entity = static_cast<Entity*>
+		(lua_touserdata(state, lua_upvalueindex(2)));
+	NavMesh *navMesh = static_cast<NavMesh*>
+		(lua_touserdata(state, lua_upvalueindex(3)));
+
+	enemy->setPath(navMesh->getPathToCoord(entity->getPosition().x,
+										   entity->getPosition().z));
+
+	return 0;
+}
+
 
 int AIHandler::log(lua_State *state) {
 	if (lua_isstring(state, -1)) {

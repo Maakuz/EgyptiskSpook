@@ -42,6 +42,7 @@ class AIHandler {
 		static int getEntityPosition(lua_State *state);
 		static int getPlayerForward(lua_State *state);
 		static int getDistanceBetween(lua_State *state);
+		static int setPathToEntity(lua_State *state);
 		static int log(lua_State *state);
 	public:
 		AIHandler(Enemy *enemy, Player *player);

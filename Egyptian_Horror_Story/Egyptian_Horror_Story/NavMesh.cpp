@@ -1,10 +1,12 @@
 #define PATH "../Resource/Textures/"
+#define SCALE 2
+#define OFFSET_X -8
+#define OFFSET_Z 8
 
 #include "NavMesh.h"
 #include <string>
+#include <math.h>
 #include <assert.h>
-
-using namespace std;
 
 void NavMesh::copy(NavMesh const &navMesh) {
 	if (&navMesh != this) {
@@ -47,7 +49,7 @@ NavMesh* NavMesh::operator=(NavMesh const &navMesh) {
 }
 
 void NavMesh::loadGrid(const char *gridName) {
-	string str(PATH);
+	std::string str(PATH);
 	str += gridName;
 
 	if (mSurface) SDL_FreeSurface(mSurface);
@@ -59,6 +61,31 @@ SDL_Color NavMesh::getPixel(int x, int y) const {
 	assert(mSurface);
 	return mSurface->format->palette->colors
 		[indexArray[x + y * getWidth()]];
+}
+
+SDL_Color NavMesh::getPixelAtCoord(int x, int z) const {
+	int pX = floor(x * SCALE) + OFFSET_X;
+	int pY = floor(z * SCALE) + OFFSET_Z;
+
+	if (pX < 0) pX = 0;
+	if (pY < 0) pY = 0;
+	if (pX >= getWidth()) pX = getWidth() - 1;
+	if (pY >= getHeight()) pY = getHeight() - 1;
+
+	assert(mSurface);
+	return mSurface->format->palette->colors
+		[indexArray[pX + pY * getWidth()]];
+}
+
+std::vector<DirectX::SimpleMath::Vector3>
+	NavMesh::getPathToCoord(int x, int z) const {
+	using namespace DirectX::SimpleMath;
+	//A Star algorithm
+	std::vector<Vector3> path;
+
+	path.push_back(Vector3(x, 5, z));
+
+	return path;
 }
 
 int NavMesh::getWidth() const {
