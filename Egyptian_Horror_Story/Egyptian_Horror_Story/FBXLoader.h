@@ -20,6 +20,8 @@ private:
 	{
 		int parent;
 		std::string name;
+		FbxAMatrix globalBindInverse;
+		FbxNode* node;
 	};
 
 	std::vector<Joint> mSkeleton;
@@ -34,14 +36,19 @@ private:
 
 	void getSkeleton(FbxNode* root);
 	void recGetSkeleton(FbxNode* node, int index, int parentIndex);
+	void setupJoints(FbxNode* root);
+	int findJoint(std::string name);
+
 
 	bool loadVertices(std::vector<EntityStruct::VertexStruct>& verticeArray, FbxMesh* mesh);
+	bool loadVertices(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, FbxMesh* mesh);
 
 public:
 	FBXLoader();
 	virtual ~FBXLoader();
 
 	bool loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray);
+	bool loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray);
 	
 
 };

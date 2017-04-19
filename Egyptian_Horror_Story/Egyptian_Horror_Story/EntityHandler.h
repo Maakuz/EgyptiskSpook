@@ -2,6 +2,7 @@
 #define ENTITYHANDLER_H
 #include <vector>
 #include "EntityRenderer.h"
+#include "RiggedEntityRenderer.h"
 #include "Player.h"
 #include "Wall.h"
 #include "FBXLoader.h"
@@ -10,11 +11,13 @@ class EntityHandler
 {
 private:
 	std::vector<Entity*> mEntities;
+	Entity* mRiggedTest;
 	Player* mPlayer;
 	FBXLoader mLoader;
 
 	//Will be removed in GraphicsHandler
 	EntityRenderer* mEntityRenderer;
+	RiggedEntityRenderer* mRiggedEntityRenderer;
 
 	int mNrOfKeys;
 
@@ -27,7 +30,8 @@ public:
 
 	void update();
 
-	EntityRenderer* getRenderer();
+	EntityRenderer* getEntityRenderer();
+	RiggedEntityRenderer* getRiggedEntityRenderer();
 	Player* getPlayer();
 };
 

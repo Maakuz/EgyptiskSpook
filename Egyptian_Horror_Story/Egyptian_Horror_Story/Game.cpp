@@ -9,7 +9,9 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	this->mEntityHandler = new EntityHandler();
 
 	this->mCamera = new CameraClass(this->mGraphics->getDevice(),
-		this->mEntityHandler->getRenderer()->getGraphicsData(), width, height);
+		this->mEntityHandler->getEntityRenderer()->getGraphicsData(),
+		this->mEntityHandler->getRiggedEntityRenderer()->getGraphicsData(),
+		width, height);
 	
 
 	this->mEntityHandler->setupPlayer(this->mGraphics->getDevice(), 
@@ -19,7 +21,8 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
 
 	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera));
-	this->mGraphics->addRenderer(this->mEntityHandler->getRenderer());
+	this->mGraphics->addRenderer(this->mEntityHandler->getEntityRenderer());
+	this->mGraphics->addRenderer(this->mEntityHandler->getRiggedEntityRenderer());
 
 	this->mGraphics->setupRenderers();
 

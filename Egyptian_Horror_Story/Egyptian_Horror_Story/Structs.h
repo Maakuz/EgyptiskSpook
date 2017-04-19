@@ -11,6 +11,15 @@ namespace EntityStruct
 		DirectX::SimpleMath::Vector3 normal;
 		DirectX::SimpleMath::Vector2 uv;
 	};
+
+	struct SkinnedVertexStruct
+	{
+		DirectX::SimpleMath::Vector3 pos;
+		DirectX::SimpleMath::Vector3 normal;
+		DirectX::SimpleMath::Vector2 uv;
+		float weight;
+		float jointIndex;
+	};
 }
 
 namespace animation
@@ -48,4 +57,4 @@ namespace camera
 
 
 
-#endif // !STRUCTS_H
+#endif
