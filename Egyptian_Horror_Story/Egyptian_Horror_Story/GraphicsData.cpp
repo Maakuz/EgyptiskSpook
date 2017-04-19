@@ -22,9 +22,14 @@ GraphicsData::~GraphicsData()
 	}
 }
 
-bool GraphicsData::loadTexture(int key, wchar_t* path, ID3D11Device* device)
+bool GraphicsData::loadTexture(int key, wchar_t* fileName, ID3D11Device* device)
 {
-	HRESULT hr = DirectX::CreateWICTextureFromFile(device, path, nullptr, &mSrvs[key]);
+	std::wstring path(TEXTUREPATH);
+
+	path += fileName;
+
+	HRESULT hr = DirectX::CreateWICTextureFromFile(device, path.c_str(), nullptr, &mSrvs[key]);
+
 
 	if (SUCCEEDED(hr))
 		return true;

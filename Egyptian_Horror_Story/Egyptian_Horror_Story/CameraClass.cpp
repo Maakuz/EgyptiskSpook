@@ -1,16 +1,18 @@
 #include "CameraClass.h"
 
-CameraClass::CameraClass(ID3D11Device* device, float width, float height)
+CameraClass::CameraClass(ID3D11Device* device, GraphicsData* gData, float width, float height)
 {
 	this->mWVPBuffer = nullptr;
-
+	this->mGraphicsData = gData;
 	float fovAngle = static_cast<float> (M_PI) * 0.45f;
 	float aspectRatio = width / height;
 
 	this->mPitch = 0;
 	this->mYaw = 0;
 
-	DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(fovAngle, aspectRatio, 0.1f, 50.f);
+	DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(
+		fovAngle, aspectRatio, 0.1f, 10000.f);
+
 	projection = DirectX::XMMatrixTranspose(projection);
 
 	this->mPos = DirectX::SimpleMath::Vector3(0, 0, -1);
@@ -28,6 +30,12 @@ CameraClass::CameraClass(ID3D11Device* device, float width, float height)
 	this->mMatrices.view = view;
 
 	this->createVWPBuffer(device);
+
+	D3D11_SUBRESOURCE_DATA data;
+	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
+	data.pSysMem = &this->mPos;
+
+	gData->createConstantBuffer(CAMPOSKEY, sizeof(DirectX::SimpleMath::Vector4), &data, device, true);
 }
 
 CameraClass::~CameraClass()
@@ -38,7 +46,7 @@ CameraClass::~CameraClass()
 void CameraClass::createVWPBuffer(ID3D11Device* device)
 {
 	D3D11_BUFFER_DESC desc;
-	desc.ByteWidth = sizeof(WVP);
+	desc.ByteWidth = sizeof(camera::WVP);
 	desc.Usage = D3D11_USAGE_DYNAMIC;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	desc.MiscFlags = 0;
@@ -70,9 +78,16 @@ void CameraClass::update(ID3D11DeviceContext* context)
 		//Update cBuffer
 		context->Map(this->mWVPBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 
-		memcpy(data.pData, &this->mMatrices, sizeof(WVP));
+		memcpy(data.pData, &this->mMatrices, sizeof(camera::WVP));
 
 		context->Unmap(this->mWVPBuffer, 0);
+
+
+		context->Map(this->mGraphicsData->getBuffer(CAMPOSKEY), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+
+		memcpy(data.pData, &this->mPos, sizeof(DirectX::SimpleMath::Vector4));
+
+		context->Unmap(this->mGraphicsData->getBuffer(CAMPOSKEY), 0);
 	}
 }
 

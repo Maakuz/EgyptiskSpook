@@ -5,22 +5,22 @@
 #define _USE_MATH_DEFINES
 
 #include "Direct3DHeader.h"
+#include "GraphicsData.h"
 
 #include <math.h>
-#include "SimpleMath.h"
-struct WVP
-{
-	DirectX::SimpleMath::Matrix world, view, projection;
-};
+#include"Structs.h"
+
 
 class CameraClass
 {
 private:
 	const double DEGTORADIANS = M_PI / 180;
 	
-	WVP mMatrices;
+	camera::WVP mMatrices;
 
 	ID3D11Buffer* mWVPBuffer;
+	GraphicsData* mGraphicsData;
+	static const int CAMPOSKEY = 302;
 
 	DirectX::SimpleMath::Vector3 mPos;
 	DirectX::SimpleMath::Vector3 mForward;
@@ -31,7 +31,7 @@ private:
 	float mYaw;
 
 public:
-	CameraClass(ID3D11Device* device, float width, float height);
+	CameraClass(ID3D11Device* device, GraphicsData* gData, float width, float height);
 	virtual ~CameraClass();
 
 	void createVWPBuffer(ID3D11Device* device);

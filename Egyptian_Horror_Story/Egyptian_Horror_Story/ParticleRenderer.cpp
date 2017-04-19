@@ -37,8 +37,8 @@ void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 
 	mGraphicsData->createVertexBuffer(0, getSize(), &data, device, true);
 	mGraphicsData->createConstantBuffer(1, sizeof(Vector4), nullptr, device, true);
-	mGraphicsData->loadTexture(0, L"../Resource/Textures/sand.png", device);
-	mGraphicsData->loadTexture(1, L"../Resource/Textures/enemy.png", device);
+	mGraphicsData->loadTexture(0, L"sand.png", device);
+	mGraphicsData->loadTexture(1, L"enemy.png", device);
 }
 
 void ParticleRenderer::updateCameraBuffer(ID3D11DeviceContext *context) {
