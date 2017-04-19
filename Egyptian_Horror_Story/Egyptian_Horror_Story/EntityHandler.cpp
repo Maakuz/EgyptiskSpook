@@ -1252,7 +1252,6 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	this->mEntities.push_back(wall);
 	this->mEntityRenderer->loadObject(device, wall->getKey(), testData33, 6, WALLTEXTURE);
 
-
 	wall = new Wall(
 		Vector3(-3, 4, -78),
 		Vector3(43.f, 0.f, 0.f),

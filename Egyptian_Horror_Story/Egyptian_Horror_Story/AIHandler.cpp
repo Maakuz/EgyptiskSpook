@@ -18,9 +18,11 @@ AIHandler::AIHandler(Enemy *enemy, Player *player) :
 }
 
 AIHandler::~AIHandler() {
+	assert(lua_gettop(mEnemyState) == 0);
 	lua_close(mEnemyState);
 
 	for (TrapScript &trap : mTraps) {
+		assert(lua_gettop(trap.state) == 0);
 		lua_close(trap.state);
 	}
 
@@ -40,8 +42,10 @@ void AIHandler::setupTraps() {
 
 		if (lua_isnumber(state, -1) && lua_isnumber(state, -2) &&
 			lua_isnumber(state, -3)) {
-			trap.trap->createAABB(trap.trap->getPosition(), Vector3(lua_tonumber(state, -3), 0, 0),
-								  Vector3(0, lua_tonumber(state, -2), 0), Vector3(0, 0, lua_tonumber(state, -1)));
+			trap.trap->createAABB(trap.trap->getPosition(),
+				Vector3(static_cast<float> (lua_tonumber(state, -3)), 0, 0),
+				Vector3(0, static_cast<float> (lua_tonumber(state, -2)), 0),
+				Vector3(0, 0, static_cast<float> (lua_tonumber(state, -1))));
 			lua_pop(state, 3);
 		}
 	}

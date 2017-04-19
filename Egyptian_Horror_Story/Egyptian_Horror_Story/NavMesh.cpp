@@ -30,6 +30,7 @@ void NavMesh::deleteMemory() {
 
 NavMesh::NavMesh() {
 	mSurface = nullptr;
+	indexArray = nullptr;
 }
 
 NavMesh::~NavMesh() {

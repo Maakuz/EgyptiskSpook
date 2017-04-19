@@ -49,6 +49,10 @@ update = function()
 	end
 end
 
+function returnStuff()
+	return 10, 10, 10
+end
+
 function onChasingPlayer() 
 	SetPlayerAsWaypoint()
 end
