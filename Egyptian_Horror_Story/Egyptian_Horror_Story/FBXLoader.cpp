@@ -194,7 +194,7 @@ FBXLoader::~FBXLoader()
 
 }
 
-bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray)
+bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray, std::string filename)
 {
 
 	if (this->mFbxManager == nullptr)
@@ -208,7 +208,9 @@ bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray)
 	FbxImporter* importer = FbxImporter::Create(this->mFbxManager, "");
 	FbxScene* scene = FbxScene::Create(this->mFbxManager, "");
 
-	bool res = importer->Initialize("../Resource/Models/rock1.fbx", -1, this->mIOSettings);
+	std::string temp = "../Resource/Models/" + filename;
+
+	bool res = importer->Initialize(temp.c_str(), -1, this->mIOSettings);
 
 	if (!res)
 		exit(-88);

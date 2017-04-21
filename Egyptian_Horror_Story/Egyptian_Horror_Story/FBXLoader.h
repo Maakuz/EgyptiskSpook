@@ -41,7 +41,7 @@ public:
 	FBXLoader();
 	virtual ~FBXLoader();
 
-	bool loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray);
+	bool loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray, std::string fileNamr);
 	
 
 };

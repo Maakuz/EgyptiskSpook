@@ -1321,7 +1321,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 	std::vector<EntityStruct::VertexStruct> test;
 
-	this->mLoader.loadMesh(test);
+	this->mLoader.loadMesh(test, "9v.fbx");
 
 	Entity* testEnt = new Entity(this->mNrOfKeys++);
 
