@@ -3,7 +3,7 @@
 #define GRAVITY 0.025f //change later ok
 #define JUMP_START_VELOCITY 1.f //change later ok FOR TESTING PURPOSES JUMPING BY LW
 
-Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int key, GraphicsData* gData)
+Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int key, GraphicsData* gData, GraphicsData* gData2)
 	:Entity(key)
 {
 	this->mCamera = camera;
@@ -14,7 +14,7 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 	this->mJumping = false;
 	this->jumpingVelocity = 0;
 
-	this->mLight = new Light(this->getPosition(), this->mCamera->getForward(), device, context, gData);
+	this->mLight = new Light(this->getPosition(), this->mCamera->getForward(), device, context, gData, gData2);
 }
 
 Player::~Player()

@@ -3,6 +3,7 @@
 EntityHandler::EntityHandler()
 {
 	this->mEntityRenderer = new EntityRenderer();
+	this->mRiggedEntityRenderer = new RiggedEntityRenderer();
 }
 
 EntityHandler::~EntityHandler()
@@ -13,11 +14,13 @@ EntityHandler::~EntityHandler()
 	{
 		delete this->mEntities[i];
 	}
+
+	delete this->mRiggedTest;
 }
 
 void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera)
 {
-	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData());
+	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData(), this->mRiggedEntityRenderer->getGraphicsData());
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, -5));
 }
 
@@ -264,14 +267,18 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 	*/
 
-	std::vector<EntityStruct::VertexStruct> test;
+	std::vector<EntityStruct::SkinnedVertexStruct> test;
 
-	this->mLoader.loadMesh(test);
+	this->mLoader.loadSkinnedMesh(test);
 
-	Entity* testEnt = new Entity(this->mNrOfKeys++);
+	this->mRiggedTest = new Entity(0);
 
-	this->mEntities.push_back(testEnt);
-	this->mEntityRenderer->loadObject(device, testEnt->getKey(), test.data(), test.size(), L"Rock-Texture-Surface.jpg");
+	this->mRiggedEntityRenderer->loadObject(
+		device, 
+		mRiggedTest->getKey(),
+		test.data(), 
+		test.size(),
+		L"dargon_bump.jpg");
 }
 
 void EntityHandler::update()
@@ -293,9 +300,14 @@ void EntityHandler::update()
 	
 }
 
-EntityRenderer* EntityHandler::getRenderer()
+EntityRenderer* EntityHandler::getEntityRenderer()
 {
 	return this->mEntityRenderer;
+}
+
+RiggedEntityRenderer* EntityHandler::getRiggedEntityRenderer()
+{
+	return mRiggedEntityRenderer;
 }
 
 Player* EntityHandler::getPlayer()
