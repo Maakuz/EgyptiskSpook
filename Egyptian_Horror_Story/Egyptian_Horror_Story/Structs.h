@@ -17,8 +17,8 @@ namespace EntityStruct
 		DirectX::SimpleMath::Vector3 pos;
 		DirectX::SimpleMath::Vector3 normal;
 		DirectX::SimpleMath::Vector2 uv;
-		float weight;
-		float jointIndex;
+		float weight[4];
+		int jointIndex[4];
 	};
 }
 

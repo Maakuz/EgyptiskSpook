@@ -269,7 +269,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 	std::vector<EntityStruct::SkinnedVertexStruct> test;
 
-	this->mLoader.loadSkinnedMesh(test);
+	this->mLoader.loadSkinnedMesh(test, "ModelTestTri.fbx");
 
 	this->mRiggedTest = new Entity(0);
 

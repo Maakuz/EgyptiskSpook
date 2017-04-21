@@ -127,6 +127,16 @@ void FBXLoader::setupJoints(FbxNode* root)
 				cluster->GetTransformLinkMatrix(transformLink);
 				this->mSkeleton[index].globalBindInverse = transformLink.Inverse() * transform * geometryTransform;
 				this->mSkeleton[index].node = cluster->GetLink();
+
+				int nrOfIndices = cluster->GetControlPointIndicesCount();
+
+				for (int i = 0; i < nrOfIndices; i++)
+				{
+					weightAndIndex tempWeightIndex;
+					tempWeightIndex.index = index;
+					tempWeightIndex.weight = cluster->GetControlPointWeights()[i];
+					this->mVertexWeights[cluster->GetControlPointIndices()[i]].push_back(tempWeightIndex);
+				}
 			}
 		}
 	}
@@ -328,7 +338,7 @@ FBXLoader::~FBXLoader()
 
 }
 
-bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray)
+bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray, std::string filename)
 {
 
 	if (this->mFbxManager == nullptr)
@@ -342,7 +352,9 @@ bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray)
 	FbxImporter* importer = FbxImporter::Create(this->mFbxManager, "");
 	FbxScene* scene = FbxScene::Create(this->mFbxManager, "");
 
-	bool res = importer->Initialize("../Resource/Models/ModelTestTri.fbx", -1, this->mIOSettings);
+	std::string temp = "../Resource/Models/" + filename;
+
+	bool res = importer->Initialize(temp.c_str(), -1, this->mIOSettings);
 
 	if (!res)
 		exit(-88);
@@ -380,7 +392,7 @@ bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray)
 	return false;
 }
 
-bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray)
+bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, std::string filename)
 {
 	if (this->mFbxManager == nullptr)
 	{
@@ -393,7 +405,9 @@ bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& 
 	FbxImporter* importer = FbxImporter::Create(this->mFbxManager, "");
 	FbxScene* scene = FbxScene::Create(this->mFbxManager, "");
 
-	bool res = importer->Initialize("../Resource/Models/dargon.fbx", -1, this->mIOSettings);
+	std::string temp = "../Resource/Models/" + filename;
+
+	bool res = importer->Initialize(temp.c_str(), -1, this->mIOSettings);
 
 	if (!res)
 		exit(-88);
@@ -427,6 +441,9 @@ bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& 
 			}
 		}
 	}
+
+	//Temporary storage
+	this->mVertexWeights.resize(verticeArray.size());
 
 	this->getSkeleton(RootNode);
 

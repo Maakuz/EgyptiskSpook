@@ -24,7 +24,14 @@ private:
 		FbxNode* node;
 	};
 
+	struct weightAndIndex
+	{
+		int index;
+		float weight;
+	};
+
 	std::vector<Joint> mSkeleton;
+	std::vector<std::vector<weightAndIndex>> mVertexWeights;
 
 	FbxManager* mFbxManager;
 	FbxIOSettings* mIOSettings;
@@ -47,8 +54,8 @@ public:
 	FBXLoader();
 	virtual ~FBXLoader();
 
-	bool loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray);
-	bool loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray);
+	bool loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray, std::string filename);
+	bool loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, std::string filename);
 	
 
 };
