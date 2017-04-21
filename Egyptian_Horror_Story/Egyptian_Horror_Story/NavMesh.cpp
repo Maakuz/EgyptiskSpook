@@ -1,7 +1,7 @@
 #define PATH "../Resource/Textures/"
-#define SCALE 2
-#define OFFSET_X 9
-#define OFFSET_Z -9
+#define SCALE 0.5
+#define OFFSET_X 9 * SCALE
+#define OFFSET_Z -9 * SCALE
 
 #include "NavMesh.h"
 #include <string>
@@ -76,14 +76,12 @@ SDL_Color NavMesh::getPixelAtCoord(int x, int z) const {
 
 Vector2 NavMesh::toPixelCoord(int x, int z) const {
 	int pX = floor(x * SCALE) + OFFSET_X;
-	int pY = floor(z * SCALE) + OFFSET_Z;
+	int pY = -(floor(z * SCALE) + OFFSET_Z);
 
-	if (pX < 0) pX = 0;
-	if (pY < 0) pY = 0;
-	if (pX >= getWidth()) pX = getWidth() - 1;
-	if (pY >= getHeight()) pY = getHeight() - 1;
+	pX %= getWidth();
+	pY %= getHeight();
 
-	return Vector2(pX, pY);
+	return Vector2(abs(pX), abs(pY));
 }
 
 bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
@@ -98,12 +96,12 @@ bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
 	while (true) { //WARNING: DANGEROUS CODE, CHANGE IT
 		if (x != pTX) {
 			x += x < pTX ? 1 : -1;
-			if (getPixel(x, y).r == 0) return false;
+			if (x != pTX && getPixel(x, y).r == 0) return false;
 		}
 
 		if (y != pTY) {
 			y += y < pTY ? 1 : -1;
-			if (getPixel(x, y).r == 0) return false;
+			if (y != pTY && getPixel(x, y).r == 0) return false;
 		}
 
 		if (x == pTX && y == pTY) return true;

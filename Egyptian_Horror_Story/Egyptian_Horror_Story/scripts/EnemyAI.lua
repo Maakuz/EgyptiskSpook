@@ -1,3 +1,5 @@
+-- @author LW
+
 walkSpeed = 0.05
 runSpeed = 0.09
 prevWaypoint = 0
