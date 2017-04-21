@@ -52,6 +52,9 @@
     <Filter Include="Resource Files\GUI Shaders">
       <UniqueIdentifier>{5a7eefb3-0545-4e89-b644-d0b27c230f07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Scripts">
+      <UniqueIdentifier>{3ccea0b1-1572-4a85-80a7-b2a677ba6048}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ShadowVS.hlsl">
@@ -152,6 +155,9 @@
     <ClCompile Include="NavMesh.cpp">
       <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
+    <ClCompile Include="FBXLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -226,9 +232,18 @@
     <ClInclude Include="Structs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="scripts\EnemyAI.lua">
+      <Filter>Resource Files\Scripts</Filter>
+    </None>
+    <None Include="scripts\TrapStone.lua">
+      <Filter>Resource Files\Scripts</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Key System.txt">

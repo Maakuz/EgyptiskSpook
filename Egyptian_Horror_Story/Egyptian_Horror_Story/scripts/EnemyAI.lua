@@ -1,5 +1,5 @@
-walkSpeed = 0.12
-runSpeed = 0.10
+walkSpeed = 0.05
+runSpeed = 0.09
 prevWaypoint = 0
 currentWaypoint = 1
 waypoints = { -- c = connections, length beetwen gets calc in c++
@@ -13,14 +13,13 @@ waypoints = { -- c = connections, length beetwen gets calc in c++
 				{x = 17, y = 0, z = -61, c = {7}},
 			}
 
-onStart = function()
+function onStart()
 	SetEnemySpeed(walkSpeed)
-	SetEnemyHuntingPlayer(false)
 	SetEnemyWaypoint(waypoints[currentWaypoint])
 end
 
-onReachingWaypoint = function()
-	--Log("Reached Waypoint")
+function onReachingWaypoint()
+	Log("Reached Waypoint")
 	local toCon = math.random(1, #waypoints[currentWaypoint].c)
 	local temp = waypoints[currentWaypoint].c[toCon]
 	
@@ -32,36 +31,21 @@ onReachingWaypoint = function()
 	SetEnemyWaypoint(waypoints[currentWaypoint])
 end
 
-update = function()
-	if not IsEnemyHuntingPlayer() and SeesPlayer()
-		then
-			SetEnemySpeed(runSpeed)
-			
-			SetEnemyHuntingPlayer(true)	
-	elseif IsEnemyHuntingPlayer() and not SeesPlayer()
-		then
-			SetEnemySpeed(walkSpeed)
-			SetEnemyWaypoint(waypoints[currentWaypoint])
-			
-			SetEnemyHuntingPlayer(false)
-	elseif IsEnemyHuntingPlayer() then
-		onChasingPlayer()
+function update()
+	local lSeesPlayer = SeesPlayer()
+	if lSeesPlayer then
+		SetEnemySpeed(runSpeed)
+		pathToPlayer()
 	end
 end
 
 function onReachingPathEnd()
-	--Log("Reached end")
-	
-	if SeesPlayer() then
-		onChasingPlayer()
-	else
-		SetOnPath(false)
-		SetEnemyWaypoint(waypoints[currentWaypoint])
-	end
+	StopPathing()
+	SetEnemyWaypoint(waypoints[currentWaypoint]) -- should get closest waypoint in line of sight
 end
 
-function onChasingPlayer() 
+function pathToPlayer()
 	SetCurrentPathNode(0)
-	SetPathToPlayer()
-	SetOnPath(true)
+	LoadPathToPlayer()
+	StartPathing()
 end

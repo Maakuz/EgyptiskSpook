@@ -5,7 +5,6 @@
 using namespace DirectX::SimpleMath;
 
 Enemy::Enemy(int graphicsKey) : Entity(graphicsKey) {
-	mHuntingPlayer = false;
 	mCapsule = nullptr;
 
 	// hi
@@ -29,10 +28,6 @@ void Enemy::setVelocity(DirectX::SimpleMath::Vector3 velocity) {
 	mVelocity = velocity;
 }
 
-void Enemy::setHuntingPlayer(bool huntingPlayer) {
-	mHuntingPlayer = huntingPlayer;
-}
-
 void Enemy::setFollowPath(bool followPath) {
 	mFollowPath = followPath;
 }
@@ -44,7 +39,6 @@ void Enemy::setWaypoint(Vector3 waypoint) {
 }
 
 void Enemy::setPath(std::vector<Vector3> path) {
-	currentPathNode = 0;
 	mPath = path;
 }
 
@@ -60,10 +54,6 @@ Vector3 Enemy::getWaypoint() const {
 	return mWaypoint;
 }
 
-bool Enemy::isHuntingPlayer() const {
-	return mHuntingPlayer;
-}
-
 bool Enemy::onPath() const {
 	return mFollowPath;
 }
@@ -73,14 +63,15 @@ Enemy::UPDATE_RETURNS Enemy::update() {
 	mCapsule->mPoint = getPosition();
 	if ((mWaypoint - getPosition()).Length() <= mSpeed) {
 		setPosition(mWaypoint);
-		/*
+		
 		if (mFollowPath && ++currentPathNode < mPath.size()) {
+			assert(currentPathNode < mPath.size());
 			setWaypoint(mPath[currentPathNode]);
 			return ON_PATH_WAYPOINT; // on path waypoint
 		}
 		else if (mFollowPath) {
 			return ON_REACHED_PATH_DESTINATION; // on reached destination
-		} */
+		} 
 
 		return ON_WAYPOINT; //On waypoint
 	}
@@ -92,23 +83,6 @@ Enemy::UPDATE_RETURNS Enemy::update() {
 *  LUA FUNCTIONS
 *  ONLY USED BY LUA
 */
-
-int Enemy::setHuntingPlayerLua(lua_State *state) {
-	Enemy *enemy = static_cast<Enemy*>
-		(lua_touserdata(state, lua_upvalueindex(1)));
-
-	if (lua_isboolean(state, -1))
-		enemy->setHuntingPlayer(lua_toboolean(state, -1) == 1);
-	return 0;
-}
-
-int Enemy::isHuntingPlayerLua(lua_State *state) {
-	Enemy *enemy = static_cast<Enemy*>
-		(lua_touserdata(state, lua_upvalueindex(1)));
-
-	lua_pushboolean(state, enemy->isHuntingPlayer());
-	return 1;
-}
 
 int Enemy::updateWaypoint(lua_State *state) {
 	Enemy *enemy = static_cast<Enemy*>
@@ -179,19 +153,7 @@ int Enemy::onPathLua(lua_State *state) {
 
 	lua_pushboolean(state, enemy->onPath());
 
-	return 1; //TODO
-}
-
-int Enemy::SetOnPathLua(lua_State *state) {
-	Enemy *enemy = static_cast<Enemy*>
-		(lua_touserdata(state, lua_upvalueindex(1)));
-
-	if (lua_isboolean(state, -1)) {
-		enemy->setFollowPath(lua_toboolean(state, -1));
-		enemy->setWaypoint(enemy->mPath[enemy->currentPathNode]);
-	}
-
-	return 0;
+	return 1;
 }
 
 int Enemy::getPathSizeLua(lua_State *state) {
@@ -209,6 +171,28 @@ int Enemy::setCurrentPathNodeLua(lua_State *state) {
 
 	if (lua_isinteger(state, -1))
 		enemy->currentPathNode = lua_tointeger(state, -1);
+
+	return 0;
+}
+
+int Enemy::startPathing(lua_State *state) {
+	Enemy *enemy = static_cast<Enemy*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+
+	assert(enemy->mPath.size() > 0);
+	enemy->mPath[enemy->currentPathNode];
+	enemy->setFollowPath(true);
+	enemy->setWaypoint(enemy->mPath[enemy->currentPathNode]);
+
+	return 0;
+}
+
+int Enemy::stopPathing(lua_State *state) {
+	Enemy *enemy = static_cast<Enemy*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+
+	enemy->setFollowPath(false);
+	enemy->mVelocity = Vector3();
 
 	return 0;
 }

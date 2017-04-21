@@ -14,7 +14,7 @@ public:
 private:
 	DirectX::SimpleMath::Vector3 mVelocity, mWaypoint;
 	float mSpeed;
-	bool mHuntingPlayer, mFollowPath;
+	bool mFollowPath;
 
 	int currentPathNode;
 	std::vector<DirectX::SimpleMath::Vector3> mPath;
@@ -29,28 +29,27 @@ public:
 
 	void setSpeed(float speed);
 	void setVelocity(DirectX::SimpleMath::Vector3 velocity);
-	void setHuntingPlayer(bool huntingPlayer);
 	void setFollowPath(bool followPath);
 	void setWaypoint(DirectX::SimpleMath::Vector3 waypoint);
 
 	DirectX::SimpleMath::Vector3 getVelocity() const;
 	DirectX::SimpleMath::Vector3 getWaypoint() const;
 	bool onPath() const;
-	bool isHuntingPlayer() const;
 
 	void setPath(std::vector<DirectX::SimpleMath::Vector3> path);
 	std::vector<DirectX::SimpleMath::Vector3> getPath() const;
 
 	// lua
 	static int setHuntingPlayerLua(lua_State *state);
-	static int isHuntingPlayerLua(lua_State *state);
 	static int updateWaypoint(lua_State *state);
 	static int seesPlayer(lua_State *state);
 	static int getNextWaypoint(lua_State *state);
 	static int onPathLua(lua_State *state);
-	static int SetOnPathLua(lua_State *state);
 	static int getPathSizeLua(lua_State *state);
 	static int setCurrentPathNodeLua(lua_State *state);
+
+	static int stopPathing(lua_State *state);
+	static int startPathing(lua_State *state);
 };
 
 #endif

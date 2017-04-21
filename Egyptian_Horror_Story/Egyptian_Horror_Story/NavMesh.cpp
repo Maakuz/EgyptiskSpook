@@ -1,12 +1,14 @@
 #define PATH "../Resource/Textures/"
 #define SCALE 2
-#define OFFSET_X -8
-#define OFFSET_Z 8
+#define OFFSET_X 9
+#define OFFSET_Z -9
 
 #include "NavMesh.h"
 #include <string>
 #include <math.h>
 #include <assert.h>
+
+using namespace DirectX::SimpleMath;
 
 void NavMesh::copy(NavMesh const &navMesh) {
 	if (&navMesh != this) {
@@ -64,6 +66,15 @@ SDL_Color NavMesh::getPixel(int x, int y) const {
 }
 
 SDL_Color NavMesh::getPixelAtCoord(int x, int z) const {
+	Vector2 pixelCoord = toPixelCoord(x, z);
+	int pX = static_cast<int>(pixelCoord.x), 
+		pY = static_cast<int>(pixelCoord.y);
+	assert(mSurface);
+	return mSurface->format->palette->colors
+		[indexArray[pX + pY * getWidth()]];
+}
+
+Vector2 NavMesh::toPixelCoord(int x, int z) const {
 	int pX = floor(x * SCALE) + OFFSET_X;
 	int pY = floor(z * SCALE) + OFFSET_Z;
 
@@ -72,18 +83,38 @@ SDL_Color NavMesh::getPixelAtCoord(int x, int z) const {
 	if (pX >= getWidth()) pX = getWidth() - 1;
 	if (pY >= getHeight()) pY = getHeight() - 1;
 
-	assert(mSurface);
-	return mSurface->format->palette->colors
-		[indexArray[pX + pY * getWidth()]];
+	return Vector2(pX, pY);
 }
 
-std::vector<DirectX::SimpleMath::Vector3>
-	NavMesh::getPathToCoord(int x, int z) const {
-	using namespace DirectX::SimpleMath;
+bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
+	Vector2 pixelCoordFrom = toPixelCoord(fromX, fromZ);
+	Vector2 pixelCoordTo = toPixelCoord(toX, toZ);
+	int x = static_cast<int> (pixelCoordFrom.x);
+	int y = static_cast<int> (pixelCoordFrom.y);
+	int pTX = static_cast<int> (pixelCoordTo.x);
+	int pTY = static_cast<int> (pixelCoordTo.y);
+
+	// Walks from x y to toX toY, if any pixels in the way is colliders, x y cant see toX toY
+	while (true) { //WARNING: DANGEROUS CODE, CHANGE IT
+		if (x != pTX) {
+			x += x < pTX ? 1 : -1;
+			if (getPixel(x, y).r == 0) return false;
+		}
+
+		if (y != pTY) {
+			y += y < pTY ? 1 : -1;
+			if (getPixel(x, y).r == 0) return false;
+		}
+
+		if (x == pTX && y == pTY) return true;
+	}
+}
+
+std::vector<Vector3> NavMesh::getPathToCoord(int x, int z) const {
 	//A Star algorithm
 	std::vector<Vector3> path;
 
-	path.push_back(Vector3(x, 5, z));
+	path.push_back(Vector3(x, 0, z));
 
 	return path;
 }

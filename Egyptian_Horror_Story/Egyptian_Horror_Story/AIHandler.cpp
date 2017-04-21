@@ -80,7 +80,7 @@ void AIHandler::setupAI() {
 }
 
 void AIHandler::addLuaFunctionsEnemy() {
-	// For testing
+	// For debugging
 	addLuaFunction(mEnemyState, "Log", log, nullptr, 0);
 
 	// ENEMY SPEED & POSITION
@@ -88,14 +88,13 @@ void AIHandler::addLuaFunctionsEnemy() {
 	addLuaFunction(mEnemyState, "SetEnemySpeed", setEnemySpeed, userData, ARRAYSIZE(userData));
 	addLuaFunction(mEnemyState, "GetEnemyPosition", getEntityPosition, userData, ARRAYSIZE(userData));
 	addLuaFunction(mEnemyState, "SetEnemyWaypoint", Enemy::updateWaypoint, userData, ARRAYSIZE(userData));
-	addLuaFunction(mEnemyState, "IsEnemyHuntingPlayer", Enemy::isHuntingPlayerLua, userData, ARRAYSIZE(userData));
-	addLuaFunction(mEnemyState, "SetEnemyHuntingPlayer", Enemy::setHuntingPlayerLua, userData, ARRAYSIZE(userData));
-	
-	addLuaFunction(mEnemyState, "SetOnPath", Enemy::SetOnPathLua, userData, ARRAYSIZE(userData));
+
 	addLuaFunction(mEnemyState, "IsEnemyOnPath", Enemy::onPathLua, userData, ARRAYSIZE(userData));
 	addLuaFunction(mEnemyState, "GetPathSize", Enemy::getPathSizeLua, userData, ARRAYSIZE(userData));
 	addLuaFunction(mEnemyState, "SetCurrentPathNode", Enemy::setCurrentPathNodeLua, userData, ARRAYSIZE(userData));
 	addLuaFunction(mEnemyState, "GetNextEnemyWaypoint", Enemy::getNextWaypoint, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "StartPathing", Enemy::startPathing, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "StopPathing", Enemy::stopPathing, userData, ARRAYSIZE(userData));
 
 	// PLAYER POSITION
 	void *userData2[] = { mPlayer };
@@ -104,10 +103,10 @@ void AIHandler::addLuaFunctionsEnemy() {
 	// GET DISTANCE BEETWEN
 	void *userData3[] = { mEnemy, mPlayer };
 	addLuaFunction(mEnemyState, "GetDistanceBetween", getDistanceBetween, userData3, ARRAYSIZE(userData3));
-	addLuaFunction(mEnemyState, "SeesPlayer", Enemy::seesPlayer, userData3, ARRAYSIZE(userData3));
 
 	void *userData4[] = { mEnemy, mPlayer, &navMesh };
-	addLuaFunction(mEnemyState, "SetPathToPlayer", setPathToEntity, userData4, ARRAYSIZE(userData4));
+	addLuaFunction(mEnemyState, "LoadPathToPlayer", loadPathToEntity, userData4, ARRAYSIZE(userData4));
+	addLuaFunction(mEnemyState, "SeesPlayer", entitySeesEntity, userData4, ARRAYSIZE(userData4));
 }
 
 void AIHandler::addLuaFunctionsTrap(lua_State *state, Trap *trap) {
@@ -141,14 +140,14 @@ void AIHandler::addLuaFunction(lua_State *state, const char *name,
 
 void AIHandler::update() {
 	lua_getglobal(mEnemyState, "update");
-	lua_pcall(mEnemyState, 0, 0, 0);
+	handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
 
 	Enemy::UPDATE_RETURNS ret = mEnemy->update();
 
-	if (ret == mEnemy->ON_WAYPOINT) {
+	if (ret == Enemy::ON_WAYPOINT) {
 		lua_getglobal(mEnemyState, "onReachingWaypoint");
 		handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
-	} else if (ret == mEnemy->ON_REACHED_PATH_DESTINATION) {
+	} else if (ret == Enemy::ON_REACHED_PATH_DESTINATION) {
 		lua_getglobal(mEnemyState, "onReachingPathEnd");
 		handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
 	}
@@ -207,7 +206,23 @@ int AIHandler::getDistanceBetween(lua_State *state) {
 	return 1;
 }
 
-int AIHandler::setPathToEntity(lua_State *state) {
+int AIHandler::entitySeesEntity(lua_State *state) {
+	Enemy *entity1 = static_cast<Enemy*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+	Entity *entity2 = static_cast<Entity*>
+		(lua_touserdata(state, lua_upvalueindex(2)));
+	NavMesh *navMesh = static_cast<NavMesh*>
+		(lua_touserdata(state, lua_upvalueindex(3)));
+
+	Vector3 e1Pos = entity1->getPosition();
+	Vector3 e2Pos = entity2->getPosition();
+
+	lua_pushboolean(state, navMesh->canSeeFrom(e1Pos.x, e1Pos.z, e2Pos.x, e2Pos.z));
+
+	return 1;
+}
+
+int AIHandler::loadPathToEntity(lua_State *state) {
 	Enemy *enemy = static_cast<Enemy*>
 		(lua_touserdata(state, lua_upvalueindex(1)));
 	Entity *entity = static_cast<Entity*>
@@ -254,8 +269,7 @@ void AIHandler::testScript() {
 		lua_pop(test, 1);
 
 		lua_getglobal(test, "PrintWorld");
-		error = lua_pcall(test, 0, 1, 0);
-		if (handleError(test, error)) {
+		if (handleError(test, lua_pcall(test, 0, 1, 0))) {
 			SDL_Log("Text2: %s", lua_tostring(test, -1));
 			lua_pop(test, 1);
 		}

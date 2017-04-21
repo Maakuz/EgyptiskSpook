@@ -21,6 +21,8 @@ public:
 	void loadGrid(const char *gridName);
 	SDL_Color getPixel(int x, int y) const;
 	SDL_Color getPixelAtCoord(int x, int z) const;
+	DirectX::SimpleMath::Vector2 toPixelCoord(int x, int z) const;
+	bool canSeeFrom(int fromX, int fromZ, int toX, int toZ) const;
 
 	std::vector<DirectX::SimpleMath::Vector3> getPathToCoord(int x, int z) const;
 
