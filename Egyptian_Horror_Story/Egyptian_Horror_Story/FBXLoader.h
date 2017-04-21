@@ -15,6 +15,11 @@
 class FBXLoader
 {
 private:
+
+	struct KeyFrame
+	{
+		int test;
+	};
 	
 	struct Joint
 	{
@@ -24,17 +29,15 @@ private:
 		FbxNode* node;
 	};
 
-	struct weightAndIndex
-	{
-		int index;
-		float weight;
-	};
+
 
 	std::vector<Joint> mSkeleton;
-	std::vector<std::vector<weightAndIndex>> mVertexWeights;
+	std::vector<std::vector<EntityStruct::weightAndIndex>> mVertexWeights;
 
 	FbxManager* mFbxManager;
 	FbxIOSettings* mIOSettings;
+	FbxScene* mScene;
+	float mAnimLength;
 
 	const int SPLIT_ARRAY[6] = {0, 1, 2, 2, 3, 0};
 
