@@ -91,6 +91,11 @@ void GraphicsData::createVerticeArray(int key, EntityStruct::VertexStruct* verti
 	}
 }
 
+void GraphicsData::setNrOfVertices(int key, int nrOfVertices)
+{
+	this->mNrOfVertices[key] = nrOfVertices;
+}
+
 void GraphicsData::addConstantBuffer(int key, ID3D11Buffer* buffer)
 {
 	this->mBuffers[key] = buffer;

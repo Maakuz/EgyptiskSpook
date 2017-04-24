@@ -38,7 +38,6 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 	};
 	this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, WALLTEXTURE);
-
 	this->mEntities.push_back(wall);
 	
 
@@ -48,7 +47,6 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0.f, 6.f, 0.f),
 		Vector3(0.f, 0.f, 46.f),
 		Vector3(-1.f, 0.f, 0.f), this->mNrOfKeys++);
-
 
 	EntityStruct::VertexStruct testData3[] = {
 		Vector3(-3, -2.f , 3),
@@ -1292,7 +1290,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera)
 {
-	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData());
+	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData(), this->mRiggedEntityRenderer->getGraphicsData());
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, 4));
 
 	this->mEnemy = new Enemy(ENEMY_KEY);
@@ -1302,6 +1300,7 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 EntityHandler::EntityHandler()
 {
 	this->mEntityRenderer = new EntityRenderer();
+	this->mRiggedEntityRenderer = new RiggedEntityRenderer();
 }
 
 EntityHandler::~EntityHandler()
@@ -1317,16 +1316,24 @@ EntityHandler::~EntityHandler()
 
 void EntityHandler::setupEntities(ID3D11Device* device)
 {
-	this->hardcodedMap(device);
+	//this->hardcodedMap(device);
 
-	std::vector<EntityStruct::VertexStruct> test;
+	std::vector<EntityStruct::SkinnedVertexStruct> test;
 
-	this->mLoader.loadMesh(test, "9v.fbx");
+	this->mLoader.loadSkinnedMesh(test, "ModelTestAnimate.fbx");
 
-	Entity* testEnt = new Entity(this->mNrOfKeys++);
+	this->mRiggedTest = new Entity(0);
 
-	this->mEntities.push_back(testEnt);
-	this->mEntityRenderer->loadObject(device, testEnt->getKey(), test.data(), test.size(), L"mon.bmp");
+	this->mEntities.push_back(mRiggedTest);
+	this->mRiggedEntityRenderer->loadObject(device, mRiggedTest->getKey(), test.data(), test.size(), L"mon.bmp");
+
+	this->mRiggedEntityRenderer->loadObject(
+		device, 
+		mRiggedTest->getKey(),
+		test.data(), 
+		test.size(),
+		L"dargon_bump.jpg");
+
 }
 
 void EntityHandler::update()
@@ -1382,9 +1389,14 @@ void EntityHandler::update()
 	}
 }
 
-EntityRenderer* EntityHandler::getRenderer()
+EntityRenderer* EntityHandler::getEntityRenderer()
 {
 	return this->mEntityRenderer;
+}
+
+RiggedEntityRenderer* EntityHandler::getRiggedEntityRenderer()
+{
+	return mRiggedEntityRenderer;
 }
 
 Player* EntityHandler::getPlayer()

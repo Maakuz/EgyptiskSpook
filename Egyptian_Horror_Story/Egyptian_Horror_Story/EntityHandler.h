@@ -2,6 +2,7 @@
 #define ENTITYHANDLER_H
 #include <vector>
 #include "EntityRenderer.h"
+#include "RiggedEntityRenderer.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Wall.h"
@@ -13,6 +14,7 @@ class EntityHandler
 {
 private:
 	std::vector<Entity*> mEntities;
+	Entity* mRiggedTest;
 	Player* mPlayer;
 	Enemy* mEnemy;
 	
@@ -20,6 +22,7 @@ private:
 
 	//Will be removed in GraphicsHandler
 	EntityRenderer* mEntityRenderer;
+	RiggedEntityRenderer* mRiggedEntityRenderer;
 
 	int mNrOfKeys;
 
@@ -33,7 +36,8 @@ public:
 
 	void update();
 
-	EntityRenderer* getRenderer();
+	EntityRenderer* getEntityRenderer();
+	RiggedEntityRenderer* getRiggedEntityRenderer();
 	Player* getPlayer();
 	Enemy* getEnemy();
 };

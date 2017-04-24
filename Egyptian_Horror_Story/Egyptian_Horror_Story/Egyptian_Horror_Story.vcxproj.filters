@@ -84,6 +84,9 @@
     <FxCompile Include="GUIGS.hlsl">
       <Filter>Resource Files\GUI Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="SkinnedEntityVS.hlsl">
+      <Filter>Resource Files\Entity Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="FBXLoader.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RiggedEntityRenderer.cpp">
+      <Filter>Source Files\Renderers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +240,9 @@
     </ClInclude>
     <ClInclude Include="FBXLoader.h">
       <Filter>Header Files</Filter>
+	</ClInclude>
+    <ClInclude Include="RiggedEntityRenderer.h">
+      <Filter>Header Files\Renderers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

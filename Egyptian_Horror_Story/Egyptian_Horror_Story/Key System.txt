@@ -13,7 +13,7 @@ ShadowRenderer: 1
 EntityRenderer: 2
 ParticleRenderer: 3
 GUI: 4
-
+RiggedEntity: 5
 
 Same goes for booking space in the GraphicsData!
 
