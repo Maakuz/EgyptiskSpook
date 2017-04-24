@@ -21,7 +21,7 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
 
 
-	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera, mEntityHandler->getEnemy())); // temp
+	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera));
 	this->mGraphics->addRenderer(this->mEntityHandler->getEntityRenderer());
 	this->mGraphics->addRenderer(this->mEntityHandler->getRiggedEntityRenderer());
 
@@ -43,7 +43,7 @@ Game::~Game()
 void Game::update()
 {
 	this->mCamera->update(this->mGraphics->getDeviceContext());
-	this->mEntityHandler->update();
+	this->mEntityHandler->update(this->mGraphics->getDeviceContext());
 
 	this->mGraphics->clear();
 	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer());

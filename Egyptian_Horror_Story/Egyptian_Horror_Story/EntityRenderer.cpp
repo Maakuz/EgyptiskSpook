@@ -27,10 +27,10 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 	shaderHandler.setShaders(context, 20, 20, -1);
 
 	ID3D11Buffer* temp;
-	temp = mGraphicsData.getBuffer(300);
+	temp = mGraphicsData.getConstantBuffer(300);
 	context->PSSetConstantBuffers(0, 1, &temp);
 
-	temp = mGraphicsData.getBuffer(302);
+	temp = mGraphicsData.getConstantBuffer(302);
 	context->PSSetConstantBuffers(1, 1, &temp);
 	
 	context->IASetInputLayout(shaderHandler.getInputLayout(20));
@@ -42,7 +42,7 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 	{
 		key = item.first;
 
-		temp = this->mGraphicsData.getBuffer(key);
+		temp = this->mGraphicsData.getVertexBuffer(key);
 		context->IASetVertexBuffers(0, 1, &temp, &stride, &offset);
 
 

@@ -46,6 +46,22 @@ std::vector<Vector3> Enemy::getPath() const {
 	return mPath;
 }
 
+void Enemy::updatePosition(GraphicsData* gData, ID3D11DeviceContext* context)
+{
+	DirectX::SimpleMath::Matrix posMat = DirectX::SimpleMath::Matrix::CreateTranslation(this->getPosition());
+	posMat = posMat.Transpose();
+
+	D3D11_MAPPED_SUBRESOURCE data;
+	ZeroMemory(&data, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+	context->Map(gData->getConstantBuffer(this->getKey()), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+	
+	memcpy(data.pData, &posMat, sizeof(DirectX::XMMATRIX));
+	
+	context->Unmap(gData->getConstantBuffer(this->getKey()), 0);
+
+}
+
 Vector3 Enemy::getVelocity() const {
 	return mVelocity;
 }

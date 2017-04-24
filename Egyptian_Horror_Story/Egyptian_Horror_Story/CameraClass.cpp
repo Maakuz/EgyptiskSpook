@@ -85,19 +85,19 @@ void CameraClass::update(ID3D11DeviceContext* context)
 		context->Unmap(this->mWVPBuffer, 0);
 
 
-		context->Map(this->mGraphicsData->getBuffer(CAMPOSKEY), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+		context->Map(this->mGraphicsData->getConstantBuffer(CAMPOSKEY), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 
 		memcpy(data.pData, &this->mPos, sizeof(DirectX::SimpleMath::Vector4));
 
-		context->Unmap(this->mGraphicsData->getBuffer(CAMPOSKEY), 0);
+		context->Unmap(this->mGraphicsData->getConstantBuffer(CAMPOSKEY), 0);
 
 
 
-		context->Map(this->mGraphicsData2->getBuffer(CAMPOSKEY), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+		context->Map(this->mGraphicsData2->getConstantBuffer(CAMPOSKEY), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 
 		memcpy(data.pData, &this->mPos, sizeof(DirectX::SimpleMath::Vector4));
 
-		context->Unmap(this->mGraphicsData2->getBuffer(CAMPOSKEY), 0);
+		context->Unmap(this->mGraphicsData2->getConstantBuffer(CAMPOSKEY), 0);
 	}
 }
 

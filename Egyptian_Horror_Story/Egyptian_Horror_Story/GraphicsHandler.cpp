@@ -81,7 +81,6 @@ GraphicsHandler::~GraphicsHandler() {
 	if (mSamplerState)
 		mSamplerState->Release();
 
-	//Oklart om denna faktiskt tar bort renderer
 	for (auto *renderer : mRenderers) {
 			delete renderer;
 	}

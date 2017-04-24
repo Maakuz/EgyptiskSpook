@@ -33,15 +33,14 @@ public:
 	void createVerticeArray(int key, EntityStruct::VertexStruct* vertices, int nrOfVertices);
 	void setNrOfVertices(int key, int nrOfVertices);
 
-	//Adds a cBuffer to that index
-	void addConstantBuffer(int key, ID3D11Buffer* buffer);
-
-	ID3D11Buffer* getBuffer(int key);
+	ID3D11Buffer* getVertexBuffer(int key);
+	ID3D11Buffer* getConstantBuffer(int key);
 	ID3D11ShaderResourceView* getSRV(int key);
 	EntityStruct::VertexStruct* getVertices(int key);
 	int getNrOfVertices(int key);
 
-	std::map<int, ID3D11Buffer*>* getBufferMap();
+	std::map<int, ID3D11Buffer*>* getVertexBufferMap();
+	std::map<int, ID3D11Buffer*>* getConstantBufferMap();
 	std::map<int, ID3D11ShaderResourceView*>* getSrvMap();
 	std::map<int, EntityStruct::VertexStruct*>* getVertexMap();
 	std::map<int, int>* getNrOfVerticesMap();

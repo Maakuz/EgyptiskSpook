@@ -1294,6 +1294,19 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, 4));
 
 	this->mEnemy = new Enemy(ENEMY_KEY);
+
+	std::vector<EntityStruct::SkinnedVertexStruct> test;
+
+	this->mLoader.loadSkinnedMesh(test, "ModelTestAnimate.fbx");
+
+	this->mRiggedEntityRenderer->loadObject(
+		device,
+		mEnemy->getKey(),
+		test.data(),
+		test.size(),
+		sizeof(DirectX::XMMATRIX),
+		L"dargon_bump.jpg");
+
 	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
 }
 
@@ -1316,31 +1329,32 @@ EntityHandler::~EntityHandler()
 
 void EntityHandler::setupEntities(ID3D11Device* device)
 {
-	//this->hardcodedMap(device);
+	this->hardcodedMap(device);
 
-	std::vector<EntityStruct::SkinnedVertexStruct> test;
+	//Test purposes
+	/*std::vector<EntityStruct::SkinnedVertexStruct> test;
 
 	this->mLoader.loadSkinnedMesh(test, "ModelTestAnimate.fbx");
 
 	this->mRiggedTest = new Entity(0);
 
 	this->mEntities.push_back(mRiggedTest);
-	this->mRiggedEntityRenderer->loadObject(device, mRiggedTest->getKey(), test.data(), test.size(), L"mon.bmp");
 
 	this->mRiggedEntityRenderer->loadObject(
 		device, 
 		mRiggedTest->getKey(),
 		test.data(), 
 		test.size(),
-		L"dargon_bump.jpg");
+		L"dargon_bump.jpg");*/
 
 }
 
-void EntityHandler::update()
+void EntityHandler::update(ID3D11DeviceContext* context)
 {
 	DirectX::SimpleMath::Vector3 prevPos = this->mPlayer->getPosition();
 
 	this->mPlayer->updatePosition();
+	this->mEnemy->updatePosition(this->mRiggedEntityRenderer->getGraphicsData(), context);
 
 	//Wall intersection test
 	for (Entity *wall : this->mEntities) 

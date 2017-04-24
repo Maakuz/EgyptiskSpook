@@ -2,6 +2,7 @@
 #define ENEMY_H
 
 #include "Entity.h"
+#include "GraphicsData.h"
 #include <lua.hpp>
 #include <SimpleMath.h>
 #include <vector>
@@ -38,6 +39,8 @@ public:
 
 	void setPath(std::vector<DirectX::SimpleMath::Vector3> path);
 	std::vector<DirectX::SimpleMath::Vector3> getPath() const;
+
+	void updatePosition(GraphicsData* gData, ID3D11DeviceContext* context);
 
 	// lua
 	static int setHuntingPlayerLua(lua_State *state);

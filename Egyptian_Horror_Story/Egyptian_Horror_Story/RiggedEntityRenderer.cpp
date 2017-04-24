@@ -27,10 +27,10 @@ void RiggedEntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& s
 	shaderHandler.setShaders(context, 50, 20, -1);
 
 	ID3D11Buffer* temp;
-	temp = mGraphicsData.getBuffer(300);
+	temp = mGraphicsData.getConstantBuffer(300);
 	context->PSSetConstantBuffers(0, 1, &temp);
 
-	temp = mGraphicsData.getBuffer(302);
+	temp = mGraphicsData.getConstantBuffer(302);
 	context->PSSetConstantBuffers(1, 1, &temp);
 
 	context->IASetInputLayout(shaderHandler.getInputLayout(50));
@@ -42,10 +42,11 @@ void RiggedEntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& s
 	{
 		key = item.first;
 
-		temp = this->mGraphicsData.getBuffer(key);
+		temp = this->mGraphicsData.getVertexBuffer(key);
 		context->IASetVertexBuffers(0, 1, &temp, &stride, &offset);
 
-
+		temp = this->mGraphicsData.getConstantBuffer(key);
+		context->VSSetConstantBuffers(1, 1, &temp);
 
 		ID3D11ShaderResourceView* texTemp = this->mGraphicsData.getSRV(key);
 		context->PSSetShaderResources(0, 1, &texTemp);
@@ -54,7 +55,7 @@ void RiggedEntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& s
 	}
 }
 
-bool RiggedEntityRenderer::loadObject(ID3D11Device* device, int key, EntityStruct::SkinnedVertexStruct* vertices, int nrOfVertices, wchar_t* texturePath)
+bool RiggedEntityRenderer::loadObject(ID3D11Device *device, int key, EntityStruct::SkinnedVertexStruct* vertices, int nrOfVertices, UINT cbufferSize, wchar_t* texturePath, bool isDynamic)
 {
 	D3D11_SUBRESOURCE_DATA data;
 	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -68,6 +69,8 @@ bool RiggedEntityRenderer::loadObject(ID3D11Device* device, int key, EntityStruc
 		MessageBox(0, L"Rigged entity vertex buffer creation failed", L"error", MB_OK);
 		return false;
 	}
+
+	this->mGraphicsData.createConstantBuffer(key, cbufferSize, 0, device, isDynamic);
 
 	return true;
 }

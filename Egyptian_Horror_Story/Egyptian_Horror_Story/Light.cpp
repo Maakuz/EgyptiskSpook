@@ -44,21 +44,21 @@ void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector
 
 	D3D11_MAPPED_SUBRESOURCE data;
 
-	this->mContext->Map(this->mGData->getBuffer(this->mLightBufferKey), 
+	this->mContext->Map(this->mGData->getConstantBuffer(this->mLightBufferKey), 
 		0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 
 	memcpy(data.pData, &this->mPosDir, sizeof(lightStructs::lightPosDir));
 
-	this->mContext->Unmap(this->mGData->getBuffer(this->mLightBufferKey), 0);
+	this->mContext->Unmap(this->mGData->getConstantBuffer(this->mLightBufferKey), 0);
 
 
 
-	this->mContext->Map(this->mGData2->getBuffer(this->mLightBufferKey),
+	this->mContext->Map(this->mGData2->getConstantBuffer(this->mLightBufferKey),
 		0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 
 	memcpy(data.pData, &this->mPosDir, sizeof(lightStructs::lightPosDir));
 
-	this->mContext->Unmap(this->mGData2->getBuffer(this->mLightBufferKey), 0);
+	this->mContext->Unmap(this->mGData2->getConstantBuffer(this->mLightBufferKey), 0);
 }
 
 float Light::getHeight() const

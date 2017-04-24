@@ -1,17 +1,15 @@
 #include "ParticleRenderer.h"
 #include <math.h> 
-#include "Enemy.h" // FOR TESTING
 #define SHADERS 30
 #define DIVIDE 4 // should be divisible by 2
 #define START_SIZE 4096  // should be divisible by 2
 
 using namespace DirectX::SimpleMath;
 
-ParticleRenderer::ParticleRenderer(CameraClass *camera, Enemy *enemy) 
+ParticleRenderer::ParticleRenderer(CameraClass *camera) 
 	: mCamera(camera) {
 	this->mGraphicsData = new GraphicsData();
 	frame = 0;
-	this->enemy = enemy;
 }
 
 ParticleRenderer::~ParticleRenderer() {
@@ -45,9 +43,9 @@ void ParticleRenderer::updateCameraBuffer(ID3D11DeviceContext *context) {
 	Vector4 cam = this->mCamera->getPos();
 
 	D3D11_MAPPED_SUBRESOURCE res;
-	context->Map(this->mGraphicsData->getBuffer(1), 0, D3D11_MAP_WRITE_DISCARD, NULL, &res);
+	context->Map(this->mGraphicsData->getConstantBuffer(1), 0, D3D11_MAP_WRITE_DISCARD, NULL, &res);
 	memcpy(res.pData, &cam, sizeof(Vector4));
-	context->Unmap(this->mGraphicsData->getBuffer(1), 0);
+	context->Unmap(this->mGraphicsData->getConstantBuffer(1), 0);
 }
 
 void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
@@ -69,27 +67,19 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 		}
 	}
 
-	/* TEEST TETSTTETET REMOVE LATER */
-	ParticleVertex *vertex = &this->mParticleVertices[mParticleVertices.size() - 1];
-	ParticleData *data = &this->mParticleData[mParticleVertices.size() - 1];
-	vertex->dimensions.x = 2.f;
-	vertex->dimensions.y = 4.f;
-	vertex->position = enemy->getPosition();
-	/* TEEST TETSTTETET */
-
 	timeCheck(start, piece);
 
 	D3D11_MAPPED_SUBRESOURCE res;
-	context->Map(this->mGraphicsData->getBuffer(0), 0, D3D11_MAP_WRITE_DISCARD, NULL, &res);
+	context->Map(this->mGraphicsData->getVertexBuffer(0), 0, D3D11_MAP_WRITE_DISCARD, NULL, &res);
 	char *ptr = static_cast<char*> (res.pData);
 	memcpy(ptr, &this->mParticleVertices[0], getSize());
-	context->Unmap(this->mGraphicsData->getBuffer(0), 0);
+	context->Unmap(this->mGraphicsData->getVertexBuffer(0), 0);
 }
 
 void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders) {
 	UINT stride = sizeof(ParticleVertex), offset = 0;
-	ID3D11Buffer *buffer = this->mGraphicsData->getBuffer(0),
-						   *cam = this->mGraphicsData->getBuffer(1),
+	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(0),
+						   *cam = this->mGraphicsData->getConstantBuffer(1),
 						   *vp = this->mCamera->getMatrixBuffer();
 	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
 	ID3D11ShaderResourceView *srv2 = this->mGraphicsData->getSRV(1);
