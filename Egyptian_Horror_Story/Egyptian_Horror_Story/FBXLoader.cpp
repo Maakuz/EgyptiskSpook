@@ -82,15 +82,15 @@ void FBXLoader::recGetSkeleton(FbxNode* node, int index, int parentIndex)
 {
 	if (node->GetNodeAttribute() && node->GetNodeAttribute()->GetAttributeType() && node->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eSkeleton)
 	{
-		Joint temp;
+		JointSetup temp;
 		temp.parent = parentIndex;
 		temp.name = node->GetName();
-		this->mSkeleton.push_back(temp);
+		this->mSkeletonSetup.push_back(temp);
 	}
 
 	for (int i = 0; i < node->GetChildCount(); i++)
 	{
-		recGetSkeleton(node->GetChild(i), this->mSkeleton.size(), index);
+		recGetSkeleton(node->GetChild(i), this->mSkeletonSetup.size(), index);
 	}
 }
 
@@ -137,8 +137,8 @@ void FBXLoader::setupJoints(FbxNode* root)
 
 							cluster->GetTransformMatrix(transform);
 							cluster->GetTransformLinkMatrix(transformLink);
-							this->mSkeleton[index].globalBindInverse = transformLink.Inverse() * transform * geometryTransform;
-							this->mSkeleton[index].node = cluster->GetLink();
+							this->mSkeletonSetup[index].globalBindInverse = transformLink.Inverse() * transform * geometryTransform;
+							this->mSkeletonSetup[index].node = cluster->GetLink();
 
 							int nrOfIndices = cluster->GetControlPointIndicesCount();
 
@@ -178,9 +178,9 @@ int FBXLoader::findJoint(std::string name)
 {
 	int res = -1;
 	
-	for (int i = 0; i < this->mSkeleton.size() && res == -1; i++)
+	for (int i = 0; i < this->mSkeletonSetup.size() && res == -1; i++)
 	{
-		if (this->mSkeleton[i].name == name)
+		if (this->mSkeletonSetup[i].name == name)
 			res = i;
 	}
 
@@ -422,7 +422,7 @@ bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray, 
 	return false;
 }
 
-bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, std::string filename)
+bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, std::string filename, GraphicsData* gData, int key, ID3D11Device* device)
 {
 	if (this->mFbxManager == nullptr)
 	{
@@ -497,6 +497,24 @@ bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& 
 			verticeArray[i].weightIndex[j] = this->mVertexWeights[i][j];
 		}
 	}
+
+	//Kanske måste transpose här NOTETOSELF
+	for (int i = 0; i < this->mSkeletonSetup.size(); i++)
+	{
+		Joint joint;
+
+		joint.globalBindInverse = this->mSkeletonSetup[i].globalBindInverse;
+		joint.parent = this->mSkeletonSetup[i].parent;
+
+		this->mSkeleton.push_back(joint);
+	}
+
+	D3D11_SUBRESOURCE_DATA data;
+	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
+	data.pSysMem = this->mSkeleton.data();
+
+
+	gData->createConstantBuffer(key, sizeof(Joint) * this->mSkeleton.size(), &data, device, true);
 
 	return false;
 }

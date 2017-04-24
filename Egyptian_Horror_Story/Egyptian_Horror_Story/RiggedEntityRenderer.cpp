@@ -45,6 +45,8 @@ void RiggedEntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& s
 		temp = this->mGraphicsData.getBuffer(key);
 		context->IASetVertexBuffers(0, 1, &temp, &stride, &offset);
 
+		temp = this->mGraphicsData.getBuffer(key + 100);
+		context->VSSetConstantBuffers(1, 1, &temp);
 
 
 		ID3D11ShaderResourceView* texTemp = this->mGraphicsData.getSRV(key);

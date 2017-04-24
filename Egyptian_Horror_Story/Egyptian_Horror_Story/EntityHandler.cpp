@@ -268,10 +268,12 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 	*/
 
 	std::vector<EntityStruct::SkinnedVertexStruct> test;
+	
+	this->mRiggedTest = new AnimatedEntity(0, 100);
 
-	this->mLoader.loadSkinnedMesh(test, "ModelTestAnimate.fbx");
+	this->mLoader.loadSkinnedMesh(test, "ModelTestAnimate.fbx", this->mRiggedEntityRenderer->getGraphicsData(),
+		this->mRiggedTest->getCBufferKey(), device);
 
-	this->mRiggedTest = new Entity(0);
 
 	this->mRiggedEntityRenderer->loadObject(
 		device, 

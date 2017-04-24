@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <fbxsdk.h>
 #include <vector>
+#include "GraphicsData.h"
 
 #include <string>
 
@@ -21,7 +22,7 @@ private:
 		int test;
 	};
 	
-	struct Joint
+	struct JointSetup
 	{
 		int parent;
 		std::string name;
@@ -29,9 +30,15 @@ private:
 		FbxNode* node;
 	};
 
+	struct Joint
+	{
+		int parent;
+		FbxAMatrix globalBindInverse;
+	};
 
 
 	std::vector<Joint> mSkeleton;
+	std::vector<JointSetup> mSkeletonSetup;
 	std::vector<std::vector<EntityStruct::weightAndIndex>> mVertexWeights;
 
 	FbxManager* mFbxManager;
@@ -58,7 +65,7 @@ public:
 	virtual ~FBXLoader();
 
 	bool loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray, std::string filename);
-	bool loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, std::string filename);
+	bool loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, std::string filename, GraphicsData* gData, int key, ID3D11Device* device);
 	
 
 };

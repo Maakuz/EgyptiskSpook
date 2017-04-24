@@ -89,9 +89,11 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimatedEntity.cpp" />
     <ClCompile Include="AnimationHandler.cpp" />
     <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -115,6 +117,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatedEntity.h" />
     <ClInclude Include="AnimationHandler.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="Direct3DHeader.h" />
