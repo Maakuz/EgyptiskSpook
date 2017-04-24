@@ -179,7 +179,6 @@ int Enemy::startPathing(lua_State *state) {
 	Enemy *enemy = static_cast<Enemy*>
 		(lua_touserdata(state, lua_upvalueindex(1)));
 
-	assert(enemy->mPath.size() > 0);
 	enemy->mPath[enemy->currentPathNode];
 	enemy->setFollowPath(true);
 	enemy->setWaypoint(enemy->mPath[enemy->currentPathNode]);

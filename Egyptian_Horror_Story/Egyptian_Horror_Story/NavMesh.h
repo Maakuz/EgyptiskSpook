@@ -8,11 +8,27 @@
 
 class NavMesh {
 private:
+	struct Node {
+		DirectX::SimpleMath::Vector2 node;
+		Node *parent;
+		float F, G, H;
+	};
+
 	SDL_Surface *mSurface;
 	UINT8 *indexArray;
 
 	void copy(NavMesh const &navMesh);
 	void deleteMemory();
+
+	// For the searching algorithm
+	// return -1 for not contains, or returns index of the node
+	int contains(std::vector<Node> const &list,
+		DirectX::SimpleMath::Vector2 const &vec) const;
+	bool isWalkable(DirectX::SimpleMath::Vector2 const &node) const;
+	float calcCost(DirectX::SimpleMath::Vector2 node,
+		DirectX::SimpleMath::Vector2 toPos) const;
+	// also removes the node from the list!!!!
+	Node getShortestNode(std::vector<Node> &openList) const;
 public:
 	NavMesh();
 	virtual ~NavMesh();
@@ -24,7 +40,8 @@ public:
 	DirectX::SimpleMath::Vector2 toPixelCoord(int x, int z) const;
 	bool canSeeFrom(int fromX, int fromZ, int toX, int toZ) const;
 
-	std::vector<DirectX::SimpleMath::Vector3> getPathToCoord(int x, int z) const;
+	std::vector<DirectX::SimpleMath::Vector3> getPathToCoord(int fromX, int fromZ, int x, int z) const;
+	DirectX::SimpleMath::Vector3 getPosition(DirectX::SimpleMath::Vector2 pixel) const;
 
 	int getWidth() const;
 	int getHeight() const;

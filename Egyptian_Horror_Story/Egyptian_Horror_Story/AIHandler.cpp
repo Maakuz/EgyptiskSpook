@@ -234,8 +234,15 @@ int AIHandler::loadPathToEntity(lua_State *state) {
 	NavMesh *navMesh = static_cast<NavMesh*>
 		(lua_touserdata(state, lua_upvalueindex(3)));
 
-	enemy->setPath(navMesh->getPathToCoord(entity->getPosition().x,
-										   entity->getPosition().z));
+	Vector3 enemyPos = enemy->getPosition();
+	Vector3 entityPos = entity->getPosition();
+
+	enemy->setPath(navMesh->getPathToCoord(
+		enemyPos.x,
+		enemyPos.z,
+		entityPos.x,
+		entityPos.z
+	));
 
 	return 0;
 }

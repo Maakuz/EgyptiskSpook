@@ -1,7 +1,8 @@
 #define PATH "../Resource/Textures/"
-#define SCALE 0.5
+#define SCALE 1
 #define OFFSET_X 9 * SCALE
 #define OFFSET_Z -9 * SCALE
+#define BLOCKADE 0
 
 #include "NavMesh.h"
 #include <string>
@@ -108,12 +109,72 @@ bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
 	}
 }
 
-std::vector<Vector3> NavMesh::getPathToCoord(int x, int z) const {
-	//A Star algorithm
+std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int toZ) const {
+	//A Star algorithm ! THIS IS CURRENTLY VERY UNOPTIMIZED !
+	Vector2 toPos = toPixelCoord(toX, toZ);
 	std::vector<Vector3> path;
+	std::vector<Node> openList;
+	std::vector<Node> closedList;
+	openList.push_back({ toPixelCoord(fromX, fromZ), nullptr, -1, 0, 0 });
 
-	path.push_back(Vector3(x, 0, z));
+	if (toPos == openList.at(0).node) { // if at same node
+		path.push_back(Vector3(toX, 0, toZ));
+		return path;
+	}
 
+	Vector2 node;
+	Node parent;
+	bool pathFound = false;
+	int nodes = 0;
+	
+	while (!openList.empty() && !pathFound) {
+		parent = getShortestNode(openList);
+		closedList.push_back(parent); //add current node to closed list
+		nodes++;
+		SDL_Log("x,y: %f,%f H: %f, Nr: %d. TO x,y: %f,%f", parent.node.x, parent.node.y, parent.H, nodes, toPos.x, toPos.y);
+		for (int x = -1; x < 2; x++) {
+			for (int y = -1; y < 2; y++) {
+				node = Vector2(x + parent.node.x,
+							   y + parent.node.y);
+				if ((x != 0 || y != 0) && node.x >= 0 && node.y >= 0 &&
+					node.x < getWidth() && node.y < getHeight()) {
+
+					float cost = calcCost(node, toPos) + parent.F; //calculate cost of this node
+
+					if (toPos == node) { // adding target node = Done
+						pathFound = true;
+					}
+					else if (isWalkable(node) &&
+						contains(closedList, node) == -1) { //can walk through node and is not in closed list
+						int index = contains(openList, node);
+						if (index == -1)
+							openList.push_back({ node, &parent,
+												cost, parent.F, cost - parent.F //F, G, H
+						}); // add new node to open list
+						else if (openList[index].F < cost) //If already added but new path is shorter,
+							// change to new path
+							openList[index] = { node, &parent, cost,
+											parent.F, cost - parent.F };
+					}
+				}
+			}
+		}
+	}
+
+	parent = closedList[closedList.size() - 1]; //node before ending
+	path.push_back(Vector3(toX, 0, toZ));
+	path.push_back(getPosition(node));
+	while (true) {
+		path.push_back(getPosition(parent.node));
+		if (parent.parent == nullptr) break;
+		parent = *(parent.parent);
+	}
+
+	for (int i = 0; i < floor(path.size() / 2); i++) {
+		std::swap(path[i], path[path.size() - i - 1]);
+	}
+
+	SDL_Log("Size: %d", path.size());
 	return path;
 }
 
@@ -123,4 +184,47 @@ int NavMesh::getWidth() const {
 
 int NavMesh::getHeight() const {
 	return mSurface->h;
+}
+
+int NavMesh::contains(std::vector<Node> const &list,
+	DirectX::SimpleMath::Vector2 const &vec) const {
+	for (int x = 0; x < list.size(); x++) {
+		if (list[x].node == vec) return x;
+	}
+
+	return -1;
+}
+
+inline bool NavMesh::isWalkable(Vector2 const &node) const {
+	return getPixelAtCoord(node.x, node.y).r == BLOCKADE;
+}
+
+Vector3 NavMesh::getPosition(Vector2 pixel) const {
+	return Vector3(
+		pixel.x / SCALE - OFFSET_X,
+		0,
+		pixel.y / SCALE - OFFSET_Z
+	);
+}
+
+float NavMesh::calcCost(Vector2 node, Vector2 toPos) const {
+	return (node - toPos).Length();
+}
+
+NavMesh::Node NavMesh::getShortestNode(std::vector<Node> &openList) const {
+	float shortest = 99999999;
+	int index = 0;
+
+	for (int x = 0; x < openList.size(); x++) {
+		if (openList[x].F < shortest) {
+			shortest = openList[x].F;
+			index = x;
+		}
+	}
+
+	Node node = openList[index];
+	std::swap(openList[index], openList[openList.size() - 1]);
+	openList.pop_back();
+
+	return node;
 }
