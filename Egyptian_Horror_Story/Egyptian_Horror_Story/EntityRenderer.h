@@ -12,7 +12,7 @@ private:
 	GraphicsData mGraphicsData;
 
 public:
-	EntityRenderer();
+	EntityRenderer(int identifier);
 	virtual ~EntityRenderer();
 
 	void setup(ID3D11Device *device, ShaderHandler &shaderHandler);

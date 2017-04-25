@@ -4,10 +4,11 @@
 
 Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 {
+	this->mStateHandler = new StateHandler(GAMESTATE::MAIN_MENU);
 	this->mGraphics = mGraphicsHandler;
 	this->mCamera = new CameraClass(this->mGraphics->getDevice(), width, height);
 	
-	this->mEntityHandler = new EntityHandler();
+	this->mEntityHandler = new EntityHandler(GAMESTATE::PLAY);
 
 	this->mEntityHandler->setupPlayer(this->mGraphics->getDevice(), 
 		this->mGraphics->getDeviceContext(),
@@ -16,7 +17,7 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 
 	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
 
-	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera));
+	this->mGraphics->addRenderer(new ParticleRenderer(GAMESTATE::PLAY, this->mCamera));
 	this->mGraphics->addRenderer(this->mEntityHandler->getRenderer());
 
 	this->mGraphics->setupRenderers();
@@ -27,23 +28,27 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 
 Game::~Game()
 {
+	delete this->mStateHandler;
 	delete this->mCamera;
 	delete this->mEntityHandler;
 }
 
-void Game::update()
-{
+void Game::updateGame() {
 	this->mCamera->update(this->mGraphics->getDeviceContext());
 	this->mEntityHandler->update();
 
 	this->mGraphics->clear();
-	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer());
+	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer(), GAMESTATE::PLAY);
 	this->mGraphics->present();
+}
+
+void Game::update() {
+	this->mStateHandler->update(this->mStateHandler->state, this);
 }
 
 bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
 {
-	return this->mEntityHandler->getPlayer()->handleMouseKeyPress(key);
+	return this->mEntityHandler->getPlayer()->handleMouseKeyPress(key); //Skumt.
 }
 
 bool Game::handleMouseKeyRelease(SDL_KeyboardEvent const& key)
@@ -54,5 +59,19 @@ bool Game::handleMouseKeyRelease(SDL_KeyboardEvent const& key)
 void Game::handleMouseMotion(SDL_MouseMotionEvent const &motion)
 {
 	this->mEntityHandler->getPlayer()->handleMouseMotion(motion);
-	this->mCamera->updateRotation(this->mGraphics->getDeviceContext());
+	this->mCamera->updateRotation(this->mGraphics->getDeviceContext()); 
+}
+
+void Game::StateHandler::update(int i, Game* g) {
+	switch(i) {
+	case GAMESTATE::MAIN_MENU:
+		break;
+	case GAMESTATE::PLAY:
+		g->updateGame();
+		break;
+	}
+}
+
+Game::StateHandler::StateHandler(int i) {
+	this->state = i;
 }

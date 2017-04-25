@@ -162,13 +162,14 @@ void GraphicsHandler::setupRenderers() {
 	}
 }
 
-void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP) {
+void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, int identifier) {
 	for (const auto& renderer : mRenderers) {
-
-		this->mContext->VSSetConstantBuffers(0, 1, &WVP);
-		this->mContext->OMSetRenderTargets(1, &this->mBackBufferRTV, this->mDSV);
-		this->mContext->RSSetViewports(1, &this->mViewport);
-		renderer->render(mContext, mShaderHandler);
+		if (renderer->getID() == identifier) {
+			this->mContext->VSSetConstantBuffers(0, 1, &WVP);
+			this->mContext->OMSetRenderTargets(1, &this->mBackBufferRTV, this->mDSV);
+			this->mContext->RSSetViewports(1, &this->mViewport);
+			renderer->render(mContext, mShaderHandler);
+		}
 	}
 }
 

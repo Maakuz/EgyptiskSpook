@@ -34,7 +34,7 @@ class ParticleRenderer : public Renderer {
 		void timeCheck(int start, int piece);
 		static float getRandomNr();
 	public:
-		ParticleRenderer(CameraClass *camera);
+		ParticleRenderer(int identifier, CameraClass *camera);
 		ParticleRenderer(ParticleRenderer const &renderer) = delete;
 		virtual ~ParticleRenderer();
 

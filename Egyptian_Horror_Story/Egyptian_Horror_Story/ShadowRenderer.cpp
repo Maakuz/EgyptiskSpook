@@ -2,7 +2,7 @@
 #define VERTEX_SHADER 10
 #define MSG(x) MessageBox(0, x, L"error", MB_OK);
 
-ShadowRenderer::ShadowRenderer(Light* light)
+ShadowRenderer::ShadowRenderer(int identifier, Light* light) : Renderer(identifier)
 {
 	this->mLight = light;
 

@@ -17,7 +17,7 @@ private:
 	int mNrOfKeys;
 
 public:
-	EntityHandler();
+	EntityHandler(int id);
 	virtual ~EntityHandler();
 
 	void setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera, GraphicsData* gData);

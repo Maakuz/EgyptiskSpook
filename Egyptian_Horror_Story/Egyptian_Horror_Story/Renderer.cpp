@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
-Renderer::Renderer()
-{
+Renderer::Renderer(int identifier) {
+	this->mIdentifier = identifier;
 }
 
 Renderer::~Renderer()

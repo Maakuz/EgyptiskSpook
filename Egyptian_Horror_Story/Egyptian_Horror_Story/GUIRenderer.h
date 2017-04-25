@@ -12,7 +12,7 @@ private:
 	UINT mSize;
 	DirectX::SimpleMath::Vector3 *mParticles;
 public:
-	GUIRenderer();
+	GUIRenderer(int identifier);
 	GUIRenderer(GUIRenderer const &renderer) = delete;
 	virtual ~GUIRenderer();
 

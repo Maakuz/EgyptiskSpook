@@ -1,8 +1,8 @@
 #include "EntityHandler.h"
 
-EntityHandler::EntityHandler()
+EntityHandler::EntityHandler(int id)
 {
-	this->mEntityRenderer = new EntityRenderer();
+	this->mEntityRenderer = new EntityRenderer(id);
 }
 
 EntityHandler::~EntityHandler()
