@@ -11,6 +11,7 @@ private:
 	bool mRunning;
 
 	Game* mGame;
+	SDL_bool mLockCursor;
 public:
 	Window();
 	Window(Window const &window) = delete;

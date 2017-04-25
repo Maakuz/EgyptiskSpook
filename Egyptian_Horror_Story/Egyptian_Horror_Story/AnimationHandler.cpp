@@ -23,3 +23,4 @@ void AnimationHandler::calculateBoneMatrices()
 			bone.absoluteForm = skeleton[bone.parent].absoluteForm * bone.relativeForm;
 	}
 }
+ 

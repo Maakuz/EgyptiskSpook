@@ -9,6 +9,7 @@
 
 class ParticleRenderer : public Renderer {
 	private:
+
 		struct ParticleVertex {
 			DirectX::SimpleMath::Vector3 position;
 			DirectX::SimpleMath::Vector2 dimensions;
@@ -26,7 +27,7 @@ class ParticleRenderer : public Renderer {
 		UINT frame;
 
 		void updateCameraBuffer(ID3D11DeviceContext *context);
-		void updateParticles(ID3D11DeviceContext *context);
+		void updateParticles(ID3D11DeviceContext * context);
 
 		UINT getSize() const;
 		void addRandomParticle(bool timeIsRandom = false);

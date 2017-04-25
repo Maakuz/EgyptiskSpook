@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <SDL.h>
 #define GRAVITY 0.025f //change later ok
 #define GROUND_Y 0.f
 #define JUMP_START_VELOCITY 1.1f //change later ok FOR TESTING PURPOSES JUMPING BY LW
@@ -12,7 +13,7 @@
 
 using namespace DirectX::SimpleMath;
 
-Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int key, GraphicsData* gData)
+Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int key, GraphicsData* gData, GraphicsData* gData2)
 	:Entity(key)
 {
 	this->mCamera = camera;
@@ -32,7 +33,7 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 	this->mJumping = false;
 	this->mJumpingVelocity = 0;
 
-	this->mLight = new Light(this->getPosition(), this->mCamera->getForward(), device, context, gData);
+	this->mLight = new Light(this->getPosition(), this->mCamera->getForward(), device, context, gData, gData2);
 }
 
 Player::~Player()
@@ -119,6 +120,9 @@ bool Player::handleMouseKeyPress(SDL_KeyboardEvent const &key)
 bool Player::handleMouseKeyRelease(SDL_KeyboardEvent const &key)
 {
 	switch (key.keysym.scancode) {
+		case SDL_SCANCODE_Q:
+			SDL_Log("x = %f, y = %f, z = %f", getPosition().x, getPosition().y, getPosition().z); // TESTING METHOD
+			break;
 		case SDL_SCANCODE_A:
 			if (this->mDirection.x == -1)
 				this->mDirection.x = 0;
@@ -170,9 +174,14 @@ void Player::setPosition(DirectX::SimpleMath::Vector3 pos)
 	this->mCamera->setPos(pos);
 }
 
-DirectX::SimpleMath::Vector3 Player::getPrevPos()
+DirectX::SimpleMath::Vector3 Player::getPrevPos() const
 {
 	return this->mPrevPos;
+}
+
+DirectX::SimpleMath::Vector3 Player::getVelocity() const
+{
+	return this->mVelocity;
 }
 
 void Player::setPrevPos(DirectX::SimpleMath::Vector3 pos)

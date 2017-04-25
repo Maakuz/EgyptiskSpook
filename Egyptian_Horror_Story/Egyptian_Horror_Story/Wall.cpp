@@ -1,5 +1,6 @@
 #include "Wall.h"
 
+
 Wall::Wall(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 dir, DirectX::SimpleMath::Vector3 up, DirectX::SimpleMath::Vector3 scale, DirectX::SimpleMath::Vector3 norm, int key)
 : Entity(key)
 {

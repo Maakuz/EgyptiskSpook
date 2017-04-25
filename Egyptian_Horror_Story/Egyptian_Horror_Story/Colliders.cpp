@@ -155,6 +155,44 @@ bool OBB::obbVsObb(OBB& other) {
 	return false;
 }
 
+
+	//float sadijasidj = DirectX::SimpleMath::Vector3(0, 1, 0).Dot(DirectX::SimpleMath::Vector3(0, -1, 0));
+
+	//temp = -other.mLengthU;
+	//temp.Normalize();
+	//result = capToBox.Dot(temp);
+	//if (result > max) {
+	//	face = 1;
+	//	max = result;
+	//}
+	//temp = -other.mLengthV;
+	//temp.Normalize();
+	//result = capToBox.Dot(temp);
+	//if (result > max) {
+	//	face = 2;
+	//	max = result;
+	//}
+	//temp = other.mLengthV;
+	//temp.Normalize();
+	//result = capToBox.Dot(temp);
+	//if (result > max) {
+	//	face = 3;
+	//	max = result;
+	//}
+	//temp = other.mLengthU;
+	//temp.Normalize();
+	//result = capToBox.Dot(temp);
+	//if (result > max) {
+	//	face = 4;
+	//	max = result;
+	//}
+	//temp = other.mLengthW;
+	//temp.Normalize();
+	//result = capToBox.Dot(temp);
+	//if (result > max) {
+	//	face = 5;
+	//	max = result;
+
 bool OBB::obbVSCapsule(const Capsule & other) {
 
 	DirectX::SimpleMath::Vector3 newPoint = this->mPoint;

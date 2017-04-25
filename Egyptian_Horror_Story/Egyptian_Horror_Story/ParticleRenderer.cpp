@@ -35,16 +35,17 @@ void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 
 	mGraphicsData->createVertexBuffer(0, getSize(), &data, device, true);
 	mGraphicsData->createConstantBuffer(1, sizeof(Vector4), nullptr, device, true);
-	mGraphicsData->loadTexture(0, L"../Resource/Textures/sand.png", device);
+	mGraphicsData->loadTexture(0, L"sand.png", device);
+	mGraphicsData->loadTexture(1, L"enemy.png", device);
 }
 
 void ParticleRenderer::updateCameraBuffer(ID3D11DeviceContext *context) {
 	Vector4 cam = this->mCamera->getPos();
 
 	D3D11_MAPPED_SUBRESOURCE res;
-	context->Map(this->mGraphicsData->getBuffer(1), 0, D3D11_MAP_WRITE_DISCARD, NULL, &res);
+	context->Map(this->mGraphicsData->getConstantBuffer(1), 0, D3D11_MAP_WRITE_DISCARD, NULL, &res);
 	memcpy(res.pData, &cam, sizeof(Vector4));
-	context->Unmap(this->mGraphicsData->getBuffer(1), 0);
+	context->Unmap(this->mGraphicsData->getConstantBuffer(1), 0);
 }
 
 void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
@@ -65,21 +66,23 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 			data->direction = Vector3(temp, temp, temp);
 		}
 	}
+
 	timeCheck(start, piece);
 
 	D3D11_MAPPED_SUBRESOURCE res;
-	context->Map(this->mGraphicsData->getBuffer(0), 0, D3D11_MAP_WRITE_DISCARD, NULL, &res);
+	context->Map(this->mGraphicsData->getVertexBuffer(0), 0, D3D11_MAP_WRITE_DISCARD, NULL, &res);
 	char *ptr = static_cast<char*> (res.pData);
 	memcpy(ptr, &this->mParticleVertices[0], getSize());
-	context->Unmap(this->mGraphicsData->getBuffer(0), 0);
+	context->Unmap(this->mGraphicsData->getVertexBuffer(0), 0);
 }
 
 void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders) {
 	UINT stride = sizeof(ParticleVertex), offset = 0;
-	ID3D11Buffer *buffer = this->mGraphicsData->getBuffer(0),
-						   *cam = this->mGraphicsData->getBuffer(1),
+	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(0),
+						   *cam = this->mGraphicsData->getConstantBuffer(1),
 						   *vp = this->mCamera->getMatrixBuffer();
 	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
+	ID3D11ShaderResourceView *srv2 = this->mGraphicsData->getSRV(1);
 	shaders.setShaders(context, SHADERS, 20, SHADERS); //20 is from entity shader, change later
 
 	updateCameraBuffer(context);
@@ -92,7 +95,9 @@ void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shade
 	context->GSSetConstantBuffers(0, 1, &vp);
 	context->GSSetConstantBuffers(1, 1, &cam);
 
-	context->Draw(this->mParticleVertices.size(), 0);
+	context->Draw(this->mParticleVertices.size() - 1, 0);
+	context->PSSetShaderResources(0, 1, &srv2);
+	context->Draw(1, this->mParticleVertices.size() - 1);
 }
 
 UINT ParticleRenderer::getSize() const {

@@ -3,15 +3,7 @@
 #include "Direct3DHeader.h"
 #include "SimpleMath.h"
 #include <vector>
-
-namespace animation
-{
-	struct Bone
-	{
-		DirectX::SimpleMath::Matrix relativeForm, absoluteForm, invBindPose;
-		int parent;
-	};
-}
+#include "Structs.h"
 
 class AnimationHandler
 {

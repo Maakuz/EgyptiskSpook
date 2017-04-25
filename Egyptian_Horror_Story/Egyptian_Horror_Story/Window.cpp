@@ -5,6 +5,7 @@ Window::Window() {
 	mWindow = nullptr;
 
 	this->mGame = nullptr;
+	this->mLockCursor = SDL_bool::SDL_TRUE;
 }
 
 Window::~Window() {
@@ -33,7 +34,8 @@ void Window::startWindowLoop(GraphicsHandler* graphicsHandler) {
 	SDL_Event event;
 
 	this->mGame = new Game(graphicsHandler, WIDTH, HEIGHT);
-	
+	SDL_SetRelativeMouseMode(SDL_bool::SDL_TRUE);
+
 	while (mRunning) {
 		while (SDL_PollEvent(&event)) {
 			if (!handleEvent(event))
@@ -68,6 +70,9 @@ bool Window::handleEvent(SDL_Event const &event) {
 
 bool Window::handleKeyPress(SDL_KeyboardEvent const &key) {
 	switch (key.keysym.scancode) {
+		case SDL_SCANCODE_L:
+			this->mGame->updateLua();
+			break;
 		case SDL_SCANCODE_ESCAPE:
 			return false;
 		case SDL_SCANCODE_RSHIFT:
@@ -83,6 +88,21 @@ bool Window::handleKeyPress(SDL_KeyboardEvent const &key) {
 bool Window::handleKeyRelease(SDL_KeyboardEvent const &key)
 {
 	this->mGame->handleMouseKeyRelease(key);
+
+
+	switch (key.keysym.scancode) {
+	case SDL_SCANCODE_RETURN:
+		if (this->mLockCursor == SDL_bool::SDL_TRUE)
+			this->mLockCursor = SDL_bool::SDL_FALSE;
+
+		else
+			this->mLockCursor = SDL_bool::SDL_TRUE;
+
+		SDL_SetRelativeMouseMode(this->mLockCursor);
+		break;
+	}
+
+
 
 	return true;
 }

@@ -81,7 +81,6 @@ GraphicsHandler::~GraphicsHandler() {
 	if (mSamplerState)
 		mSamplerState->Release();
 
-	//Oklart om denna faktiskt tar bort renderer
 	for (auto *renderer : mRenderers) {
 			delete renderer;
 	}
@@ -184,7 +183,7 @@ ID3D11DeviceContext* GraphicsHandler::getDeviceContext()
 
 void GraphicsHandler::clear()
 {
-	float clear[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float clear[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	mContext->ClearRenderTargetView(mBackBufferRTV, clear);
 	mContext->ClearDepthStencilView(this->mDSV, D3D11_CLEAR_DEPTH, 1.f, 0);
 }
