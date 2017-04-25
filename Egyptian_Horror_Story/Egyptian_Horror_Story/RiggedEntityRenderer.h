@@ -12,7 +12,7 @@ private:
 	GraphicsData mGraphicsData;
 
 public:
-	RiggedEntityRenderer();
+	RiggedEntityRenderer(int id);
 	virtual ~RiggedEntityRenderer();
 
 	void setup(ID3D11Device *device, ShaderHandler &shaderHandler);
