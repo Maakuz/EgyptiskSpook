@@ -1,8 +1,10 @@
 #define PATH "../Resource/Textures/"
-#define SCALE 1
-#define OFFSET_X 9 * SCALE
-#define OFFSET_Z -9 * SCALE
+#define SCALE_X 1
+#define SCALE_Z -1
+#define OFFSET_X 9 * SCALE_X
+#define OFFSET_Z -9 * SCALE_Z
 #define BLOCKADE 0
+#define AVOID 128
 
 #include "NavMesh.h"
 #include <string>
@@ -76,8 +78,8 @@ SDL_Color NavMesh::getPixelAtCoord(int x, int z) const {
 }
 
 Vector2 NavMesh::toPixelCoord(int x, int z) const {
-	int pX = floor(x * SCALE) + OFFSET_X;
-	int pY = -(floor(z * SCALE) + OFFSET_Z);
+	int pX = floor(x * SCALE_X) + OFFSET_X;
+	int pY = -(floor(z * SCALE_Z) + OFFSET_Z);
 
 	pX %= getWidth();
 	pY %= getHeight();
@@ -97,12 +99,12 @@ bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
 	while (true) { //WARNING: DANGEROUS CODE, CHANGE IT
 		if (x != pTX) {
 			x += x < pTX ? 1 : -1;
-			if (x != pTX && getPixel(x, y).r == 0) return false;
+			if (x != pTX && getPixel(x, y).r == BLOCKADE) return false;
 		}
 
 		if (y != pTY) {
 			y += y < pTY ? 1 : -1;
-			if (y != pTY && getPixel(x, y).r == 0) return false;
+			if (y != pTY && getPixel(x, y).r == BLOCKADE) return false;
 		}
 
 		if (x == pTX && y == pTY) return true;
@@ -115,7 +117,7 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 	std::vector<Vector3> path;
 	std::vector<Node> openList;
 	std::vector<Node> closedList;
-	openList.push_back({ toPixelCoord(fromX, fromZ), nullptr, -1, 0, 0 });
+	openList.push_back({ toPixelCoord(fromX, fromZ), 0, 0, 0, 0 });
 
 	if (toPos == openList.at(0).node) { // if at same node
 		path.push_back(Vector3(toX, 0, toZ));
@@ -131,15 +133,16 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 		parent = getShortestNode(openList);
 		closedList.push_back(parent); //add current node to closed list
 		nodes++;
-		SDL_Log("x,y: %f,%f H: %f, Nr: %d. TO x,y: %f,%f", parent.node.x, parent.node.y, parent.H, nodes, toPos.x, toPos.y);
+	//	SDL_Log("x,y: %f,%f H: %f, Nr: %d. TO x,y: %f,%f", parent.node.x, parent.node.y, parent.H, closedList.size(), toPos.x, toPos.y);
 		for (int x = -1; x < 2; x++) {
 			for (int y = -1; y < 2; y++) {
-				node = Vector2(x + parent.node.x,
-							   y + parent.node.y);
-				if ((x != 0 || y != 0) && node.x >= 0 && node.y >= 0 &&
-					node.x < getWidth() && node.y < getHeight()) {
+				if ((x != 0 || y != 0)) {
+					node = Vector2(
+						static_cast<int>(abs(x + parent.node.x)) % getWidth(),
+						static_cast<int>(abs(y + parent.node.y)) % getHeight() // so node is in bounds
+					);
 
-					float cost = calcCost(node, toPos) + parent.F; //calculate cost of this node
+					float cost = heuristic(node, toPos) + parent.F; //calculate cost of this node
 
 					if (toPos == node) { // adding target node = Done
 						pathFound = true;
@@ -147,13 +150,13 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 					else if (isWalkable(node) &&
 						contains(closedList, node) == -1) { //can walk through node and is not in closed list
 						int index = contains(openList, node);
-						if (index == -1)
-							openList.push_back({ node, &parent,
+						if (index == -1) // if not already added
+							openList.push_back({ node, closedList.size() - 1,
 												cost, parent.F, cost - parent.F //F, G, H
 						}); // add new node to open list
 						else if (openList[index].F < cost) //If already added but new path is shorter,
 							// change to new path
-							openList[index] = { node, &parent, cost,
+							openList[index] = { node, closedList.size() - 1, cost,
 											parent.F, cost - parent.F };
 					}
 				}
@@ -166,15 +169,15 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 	path.push_back(getPosition(node));
 	while (true) {
 		path.push_back(getPosition(parent.node));
-		if (parent.parent == nullptr) break;
-		parent = *(parent.parent);
+		if (parent.parentIndex == 0) break;
+		parent = closedList[parent.parentIndex];
 	}
 
 	for (int i = 0; i < floor(path.size() / 2); i++) {
 		std::swap(path[i], path[path.size() - i - 1]);
 	}
 
-	SDL_Log("Size: %d", path.size());
+	SDL_Log("Path started, Size: %d", path.size());
 	return path;
 }
 
@@ -196,19 +199,20 @@ int NavMesh::contains(std::vector<Node> const &list,
 }
 
 inline bool NavMesh::isWalkable(Vector2 const &node) const {
-	return getPixelAtCoord(node.x, node.y).r == BLOCKADE;
+	SDL_Color col = getPixel(node.x, node.y);
+	return col.r == BLOCKADE || col.r == AVOID;
 }
 
 Vector3 NavMesh::getPosition(Vector2 pixel) const {
 	return Vector3(
-		pixel.x / SCALE - OFFSET_X,
+		(pixel.x - OFFSET_X) / SCALE_X,
 		0,
-		pixel.y / SCALE - OFFSET_Z
+		(pixel.y - OFFSET_Z) / SCALE_Z
 	);
 }
 
-float NavMesh::calcCost(Vector2 node, Vector2 toPos) const {
-	return (node - toPos).Length();
+float NavMesh::heuristic(Vector2 node, Vector2 toPos) const {
+	return (toPos - node).Length(); //There is better and more efficient ways to do this! TODO
 }
 
 NavMesh::Node NavMesh::getShortestNode(std::vector<Node> &openList) const {

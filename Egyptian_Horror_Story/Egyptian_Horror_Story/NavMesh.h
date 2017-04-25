@@ -10,7 +10,7 @@ class NavMesh {
 private:
 	struct Node {
 		DirectX::SimpleMath::Vector2 node;
-		Node *parent;
+		unsigned int parentIndex;
 		float F, G, H;
 	};
 
@@ -25,7 +25,7 @@ private:
 	int contains(std::vector<Node> const &list,
 		DirectX::SimpleMath::Vector2 const &vec) const;
 	bool isWalkable(DirectX::SimpleMath::Vector2 const &node) const;
-	float calcCost(DirectX::SimpleMath::Vector2 node,
+	float heuristic(DirectX::SimpleMath::Vector2 node,
 		DirectX::SimpleMath::Vector2 toPos) const;
 	// also removes the node from the list!!!!
 	Node getShortestNode(std::vector<Node> &openList) const;

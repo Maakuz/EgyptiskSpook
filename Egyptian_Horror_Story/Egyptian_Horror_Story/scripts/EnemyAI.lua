@@ -40,7 +40,7 @@ function update()
 	frame = frame + 1
 	local lSeesPlayer = SeesPlayer()
 	--if lSeesPlayer and not onPath then
-	if frame % 1000 == 0 then
+	if frame % 1000 == 0 and not onPath then
 		SetEnemySpeed(runSpeed)
 		pathToPlayer()
 	end
