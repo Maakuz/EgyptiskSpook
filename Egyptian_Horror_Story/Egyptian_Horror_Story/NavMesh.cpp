@@ -218,7 +218,8 @@ void NavMesh::savePathTest(std::vector<Vector3> &path) {
 		counter++;
 	}
 
-	SDL_SaveBMP(mCopy, "../NAVIGATION_TEST.bmp");
+	SDL_SaveBMP(mCopy, "../Resource/Textures/" "NAVIGATION_TEST.bmp");
+	SDL_LockSurface(mCopy);
 }
 
 int NavMesh::getWidth() const {
@@ -273,7 +274,7 @@ NavMesh::Node NavMesh::getShortestNode(std::vector<Node> &openList) const {
 	return node;
 }
 
-UINT32* NavMesh::getNavigationTexture() const {
+void* NavMesh::getNavigationTexture() const {
 	if (!mCopy) return nullptr;
 	else mCopy->pixels;
 }//this is for debugging

@@ -18,7 +18,11 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 
 	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
 
-	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera, mEntityHandler->getEnemy())); // temp
+	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera, mEntityHandler->getEnemy()));
+
+	mGuiRenderer = new GUIRenderer();
+	this->mGraphics->addRenderer(mGuiRenderer);
+
 	this->mGraphics->addRenderer(this->mEntityHandler->getRenderer());
 
 	this->mGraphics->setupRenderers();
@@ -45,6 +49,9 @@ void Game::update()
 	this->mGraphics->present();
 
 	this->mAIHandler->update();
+	if (this->mAIHandler->getNavigationTexture() != nullptr)
+		mGuiRenderer->setNavigationTest(mGraphics->getDevice(), this->mAIHandler->getNavigationTexture(),
+			this->mAIHandler->getNavMeshWidth(), this->mAIHandler->getNavMeshHeight());
 }
 
 bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)

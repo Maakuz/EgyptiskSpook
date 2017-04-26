@@ -289,6 +289,14 @@ void AIHandler::testScript() {
 	lua_close(test);
 }
 
-UINT32* AIHandler::getNavigationTexture() const {
+int AIHandler::getNavMeshWidth() const {
+	return navMesh.getWidth();
+}
+
+int AIHandler::getNavMeshHeight() const {
+	return navMesh.getHeight();
+}
+
+void* AIHandler::getNavigationTexture() const {
 	return navMesh.getNavigationTexture();
 } //this is for debugging

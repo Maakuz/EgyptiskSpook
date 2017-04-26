@@ -4,6 +4,7 @@
 #include "EntityHandler.h"
 #include "CameraClass.h"
 #include "AIHandler.h"
+#include "GUIRenderer.h"
 
 class Game
 {
@@ -12,6 +13,7 @@ private:
 	CameraClass* mCamera;
 	EntityHandler* mEntityHandler;
 	AIHandler* mAIHandler;
+	GUIRenderer *mGuiRenderer; //temp
 public:
 	Game(GraphicsHandler* graphicsHandler, float width, float height);
 	virtual ~Game();

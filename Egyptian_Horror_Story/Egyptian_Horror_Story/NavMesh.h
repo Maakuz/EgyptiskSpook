@@ -47,7 +47,7 @@ public:
 	int getWidth() const;
 	int getHeight() const;
 
-	UINT32* getNavigationTexture() const; //this is for debugging
+	void* getNavigationTexture() const; //this is for debugging
 
 	NavMesh* operator=(NavMesh const &navMesh);
 };
