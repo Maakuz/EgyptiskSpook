@@ -14,7 +14,7 @@ private:
 		float F, G, H;
 	};
 
-	SDL_Surface *mSurface;
+	SDL_Surface *mSurface, *mCopy;
 	UINT8 *indexArray;
 
 	void copy(NavMesh const &navMesh);
@@ -27,6 +27,7 @@ private:
 	bool isWalkable(DirectX::SimpleMath::Vector2 const &node) const;
 	float heuristic(DirectX::SimpleMath::Vector2 node,
 		DirectX::SimpleMath::Vector2 toPos) const;
+	void savePathTest(std::vector<DirectX::SimpleMath::Vector3> &path);
 	// also removes the node from the list!!!!
 	Node getShortestNode(std::vector<Node> &openList) const;
 public:
@@ -40,11 +41,13 @@ public:
 	DirectX::SimpleMath::Vector2 toPixelCoord(int x, int z) const;
 	bool canSeeFrom(int fromX, int fromZ, int toX, int toZ) const;
 
-	std::vector<DirectX::SimpleMath::Vector3> getPathToCoord(int fromX, int fromZ, int x, int z) const;
+	std::vector<DirectX::SimpleMath::Vector3> getPathToCoord(int fromX, int fromZ, int x, int z);
 	DirectX::SimpleMath::Vector3 getPosition(DirectX::SimpleMath::Vector2 pixel) const;
 
 	int getWidth() const;
 	int getHeight() const;
+
+	UINT32* getNavigationTexture() const; //this is for debugging
 
 	NavMesh* operator=(NavMesh const &navMesh);
 };

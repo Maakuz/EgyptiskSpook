@@ -18,6 +18,7 @@ void NavMesh::copy(NavMesh const &navMesh) {
 		deleteMemory();
 		
 		mSurface = navMesh.mSurface;
+		mCopy = nullptr;
 		assert(!mSurface); //for testing
 		indexArray = new UINT8[getWidth() * getHeight()];
 
@@ -33,6 +34,8 @@ void NavMesh::copy(NavMesh const &navMesh) {
 void NavMesh::deleteMemory() {
 	if (mSurface)
 		SDL_FreeSurface(mSurface);
+	if (mCopy)
+		SDL_FreeSurface(mCopy);
 }
 
 NavMesh::NavMesh() {
@@ -111,7 +114,7 @@ bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
 	}
 }
 
-std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int toZ) const {
+std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int toZ) {
 	//A Star algorithm ! THIS IS CURRENTLY VERY UNOPTIMIZED !
 	Vector2 toPos = toPixelCoord(toX, toZ);
 	std::vector<Vector3> path;
@@ -177,8 +180,45 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 		std::swap(path[i], path[path.size() - i - 1]);
 	}
 
+	savePathTest(path);
+
 	SDL_Log("Path started, Size: %d", path.size());
 	return path;
+}
+
+// Save image so the path taken is visible
+void NavMesh::savePathTest(std::vector<Vector3> &path) {
+	UINT32 rMask, gMask, bMask, aMask;
+	rMask = 0xFF000000;
+	gMask = 0x00FF0000;
+	bMask = 0x0000FF00;
+	aMask = 0x000000FF;
+
+	if (mCopy)
+		SDL_FreeSurface(mCopy);
+
+	mCopy =
+		SDL_CreateRGBSurface(0, mSurface->w, mSurface->h, 32, rMask, gMask, bMask, 0);
+
+	SDL_UnlockSurface(mSurface);
+	SDL_BlitSurface(mSurface, nullptr, mCopy, nullptr);
+	SDL_LockSurface(mSurface);
+	UINT32* pixels = (UINT32*)mCopy->pixels;
+	int counter = 0;
+	unsigned int i = 0;
+
+	for (Vector3 v3 : path) {
+		Vector2 pos = toPixelCoord(v3.x, v3.z);
+		i = static_cast<unsigned int> (pos.x + pos.y * mCopy->w);
+
+		if (counter == 0) pixels[i] = (255 << 16);
+		else if (counter == path.size() - 1) pixels[i] = (255 << 8);
+		else pixels[i] = (counter * 10 % 255 << 24);
+
+		counter++;
+	}
+
+	SDL_SaveBMP(mCopy, "../NAVIGATION_TEST.bmp");
 }
 
 int NavMesh::getWidth() const {
@@ -200,7 +240,7 @@ int NavMesh::contains(std::vector<Node> const &list,
 
 inline bool NavMesh::isWalkable(Vector2 const &node) const {
 	SDL_Color col = getPixel(node.x, node.y);
-	return col.r == BLOCKADE || col.r == AVOID;
+	return col.r != BLOCKADE && col.r != AVOID;
 }
 
 Vector3 NavMesh::getPosition(Vector2 pixel) const {
@@ -232,3 +272,8 @@ NavMesh::Node NavMesh::getShortestNode(std::vector<Node> &openList) const {
 
 	return node;
 }
+
+UINT32* NavMesh::getNavigationTexture() const {
+	if (!mCopy) return nullptr;
+	else mCopy->pixels;
+}//this is for debugging

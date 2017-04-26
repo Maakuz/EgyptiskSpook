@@ -65,7 +65,6 @@ Enemy::UPDATE_RETURNS Enemy::update() {
 		setPosition(mWaypoint);
 		
 		if (mFollowPath && ++currentPathNode < mPath.size()) {
-			assert(currentPathNode < mPath.size());
 			setWaypoint(mPath[currentPathNode]);
 			return ON_PATH_WAYPOINT; // on path waypoint
 		}

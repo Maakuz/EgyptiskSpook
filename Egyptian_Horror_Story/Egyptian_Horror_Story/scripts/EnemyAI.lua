@@ -39,8 +39,7 @@ end
 function update()
 	frame = frame + 1
 	local lSeesPlayer = SeesPlayer()
-	--if lSeesPlayer and not onPath then
-	if frame % 1000 == 0 and not onPath then
+	if lSeesPlayer and not onPath and frame % 100 == 0 then
 		SetEnemySpeed(runSpeed)
 		pathToPlayer()
 	end
@@ -48,9 +47,13 @@ function update()
 end
 
 function onReachingPathEnd()
+	print("Path End")
 	StopPathing()
 	SetEnemyWaypoint(waypoints[currentWaypoint])
 	onPath = false
+	
+	-- test
+	pathToPlayer()
 end
 
 function pathToPlayer()
