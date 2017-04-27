@@ -119,10 +119,11 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 	Vector2 toPos = toPixelCoord(toX, toZ);
 	std::vector<Vector3> path;
 	std::vector<Node> openList;
-	std::vector<Node> closedList;
+	std::unordered_map<int, Node> closedList;
 	openList.push_back({ toPixelCoord(fromX, fromZ), 0, 0, 0, 0 });
+	std::make_heap(openList.begin(), openList.end()); //use stl heap thingy, can make my own heap class if neccesary
 
-	if (toPos == openList.at(0).node) { // if at same node
+	if (toPos == openList[0].node) { // if at same node
 		path.push_back(Vector3(toX, 0, toZ));
 		return path;
 	}
@@ -134,9 +135,11 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 	
 	while (!openList.empty() && !pathFound) {
 		parent = getShortestNode(openList);
-		closedList.push_back(parent); //add current node to closed list
+		if (contains(closedList, parent.node, getWidth()) != -1) continue; //in closed list just go
+		
+		closedList.insert({ hashMethod(parent.node, getWidth()), parent }); //add current node to closed list
 		nodes++;
-	//	SDL_Log("x,y: %f,%f H: %f, Nr: %d. TO x,y: %f,%f", parent.node.x, parent.node.y, parent.H, closedList.size(), toPos.x, toPos.y);
+
 		for (int x = -1; x < 2; x++) {
 			for (int y = -1; y < 2; y++) {
 				if ((x != 0 || y != 0)) {
@@ -149,25 +152,14 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 
 					if (toPos == node) { // adding target node = Done
 						pathFound = true;
-					}
-					else if (isWalkable(node) &&
-						contains(closedList, node) == -1) { //can walk through node and is not in closed list
-						int index = contains(openList, node);
-						if (index == -1) // if not already added
-							openList.push_back({ node, closedList.size() - 1,
-												cost, parent.F, cost - parent.F //F, G, H
-						}); // add new node to open list
-						else if (openList[index].F < cost) //If already added but new path is shorter,
-							// change to new path
-							openList[index] = { node, closedList.size() - 1, cost,
-											parent.F, cost - parent.F };
+					} else if (isWalkable(node) && contains(closedList, node, getWidth()) == -1) {
+						openListInsert(node, openList, hashMethod(parent.node, getWidth()), cost, parent);
 					}
 				}
 			}
 		}
 	}
 
-	parent = closedList[closedList.size() - 1]; //node before ending
 	path.push_back(Vector3(toX, 0, toZ));
 	path.push_back(getPosition(node));
 	while (true) {
@@ -230,13 +222,10 @@ int NavMesh::getHeight() const {
 	return mSurface->h;
 }
 
-int NavMesh::contains(std::vector<Node> const &list,
-	DirectX::SimpleMath::Vector2 const &vec) const {
-	for (int x = 0; x < list.size(); x++) {
-		if (list[x].node == vec) return x;
-	}
-
-	return -1;
+int NavMesh::contains(std::unordered_map<int, Node> const &list,
+	Vector2 const &vec, int w) const {
+	int key = hashMethod(vec, w);
+	return list.find(key) == list.end() ? -1 : key;
 }
 
 inline bool NavMesh::isWalkable(Vector2 const &node) const {
@@ -257,21 +246,23 @@ float NavMesh::heuristic(Vector2 node, Vector2 toPos) const {
 }
 
 NavMesh::Node NavMesh::getShortestNode(std::vector<Node> &openList) const {
-	float shortest = 99999999;
-	int index = 0;
-
-	for (int x = 0; x < openList.size(); x++) {
-		if (openList[x].F < shortest) {
-			shortest = openList[x].F;
-			index = x;
-		}
-	}
-
-	Node node = openList[index];
-	std::swap(openList[index], openList[openList.size() - 1]);
+	std::pop_heap(openList.begin(), openList.end());
+	Node node = openList.back();
 	openList.pop_back();
-
 	return node;
+}
+
+
+void NavMesh::openListInsert(Vector2 &node, std::vector<Node> &openList,
+	unsigned int parentIndex, float cost, Node &parent) const {
+	openList.push_back({
+		node, parentIndex, cost, parent.F, cost - parent.F //F, G, H
+	}); // add new node to open list
+	std::push_heap(openList.begin(), openList.end());
+}
+
+int NavMesh::hashMethod(Vector2 const &pos, int w) const {
+	return pos.x + pos.y * w;
 }
 
 void* NavMesh::getNavigationTexture() const {
