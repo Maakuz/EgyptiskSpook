@@ -24,7 +24,6 @@ function onStart()
 end
 
 function onReachingWaypoint()
-	Log("Reached Waypoint")
 	local toCon = math.random(1, #waypoints[currentWaypoint].c)
 	local temp = waypoints[currentWaypoint].c[toCon]
 	
@@ -38,8 +37,7 @@ end
 
 function update()
 	frame = frame + 1
-	local lSeesPlayer = SeesPlayer()
-	if lSeesPlayer and not onPath and frame % 100 == 0 then
+	if not onPath and frame % 100 == 0 and SeesPlayer() then
 		SetEnemySpeed(runSpeed)
 		pathToPlayer()
 	end
@@ -47,13 +45,14 @@ function update()
 end
 
 function onReachingPathEnd()
-	print("Path End")
-	StopPathing()
-	SetEnemyWaypoint(waypoints[currentWaypoint])
-	onPath = false
-	
-	-- test
-	pathToPlayer()
+	Log("Path End")
+	if (SeesPlayer()) then
+		pathToPlayer()
+	else
+		StopPathing()
+		SetEnemyWaypoint(waypoints[currentWaypoint])
+		onPath = false
+	end
 end
 
 function pathToPlayer()

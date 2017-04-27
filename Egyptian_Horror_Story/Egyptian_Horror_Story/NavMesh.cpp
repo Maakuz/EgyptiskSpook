@@ -242,7 +242,8 @@ Vector3 NavMesh::getPosition(Vector2 pixel) const {
 }
 
 float NavMesh::heuristic(Vector2 node, Vector2 toPos) const {
-	return (toPos - node).Length(); //There is better and more efficient ways to do this! TODO
+	Vector2 to = toPos - node;
+	return to.x * to.x + to.y * to.y;
 }
 
 NavMesh::Node NavMesh::getShortestNode(std::vector<Node> &openList) const {
