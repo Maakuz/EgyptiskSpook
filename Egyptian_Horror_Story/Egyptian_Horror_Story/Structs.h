@@ -52,9 +52,9 @@ namespace lightStructs {
 
 namespace camera 
 {
-	struct WVP
+	struct VP
 	{
-		DirectX::SimpleMath::Matrix world, view, projection;
+		DirectX::SimpleMath::Matrix view, projection;
 	};
 }
 

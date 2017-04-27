@@ -2,7 +2,7 @@
 
 CameraClass::CameraClass(ID3D11Device* device, GraphicsData* gData, GraphicsData* gData2, float width, float height)
 {
-	this->mWVPBuffer = nullptr;
+	this->mVPBuffer = nullptr;
 	this->mGraphicsData = gData;
 	this->mGraphicsData2 = gData2;
 	float fovAngle = static_cast<float> (M_PI) * 0.45f;
@@ -27,10 +27,9 @@ CameraClass::CameraClass(ID3D11Device* device, GraphicsData* gData, GraphicsData
 	view = DirectX::XMMatrixTranspose(view);
 
 	this->mMatrices.projection = projection;
-	this->mMatrices.world = DirectX::XMMatrixIdentity();
 	this->mMatrices.view = view;
 
-	this->createVWPBuffer(device);
+	this->createVPBuffer(device);
 
 	D3D11_SUBRESOURCE_DATA data;
 	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -42,13 +41,13 @@ CameraClass::CameraClass(ID3D11Device* device, GraphicsData* gData, GraphicsData
 
 CameraClass::~CameraClass()
 {
-	this->mWVPBuffer->Release();
+	this->mVPBuffer->Release();
 }
 
-void CameraClass::createVWPBuffer(ID3D11Device* device)
+void CameraClass::createVPBuffer(ID3D11Device* device)
 {
 	D3D11_BUFFER_DESC desc;
-	desc.ByteWidth = sizeof(camera::WVP);
+	desc.ByteWidth = sizeof(camera::VP);
 	desc.Usage = D3D11_USAGE_DYNAMIC;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	desc.MiscFlags = 0;
@@ -59,7 +58,7 @@ void CameraClass::createVWPBuffer(ID3D11Device* device)
 
 	data.pSysMem = &this->mMatrices;
 
-	HRESULT hr = device->CreateBuffer(&desc, &data, &this->mWVPBuffer);
+	HRESULT hr = device->CreateBuffer(&desc, &data, &this->mVPBuffer);
 	if (FAILED(hr))
 	{
 		MessageBox(0, L"Matrix buffer creation failed", L"error", MB_OK);
@@ -78,11 +77,11 @@ void CameraClass::update(ID3D11DeviceContext* context)
 		D3D11_MAPPED_SUBRESOURCE data;
 		ZeroMemory(&data, sizeof(D3D11_MAPPED_SUBRESOURCE));
 		//Update cBuffer
-		context->Map(this->mWVPBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+		context->Map(this->mVPBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 
-		memcpy(data.pData, &this->mMatrices, sizeof(camera::WVP));
+		memcpy(data.pData, &this->mMatrices, sizeof(camera::VP));
 
-		context->Unmap(this->mWVPBuffer, 0);
+		context->Unmap(this->mVPBuffer, 0);
 
 
 		context->Map(this->mGraphicsData->getConstantBuffer(CAMPOSKEY), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
@@ -119,7 +118,7 @@ void CameraClass::updateRotation(ID3D11DeviceContext* context) {
 
 ID3D11Buffer* CameraClass::getMatrixBuffer()
 {
-	return this->mWVPBuffer;
+	return this->mVPBuffer;
 }
 
 DirectX::SimpleMath::Vector3 CameraClass::getPos() const

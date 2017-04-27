@@ -2,6 +2,7 @@
 
 EntityRenderer::EntityRenderer()
 {
+	this->shadowPass = false;
 }
 
 EntityRenderer::~EntityRenderer()
@@ -27,12 +28,21 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 	shaderHandler.setShaders(context, 20, 20, -1);
 
 	ID3D11Buffer* temp;
-	temp = mGraphicsData.getConstantBuffer(300);
-	context->PSSetConstantBuffers(0, 1, &temp);
 
-	temp = mGraphicsData.getConstantBuffer(302);
-	context->PSSetConstantBuffers(1, 1, &temp);
-	
+	if (this->shadowPass)
+	{
+		shaderHandler.setPixelShader(context, -1);
+	}
+
+	else
+	{
+		temp = mGraphicsData.getConstantBuffer(300);
+		context->PSSetConstantBuffers(0, 1, &temp);
+
+		temp = mGraphicsData.getConstantBuffer(302);
+		context->PSSetConstantBuffers(1, 1, &temp);
+	}
+
 	context->IASetInputLayout(shaderHandler.getInputLayout(20));
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -46,11 +56,15 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 		context->IASetVertexBuffers(0, 1, &temp, &stride, &offset);
 
 
-
-		ID3D11ShaderResourceView* texTemp = this->mGraphicsData.getSRV(key);
-		context->PSSetShaderResources(0, 1, &texTemp);
+		if (!this->shadowPass)
+		{
+			ID3D11ShaderResourceView* texTemp = this->mGraphicsData.getSRV(key);
+			context->PSSetShaderResources(0, 1, &texTemp);
+		}
 
 		context->Draw(this->mGraphicsData.getNrOfVertices(key), 0);
+
+
 	}
 }
 
@@ -73,6 +87,11 @@ bool EntityRenderer::loadObject(ID3D11Device* device, int key, EntityStruct::Ver
 	}
 
 	return true;
+}
+
+void EntityRenderer::setShadowPass(bool value)
+{
+	this->shadowPass = value;
 }
 
 GraphicsData* EntityRenderer::getGraphicsData()

@@ -78,6 +78,12 @@ GraphicsHandler::~GraphicsHandler() {
 	if (mDSV)
 		mDSV->Release();
 
+	if (this->mDSVShadow)
+		this->mDSVShadow->Release();
+
+	if (this->mSRVShadow)
+		this->mSRVShadow->Release();
+
 	if (mSamplerState)
 		mSamplerState->Release();
 
@@ -151,6 +157,15 @@ void GraphicsHandler::setupSamplerState() {
 	mContext->PSSetSamplers(0, 1, &mSamplerState);
 }
 
+void GraphicsHandler::setupLightViewport(Light* light)
+{
+	this->mViewportShadow.Height = light->getHeight();
+	this->mViewportShadow.Width = light->getWidth();
+	this->mViewportShadow.MaxDepth = 1.f;
+	this->mViewportShadow.MinDepth = 0.f;
+	this->mViewportShadow.TopLeftX = mViewport.TopLeftY = 0;
+}
+
 void GraphicsHandler::addRenderer(Renderer *renderer) {
 	mRenderers.push_back(renderer);
 }
@@ -161,7 +176,61 @@ void GraphicsHandler::setupRenderers() {
 	}
 }
 
-void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP) {
+void GraphicsHandler::setupDSAndSRViews() {
+	ID3D11Texture2D* texture;
+
+	D3D11_TEXTURE2D_DESC descTex;
+	ZeroMemory(&descTex, sizeof(D3D11_TEXTURE2D_DESC));
+	descTex.ArraySize = 1;
+	descTex.MipLevels = 1;
+	descTex.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+	descTex.Format = DXGI_FORMAT_R32_TYPELESS;
+	descTex.Height = static_cast<UINT> (this->mViewportShadow.Height);
+	descTex.Width = static_cast<UINT> (this->mViewportShadow.Width);
+	descTex.SampleDesc.Count = 4;
+
+	if (FAILED(this->mDevice->CreateTexture2D(&descTex, NULL, &texture)))
+		exit(-2);//MSG(L"Shadow texture creation failed");
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC descStenV;
+	ZeroMemory(&descStenV, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+	descStenV.Format = DXGI_FORMAT_D32_FLOAT;
+	descStenV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+
+	if (FAILED(this->mDevice->CreateDepthStencilView(texture, &descStenV, &this->mDSVShadow)))
+		exit(-2);//MSG(L"Shadow stencil view creation failed");
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	ZeroMemory(&srvDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+	srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+	srvDesc.Texture2D.MipLevels = descTex.MipLevels;
+
+	if (FAILED(this->mDevice->CreateShaderResourceView(texture, &srvDesc, &this->mSRVShadow)))
+		exit(-2); //MSG(L"Shadow srv view creation failed");
+	texture->Release();
+}
+
+void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightWVP) {
+
+	//Shadow prepass
+	for (const auto& renderer : mRenderers) {
+		EntityRenderer* ptr = dynamic_cast<EntityRenderer*>(renderer);
+
+		if (ptr)
+		{
+			ptr->setShadowPass(true);
+			this->mContext->VSSetConstantBuffers(0, 1, &lightWVP);
+			this->mContext->OMSetRenderTargets(0, nullptr, this->mDSVShadow);
+			this->mContext->RSSetViewports(1, &this->mViewportShadow);
+
+			renderer->render(mContext, mShaderHandler);
+			ptr->setShadowPass(false);
+		}
+	
+	}
+
+
 	for (const auto& renderer : mRenderers) {
 
 		this->mContext->VSSetConstantBuffers(0, 1, &WVP);
@@ -186,6 +255,7 @@ void GraphicsHandler::clear()
 	float clear[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	mContext->ClearRenderTargetView(mBackBufferRTV, clear);
 	mContext->ClearDepthStencilView(this->mDSV, D3D11_CLEAR_DEPTH, 1.f, 0);
+	this->mContext->ClearDepthStencilView(this->mDSVShadow, D3D11_CLEAR_DEPTH, 1, 0);
 }
 
 void GraphicsHandler::present() {

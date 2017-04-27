@@ -16,9 +16,8 @@ struct VS_OUT
     float2 uv : TEXCOORD;
 };
 
-cbuffer WVP : register(b0)
+cbuffer VP : register(b0)
 {
-    matrix world;
     //OPTIMERING
     matrix view;
     matrix projection;
@@ -37,8 +36,6 @@ VS_OUT main(VS_IN input)
     output.pos = float4(input.pos, 1);
 
     output.pos = mul(output.pos, translation);
-
-    output.pos = mul(output.pos, world);
     
     output.wPos = output.pos;
 

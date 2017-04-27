@@ -27,6 +27,8 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 
 
 	this->mGraphics->setupRenderers();
+	this->mGraphics->setupLightViewport(mEntityHandler->getPlayer()->getLight());
+	this->mGraphics->setupDSAndSRViews();
 
 	this->mAIHandler = new AIHandler(mEntityHandler->getEnemy(), mEntityHandler->getPlayer());
 
@@ -46,7 +48,7 @@ void Game::update()
 	this->mEntityHandler->update(this->mGraphics->getDeviceContext());
 
 	this->mGraphics->clear();
-	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer());
+	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer(), this->mEntityHandler->getEntityRenderer()->getGraphicsData()->getConstantBuffer(301));
 	this->mGraphics->present();
 
 	this->mAIHandler->update();

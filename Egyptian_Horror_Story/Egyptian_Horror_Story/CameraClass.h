@@ -16,9 +16,9 @@ class CameraClass
 private:
 	const double DEGTORADIANS = M_PI / 180;
 	
-	camera::WVP mMatrices;
+	camera::VP mMatrices;
 
-	ID3D11Buffer* mWVPBuffer;
+	ID3D11Buffer* mVPBuffer;
 	GraphicsData* mGraphicsData;
 	GraphicsData* mGraphicsData2;
 	static const int CAMPOSKEY = 302;
@@ -35,7 +35,7 @@ public:
 	CameraClass(ID3D11Device* device, GraphicsData* gData, GraphicsData* gData2, float width, float height);
 	virtual ~CameraClass();
 
-	void createVWPBuffer(ID3D11Device* device);
+	void createVPBuffer(ID3D11Device* device);
 	void update(ID3D11DeviceContext* context);
 	void updateRotation(ID3D11DeviceContext* context);
 

@@ -42,6 +42,8 @@ void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector
 	this->mPosDir.pos = DirectX::SimpleMath::Vector4(pos.x, pos.y, pos.z, 1);
 	this->mPosDir.dir = DirectX::SimpleMath::Vector4(dir.x, dir.y, dir.z, 1);
 
+	this->mMatrices.view = DirectX::XMMatrixLookToLH(this->mPosDir.pos, this->mPosDir.dir, DirectX::SimpleMath::Vector3(0, 1, 0));
+
 	D3D11_MAPPED_SUBRESOURCE data;
 
 	this->mContext->Map(this->mGData->getConstantBuffer(this->mLightBufferKey), 
@@ -59,6 +61,24 @@ void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector
 	memcpy(data.pData, &this->mPosDir, sizeof(lightStructs::lightPosDir));
 
 	this->mContext->Unmap(this->mGData2->getConstantBuffer(this->mLightBufferKey), 0);
+
+
+	//Matrices
+	this->mContext->Map(this->mGData->getConstantBuffer(this->mMatrixBufferKey),
+		0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+
+	memcpy(data.pData, &this->mMatrices, sizeof(lightStructs::VP));
+
+	this->mContext->Unmap(this->mGData->getConstantBuffer(this->mMatrixBufferKey), 0);
+
+
+
+	this->mContext->Map(this->mGData2->getConstantBuffer(this->mMatrixBufferKey),
+		0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+
+	memcpy(data.pData, &this->mMatrices, sizeof(lightStructs::VP));
+
+	this->mContext->Unmap(this->mGData2->getConstantBuffer(this->mMatrixBufferKey), 0);
 }
 
 float Light::getHeight() const

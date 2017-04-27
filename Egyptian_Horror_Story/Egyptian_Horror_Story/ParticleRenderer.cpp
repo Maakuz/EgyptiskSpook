@@ -1,7 +1,7 @@
 #include "ParticleRenderer.h"
 #include <math.h> 
 #define SHADERS 30
-#define DIVIDE 4 // should be divisible by 2
+#define DIVIDE 4// should be divisible by 2
 #define START_SIZE 4096  // should be divisible by 2
 
 using namespace DirectX::SimpleMath;
@@ -23,7 +23,7 @@ void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	};
 
 	shaders.setupVertexShader(device, SHADERS, L"ParticleVS.hlsl", "main", desc, ARRAYSIZE(desc));
-	shaders.setupPixelShader(device, SHADERS, L"ParticlePS.hlsl", "main");
+	//shaders.setupPixelShader(device, SHADERS, L"ParticlePS.hlsl", "main");
 	shaders.setupGeometryShader(device, SHADERS, L"ParticleGS.hlsl", "main");
 
 	for (int i = 0; i < START_SIZE; i++) {

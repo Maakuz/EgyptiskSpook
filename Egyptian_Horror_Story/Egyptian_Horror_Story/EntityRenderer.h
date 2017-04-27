@@ -10,6 +10,7 @@ class EntityRenderer : public Renderer
 {
 private:
 	GraphicsData mGraphicsData;
+	bool shadowPass;
 
 public:
 	EntityRenderer();
@@ -19,6 +20,8 @@ public:
 	void render(ID3D11DeviceContext *context, ShaderHandler &shaderHandler);
 
 	bool loadObject(ID3D11Device *device, int key, EntityStruct::VertexStruct* vertices, int nrOfVertices, wchar_t* texturePath = L"../Resource/Textures/placeholder.png");
+	void setShadowPass(bool value);
+
 
 	GraphicsData* getGraphicsData();
 
