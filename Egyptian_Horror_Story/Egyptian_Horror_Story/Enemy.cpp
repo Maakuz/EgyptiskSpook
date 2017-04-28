@@ -46,10 +46,12 @@ std::vector<Vector3> Enemy::getPath() const {
 	return mPath;
 }
 
-void Enemy::updatePosition(GraphicsData* gData, ID3D11DeviceContext* context)
+void Enemy::updatePosition(GraphicsData* gData, ID3D11DeviceContext* context, DirectX::SimpleMath::Vector3 playerPos)
 {
 	DirectX::SimpleMath::Matrix posMat = DirectX::SimpleMath::Matrix::CreateTranslation(this->getPosition());
 	posMat = posMat.Transpose();
+
+	DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationY();
 
 	D3D11_MAPPED_SUBRESOURCE data;
 	ZeroMemory(&data, sizeof(D3D11_MAPPED_SUBRESOURCE));
