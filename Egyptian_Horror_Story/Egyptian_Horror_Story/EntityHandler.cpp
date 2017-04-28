@@ -1329,7 +1329,7 @@ EntityHandler::~EntityHandler()
 
 void EntityHandler::setupEntities(ID3D11Device* device)
 {
-	//this->hardcodedMap(device);
+	this->hardcodedMap(device);
 
 	std::vector<EntityStruct::SkinnedVertexStruct> lightVec;
 
