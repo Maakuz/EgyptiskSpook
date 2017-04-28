@@ -3,6 +3,7 @@
 
 #include "ShaderHandler.h"
 #include "EntityRenderer.h"
+#include "RiggedEntityRenderer.h"
 #include "Light.h"
 #include "GraphicsData.h"
 #include <vector>

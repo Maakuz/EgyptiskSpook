@@ -2,6 +2,7 @@
 
 RiggedEntityRenderer::RiggedEntityRenderer()
 {
+	this->shadowPass = false;
 }
 
 RiggedEntityRenderer::~RiggedEntityRenderer()
@@ -25,13 +26,21 @@ void RiggedEntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& s
 	UINT stride = sizeof(EntityStruct::SkinnedVertexStruct), offset = 0;
 
 	shaderHandler.setShaders(context, 50, 20, -1);
-
 	ID3D11Buffer* temp;
-	temp = mGraphicsData.getConstantBuffer(300);
-	context->PSSetConstantBuffers(0, 1, &temp);
 
-	temp = mGraphicsData.getConstantBuffer(302);
-	context->PSSetConstantBuffers(1, 1, &temp);
+	if (this->shadowPass)
+	{
+		shaderHandler.setPixelShader(context, -1);
+	}
+
+	else
+	{
+		temp = mGraphicsData.getConstantBuffer(300);
+		context->PSSetConstantBuffers(0, 1, &temp);
+
+		temp = mGraphicsData.getConstantBuffer(302);
+		context->PSSetConstantBuffers(1, 1, &temp);
+	}
 
 	context->IASetInputLayout(shaderHandler.getInputLayout(50));
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -48,11 +57,19 @@ void RiggedEntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& s
 		temp = this->mGraphicsData.getConstantBuffer(key);
 		context->VSSetConstantBuffers(1, 1, &temp);
 
-		ID3D11ShaderResourceView* texTemp = this->mGraphicsData.getSRV(key);
-		context->PSSetShaderResources(0, 1, &texTemp);
+		if (!this->shadowPass)
+		{
+			ID3D11ShaderResourceView* texTemp = this->mGraphicsData.getSRV(key);
+			context->PSSetShaderResources(0, 1, &texTemp);
+		}
 
 		context->Draw(this->mGraphicsData.getNrOfVertices(key), 0);
 	}
+}
+
+void RiggedEntityRenderer::setShadowPass(bool value)
+{
+	this->shadowPass = value;
 }
 
 bool RiggedEntityRenderer::loadObject(ID3D11Device *device, int key, EntityStruct::SkinnedVertexStruct* vertices, int nrOfVertices, UINT cbufferSize, wchar_t* texturePath, bool isDynamic)
