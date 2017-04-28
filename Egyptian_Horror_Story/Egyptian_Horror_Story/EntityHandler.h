@@ -14,7 +14,7 @@ class EntityHandler
 {
 private:
 	std::vector<Entity*> mEntities;
-	Entity* mRiggedTest;
+	Entity* mFlashlightModel;
 	Player* mPlayer;
 	Enemy* mEnemy;
 	

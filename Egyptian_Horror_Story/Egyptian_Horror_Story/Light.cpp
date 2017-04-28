@@ -14,6 +14,7 @@ Light::Light(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 dire
 	this->mMatrices.projection = DirectX::XMMatrixPerspectiveFovLH(mLightFOV, this->mWidth / this->mHeight, 0.1f, 200);
 	this->mMatrices.projection = this->mMatrices.projection.Transpose();
 
+	this->mLightGraphicsKey = 299;
 	this->mLightBufferKey = 300;
 	this->mMatrixBufferKey = 301;
 
@@ -38,9 +39,11 @@ Light::~Light()
 {
 }
 
-void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 dir)
+void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 offset, DirectX::SimpleMath::Vector3 dir)
 {
-	this->mPosDir.pos = DirectX::SimpleMath::Vector4(pos.x, pos.y, pos.z, 1);
+	DirectX::SimpleMath::Vector3 newPos(pos + offset);
+
+	this->mPosDir.pos = DirectX::SimpleMath::Vector4(newPos.x, newPos.y, newPos.z, 1);
 	this->mPosDir.dir = DirectX::SimpleMath::Vector4(dir.x, dir.y, dir.z, 1);
 
 	this->mMatrices.view = DirectX::XMMatrixLookToLH(this->mPosDir.pos, this->mPosDir.dir, DirectX::SimpleMath::Vector3(0, 1, 0));
@@ -81,6 +84,20 @@ void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector
 	memcpy(data.pData, &this->mMatrices, sizeof(lightStructs::VP));
 
 	this->mContext->Unmap(this->mGData2->getConstantBuffer(this->mMatrixBufferKey), 0);
+
+
+	//Transform matrix
+	DirectX::SimpleMath::Matrix transform = DirectX::SimpleMath::Matrix::CreateTranslation(pos);
+	transform = transform.Transpose();
+
+	//TODO: FORTSÄTT
+
+	this->mContext->Map(this->mGData2->getConstantBuffer(this->mLightGraphicsKey),
+		0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+
+	memcpy(data.pData, &transform, sizeof(DirectX::XMMATRIX));
+
+	this->mContext->Unmap(this->mGData2->getConstantBuffer(this->mLightGraphicsKey), 0);
 }
 
 float Light::getHeight() const
@@ -91,4 +108,9 @@ float Light::getHeight() const
 float Light::getWidth() const
 {
 	return this->mWidth;
+}
+
+int Light::getGraphicsKey() const
+{
+	return this->mLightGraphicsKey;
 }

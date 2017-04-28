@@ -20,6 +20,7 @@ Same goes for booking space in the GraphicsData!
 player: 0
 wall: 1
 entity: 2 - 202
+Light graphics: 299
 Light Pos & Dir Buffer: 300 only buffer
 Light Matrix Buffer: 301 only buffer
 Camera pos:302

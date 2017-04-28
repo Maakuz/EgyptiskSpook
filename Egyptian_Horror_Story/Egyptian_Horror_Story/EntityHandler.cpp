@@ -1329,23 +1329,23 @@ EntityHandler::~EntityHandler()
 
 void EntityHandler::setupEntities(ID3D11Device* device)
 {
-	this->hardcodedMap(device);
+	//this->hardcodedMap(device);
 
-	//Test purposes
-	/*std::vector<EntityStruct::SkinnedVertexStruct> test;
+	std::vector<EntityStruct::SkinnedVertexStruct> lightVec;
 
-	this->mLoader.loadSkinnedMesh(test, "ModelTestAnimate.fbx");
+	this->mLoader.loadSkinnedMesh(lightVec, "FlashLight.fbx");
 
-	this->mRiggedTest = new Entity(0);
+	this->mFlashlightModel = new Entity(this->mPlayer->getLight()->getGraphicsKey());
 
-	this->mEntities.push_back(mRiggedTest);
+	this->mEntities.push_back(mFlashlightModel);
 
 	this->mRiggedEntityRenderer->loadObject(
 		device, 
-		mRiggedTest->getKey(),
-		test.data(), 
-		test.size(),
-		L"dargon_bump.jpg");*/
+		mFlashlightModel->getKey(),
+		lightVec.data(),
+		lightVec.size(),
+		sizeof(DirectX::XMMATRIX),
+		L"dargon_bump.jpg");
 
 }
 
