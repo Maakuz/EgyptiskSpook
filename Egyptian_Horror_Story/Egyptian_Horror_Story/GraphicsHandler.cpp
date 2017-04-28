@@ -147,7 +147,7 @@ void GraphicsHandler::setupSamplerState() {
 	D3D11_SAMPLER_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
 	desc.AddressU = desc.AddressV =
-		desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
 	desc.Filter = D3D11_FILTER_ANISOTROPIC;
 	desc.MaxLOD = D3D11_FLOAT32_MAX;
 	desc.MaxAnisotropy = 16; //max
@@ -159,8 +159,8 @@ void GraphicsHandler::setupSamplerState() {
 
 void GraphicsHandler::setupLightViewport(Light* light)
 {
-	this->mViewportShadow.Height = light->getHeight();
-	this->mViewportShadow.Width = light->getWidth();
+	this->mViewportShadow.Height = this->mViewport.Height;//light->getHeight();
+	this->mViewportShadow.Width = this->mViewport.Width;// light->getWidth();
 	this->mViewportShadow.MaxDepth = 1.f;
 	this->mViewportShadow.MinDepth = 0.f;
 	this->mViewportShadow.TopLeftX = mViewport.TopLeftY = 0;
@@ -185,9 +185,9 @@ void GraphicsHandler::setupDSAndSRViews() {
 	descTex.MipLevels = 1;
 	descTex.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 	descTex.Format = DXGI_FORMAT_R32_TYPELESS;
-	descTex.Height = static_cast<UINT> (this->mViewportShadow.Height);
-	descTex.Width = static_cast<UINT> (this->mViewportShadow.Width);
-	descTex.SampleDesc.Count = 4;
+	descTex.Height = HEIGHT;
+	descTex.Width = WIDTH;
+	descTex.SampleDesc.Count = 1;
 
 	if (FAILED(this->mDevice->CreateTexture2D(&descTex, NULL, &texture)))
 		exit(-2);//MSG(L"Shadow texture creation failed");
@@ -195,7 +195,7 @@ void GraphicsHandler::setupDSAndSRViews() {
 	D3D11_DEPTH_STENCIL_VIEW_DESC descStenV;
 	ZeroMemory(&descStenV, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 	descStenV.Format = DXGI_FORMAT_D32_FLOAT;
-	descStenV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+	descStenV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 
 	if (FAILED(this->mDevice->CreateDepthStencilView(texture, &descStenV, &this->mDSVShadow)))
 		exit(-2);//MSG(L"Shadow stencil view creation failed");
@@ -203,7 +203,7 @@ void GraphicsHandler::setupDSAndSRViews() {
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	ZeroMemory(&srvDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 	srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
-	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = descTex.MipLevels;
 
 	if (FAILED(this->mDevice->CreateShaderResourceView(texture, &srvDesc, &this->mSRVShadow)))
@@ -220,22 +220,29 @@ void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightWVP)
 		if (ptr)
 		{
 			ptr->setShadowPass(true);
+
+			//Needs to be null in order to be used as depthmap
+			ID3D11ShaderResourceView* srvNull = nullptr;
+			this->mContext->PSSetShaderResources(1, 1, &srvNull);
+
 			this->mContext->VSSetConstantBuffers(0, 1, &lightWVP);
 			this->mContext->OMSetRenderTargets(0, nullptr, this->mDSVShadow);
 			this->mContext->RSSetViewports(1, &this->mViewportShadow);
 
 			renderer->render(mContext, mShaderHandler);
+			
 			ptr->setShadowPass(false);
 		}
 	
 	}
 
+	this->mContext->VSSetConstantBuffers(0, 1, &WVP);
+	this->mContext->OMSetRenderTargets(1, &this->mBackBufferRTV, this->mDSV);
+	this->mContext->PSSetShaderResources(1, 1, &this->mSRVShadow);
+	this->mContext->PSSetConstantBuffers(2, 1, &lightWVP);
+	this->mContext->RSSetViewports(1, &this->mViewport);
 
 	for (const auto& renderer : mRenderers) {
-
-		this->mContext->VSSetConstantBuffers(0, 1, &WVP);
-		this->mContext->OMSetRenderTargets(1, &this->mBackBufferRTV, this->mDSV);
-		this->mContext->RSSetViewports(1, &this->mViewport);
 		renderer->render(mContext, mShaderHandler);
 	}
 }
