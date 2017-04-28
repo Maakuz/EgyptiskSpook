@@ -1354,7 +1354,7 @@ void EntityHandler::update(ID3D11DeviceContext* context)
 	DirectX::SimpleMath::Vector3 prevPos = this->mPlayer->getPosition();
 
 	this->mPlayer->updatePosition();
-	this->mEnemy->updatePosition(this->mRiggedEntityRenderer->getGraphicsData(), context);
+	this->mEnemy->updatePosition(this->mRiggedEntityRenderer->getGraphicsData(), context, this->mPlayer->getPosition());
 
 	//Wall intersection test
 	for (Entity *wall : this->mEntities) 

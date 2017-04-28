@@ -51,7 +51,11 @@ void Enemy::updatePosition(GraphicsData* gData, ID3D11DeviceContext* context, Di
 	DirectX::SimpleMath::Matrix posMat = DirectX::SimpleMath::Matrix::CreateTranslation(this->getPosition());
 	posMat = posMat.Transpose();
 
-	DirectX::SimpleMath::Matrix rot = DirectX::SimpleMath::Matrix::CreateRotationY();
+	//Very simple solution, can be improved
+	Matrix rot = Matrix::CreateRotationY(atan2(playerPos.x - this->getPosition().x, playerPos.z - this->getPosition().z));
+	rot = rot.Transpose();
+
+	posMat *= rot;
 
 	D3D11_MAPPED_SUBRESOURCE data;
 	ZeroMemory(&data, sizeof(D3D11_MAPPED_SUBRESOURCE));

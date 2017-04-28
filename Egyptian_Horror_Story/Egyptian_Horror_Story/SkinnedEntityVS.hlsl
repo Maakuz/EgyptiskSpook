@@ -42,7 +42,7 @@ VS_OUT main(VS_IN input)
     output.pos = mul(output.pos, view);
     output.pos = mul(output.pos, projection);
 
-    output.normal = input.normal;
+    output.normal = mul(float4(input.normal, 0), translation);
     output.uv = input.uv;
 
     return output;
