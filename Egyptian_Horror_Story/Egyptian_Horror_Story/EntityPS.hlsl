@@ -1,4 +1,5 @@
 texture2D tex : register(t0);
+texture2D shadowMap : register(t1);
 SamplerState sSampler;
 
 struct VS_OUT
@@ -20,9 +21,17 @@ cbuffer cameraPos : register(b1)
     float4 camPos;
 }
 
+cbuffer lightVP : register(b2)
+{
+    //OPTIMERING
+    matrix lView;
+    matrix lProjection;
+}
+
 
 float4 main(VS_OUT input) : SV_TARGET
 {
+    float4 lighting = float4(1, 1, 1, 1);
     float4 lightToPos = input.wPos - lightPos;
     float specularIntensity = 400.f;
     float outerCone = 0.8f;
@@ -45,7 +54,7 @@ float4 main(VS_OUT input) : SV_TARGET
         diffuse = lambert * falloff;
 
 
-        //Skrik på Jakob Nyberg var formeln kommer ifrån!
+        //Creds till Jakob Nyberg för formeln han stal!
         float3 posToCam = camPos.xyz - input.wPos.xyz;
        // float3 H = normalize(lightDir.xyz + posToCam); // kanske rättare?
         float3 H = normalize(posToCam - lightDir.xyz);
@@ -58,5 +67,28 @@ float4 main(VS_OUT input) : SV_TARGET
 
     }
 
-    return tex.Sample(sSampler, input.uv) * (saturate(diffuse + ambient) + specularity);
+    lighting = saturate(diffuse + ambient) + specularity;
+
+    //*******************SHADOW MAPPING FINALLY*********************
+    float4 posFromLight = input.wPos;
+
+    posFromLight = mul(posFromLight, lView);
+    posFromLight = mul(posFromLight, lProjection);
+
+    posFromLight /= posFromLight.w;
+
+	//Convert to texture coords
+    posFromLight.x = (posFromLight.x * 0.5) + 0.5;
+    posFromLight.y = (posFromLight.y * -0.5) + 0.5;
+
+
+    float depth = shadowMap.Sample(sSampler, posFromLight.xy).x;
+
+    if (depth < posFromLight.z - 0.0001)
+        lighting *= float4(0.5, 0.5, 0.5, 1);
+
+    //*****************SHADOW MAPPING FINALLY END*******************
+
+    //return shadowMap.Sample(sSampler, input.uv);
+    return tex.Sample(sSampler, input.uv) * lighting;
 }
