@@ -12,13 +12,18 @@ namespace EntityStruct
 		DirectX::SimpleMath::Vector2 uv;
 	};
 
+	struct weightAndIndex
+	{
+		int index;
+		float weight;
+	};
+
 	struct SkinnedVertexStruct
 	{
 		DirectX::SimpleMath::Vector3 pos;
 		DirectX::SimpleMath::Vector3 normal;
 		DirectX::SimpleMath::Vector2 uv;
-		float weight;
-		float jointIndex;
+		weightAndIndex weightIndex[4];
 	};
 }
 

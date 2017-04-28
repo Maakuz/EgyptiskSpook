@@ -155,6 +155,9 @@
     <ClCompile Include="RiggedEntityRenderer.cpp">
       <Filter>Source Files\Renderers</Filter>
     </ClCompile>
+    <ClCompile Include="AnimatedEntity.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -222,6 +225,9 @@
     </ClInclude>
     <ClInclude Include="RiggedEntityRenderer.h">
       <Filter>Header Files\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedEntity.h">
+      <Filter>Header Files\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

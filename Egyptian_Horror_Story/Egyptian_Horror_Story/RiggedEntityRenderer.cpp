@@ -15,7 +15,7 @@ void RiggedEntityRenderer::setup(ID3D11Device* device, ShaderHandler & shaderHan
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "WEIGHT", 0, DXGI_FORMAT_R32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "INDEX", 0, DXGI_FORMAT_R32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "INDEX", 0, DXGI_FORMAT_R32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 	HRESULT hr = shaderHandler.setupVertexShader(device, 50, L"SkinnedEntityVS.hlsl", "main", desc, ARRAYSIZE(desc));
 }
@@ -45,6 +45,8 @@ void RiggedEntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& s
 		temp = this->mGraphicsData.getBuffer(key);
 		context->IASetVertexBuffers(0, 1, &temp, &stride, &offset);
 
+		temp = this->mGraphicsData.getBuffer(key + 100);
+		context->VSSetConstantBuffers(1, 1, &temp);
 
 
 		ID3D11ShaderResourceView* texTemp = this->mGraphicsData.getSRV(key);

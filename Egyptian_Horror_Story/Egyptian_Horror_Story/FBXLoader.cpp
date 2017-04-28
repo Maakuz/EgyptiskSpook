@@ -82,64 +82,105 @@ void FBXLoader::recGetSkeleton(FbxNode* node, int index, int parentIndex)
 {
 	if (node->GetNodeAttribute() && node->GetNodeAttribute()->GetAttributeType() && node->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eSkeleton)
 	{
-		Joint temp;
+		JointSetup temp;
 		temp.parent = parentIndex;
 		temp.name = node->GetName();
-		this->mSkeleton.push_back(temp);
+		this->mSkeletonSetup.push_back(temp);
 	}
 
 	for (int i = 0; i < node->GetChildCount(); i++)
 	{
-		recGetSkeleton(node->GetChild(i), this->mSkeleton.size(), index);
+		recGetSkeleton(node->GetChild(i), this->mSkeletonSetup.size(), index);
 	}
 }
 
 void FBXLoader::setupJoints(FbxNode* root)
 {
-	FbxMesh* mesh = root->GetMesh();
-
-	int nrOfDeformations = mesh->GetDeformerCount();
-
-	//Probably maybe not needed
-	const FbxVector4 lT = root->GetGeometricTranslation(FbxNode::eSourcePivot);
-	const FbxVector4 lR = root->GetGeometricRotation(FbxNode::eSourcePivot);
-	const FbxVector4 lS = root->GetGeometricScaling(FbxNode::eSourcePivot);
-
-	FbxAMatrix geometryTransform = FbxAMatrix(lT, lR, lS);
-	//end
-
-	for (int i = 0; i < nrOfDeformations; i++)
+	FbxMesh* mesh;
+	for (int i = 0; i < root->GetChildCount(); i++)
 	{
-		FbxSkin* skin = reinterpret_cast<FbxSkin*>(mesh->GetDeformer(i, FbxDeformer::eSkin));
+		FbxNode* childNode = root->GetChild(i);
 
-		if (skin)
+
+		if (childNode->GetNodeAttribute() != NULL)
 		{
-			int nrOfClusters = skin->GetClusterCount();
-			for (int j = 0; j < nrOfClusters; j++)
+			FbxNodeAttribute::EType attributeType = childNode->GetNodeAttribute()->GetAttributeType();
+
+			if (attributeType == FbxNodeAttribute::eMesh)
 			{
-				FbxCluster* cluster = skin->GetCluster(j);
-				int index = this->findJoint(cluster->GetLink()->GetName());
+				FbxMesh* mesh = (FbxMesh*)childNode->GetNodeAttribute();
 
-				FbxAMatrix transform;
-				FbxAMatrix transformLink;
+				int nrOfDeformations = mesh->GetDeformerCount();
 
-				cluster->GetTransformMatrix(transform);
-				cluster->GetTransformLinkMatrix(transformLink);
-				this->mSkeleton[index].globalBindInverse = transformLink.Inverse() * transform * geometryTransform;
-				this->mSkeleton[index].node = cluster->GetLink();
+				//Probably maybe not needed
+				const FbxVector4 lT = root->GetGeometricTranslation(FbxNode::eSourcePivot);
+				const FbxVector4 lR = root->GetGeometricRotation(FbxNode::eSourcePivot);
+				const FbxVector4 lS = root->GetGeometricScaling(FbxNode::eSourcePivot);
+
+				FbxAMatrix geometryTransform = FbxAMatrix(lT, lR, lS);
+				//end
+
+				for (int i = 0; i < nrOfDeformations; i++)
+				{
+					FbxSkin* skin = reinterpret_cast<FbxSkin*>(mesh->GetDeformer(i, FbxDeformer::eSkin));
+
+					if (skin)
+					{
+						int nrOfClusters = skin->GetClusterCount();
+						for (int j = 0; j < nrOfClusters; j++)
+						{
+							FbxCluster* cluster = skin->GetCluster(j);
+							int index = this->findJoint(cluster->GetLink()->GetName());
+
+							FbxAMatrix transform;
+							FbxAMatrix transformLink;
+
+							cluster->GetTransformMatrix(transform);
+							cluster->GetTransformLinkMatrix(transformLink);
+							this->mSkeletonSetup[index].globalBindInverse = transformLink.Inverse() * transform * geometryTransform;
+							this->mSkeletonSetup[index].node = cluster->GetLink();
+
+							int nrOfIndices = cluster->GetControlPointIndicesCount();
+
+							for (int i = 0; i < nrOfIndices; i++)
+							{
+								EntityStruct::weightAndIndex tempWeightIndex;
+								tempWeightIndex.index = index;
+								tempWeightIndex.weight = cluster->GetControlPointWeights()[i];
+								this->mVertexWeights[cluster->GetControlPointIndices()[i]].push_back(tempWeightIndex);
+							}
+
+							//MÅSTE HA -MD PAKETET PÅ 111MB FÖR DETTA OCH DET DYKER UPP
+							//MINNESLÄCKOR ÖVERALLT AAAH KILLMENAO
+
+							//FbxAnimStack* animStack = this->mScene->GetSrcObject<FbxAnimStack>(0);
+							//FbxString stackName = animStack->GetName();
+
+							//FbxTakeInfo* takeInfo = this->mScene->GetTakeInfo(stackName);
+							//FbxTime start = takeInfo->mLocalTimeSpan.GetStart();
+							//FbxTime stop = takeInfo->mLocalTimeSpan.GetStop();
+							//this->mAnimLength = stop.GetFrameCount(FbxTime::eFrames24) - start.GetFrameCount(FbxTime::eFrames24) + 1;// VARFÖR +1?
+						
+							//this->mSkeleton[index].
+						
+						}
+					}
+				}
+
 			}
 		}
 	}
 
+	
 }
 
 int FBXLoader::findJoint(std::string name)
 {
 	int res = -1;
 	
-	for (int i = 0; i < this->mSkeleton.size() && res == -1; i++)
+	for (int i = 0; i < this->mSkeletonSetup.size() && res == -1; i++)
 	{
-		if (this->mSkeleton[i].name == name)
+		if (this->mSkeletonSetup[i].name == name)
 			res = i;
 	}
 
@@ -325,10 +366,9 @@ FBXLoader::FBXLoader()
 
 FBXLoader::~FBXLoader()
 {
-
 }
 
-bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray)
+bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray, std::string filename)
 {
 
 	if (this->mFbxManager == nullptr)
@@ -340,21 +380,23 @@ bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray)
 	}
 
 	FbxImporter* importer = FbxImporter::Create(this->mFbxManager, "");
-	FbxScene* scene = FbxScene::Create(this->mFbxManager, "");
+	mScene = FbxScene::Create(this->mFbxManager, "");
 
-	bool res = importer->Initialize("../Resource/Models/ModelTestTri.fbx", -1, this->mIOSettings);
+	std::string temp = "../Resource/Models/" + filename;
+
+	bool res = importer->Initialize(temp.c_str(), -1, this->mIOSettings);
 
 	if (!res)
 		exit(-88);
 
-	res = importer->Import(scene);
+	res = importer->Import(mScene);
 
 	if (!res)
 		exit(-89);
 
 	importer->Destroy();
 
-	FbxNode* RootNode = scene->GetRootNode();
+	FbxNode* RootNode = mScene->GetRootNode();
 
 	if (RootNode)
 	{
@@ -380,7 +422,7 @@ bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray)
 	return false;
 }
 
-bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray)
+bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, std::string filename, GraphicsData* gData, int key, ID3D11Device* device)
 {
 	if (this->mFbxManager == nullptr)
 	{
@@ -391,21 +433,23 @@ bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& 
 	}
 
 	FbxImporter* importer = FbxImporter::Create(this->mFbxManager, "");
-	FbxScene* scene = FbxScene::Create(this->mFbxManager, "");
+	this->mScene = FbxScene::Create(this->mFbxManager, "");
 
-	bool res = importer->Initialize("../Resource/Models/dargon.fbx", -1, this->mIOSettings);
+	std::string temp = "../Resource/Models/" + filename;
+
+	bool res = importer->Initialize(temp.c_str(), -1, this->mIOSettings);
 
 	if (!res)
 		exit(-88);
 
-	res = importer->Import(scene);
+	res = importer->Import(mScene);
 
 	if (!res)
 		exit(-89);
 
 	importer->Destroy();
 
-	FbxNode* RootNode = scene->GetRootNode();
+	FbxNode* RootNode = mScene->GetRootNode();
 
 	if (RootNode)
 	{
@@ -428,7 +472,49 @@ bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& 
 		}
 	}
 
+	//Temporary storage
+	this->mVertexWeights.resize(verticeArray.size());
+	
+
 	this->getSkeleton(RootNode);
+	this->setupJoints(RootNode);
+
+	//Initialize
+	for (int i = 0; i < verticeArray.size(); i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			verticeArray[i].weightIndex[j].index = 0;
+			verticeArray[i].weightIndex[j].weight = 0;
+		}
+	}
+
+
+	for (int i = 0; i < verticeArray.size(); i++)
+	{
+		for (int j = 0; j < this->mVertexWeights[i].size() && j < 4; j++)
+		{
+			verticeArray[i].weightIndex[j] = this->mVertexWeights[i][j];
+		}
+	}
+
+	//Kanske måste transpose här NOTETOSELF
+	for (int i = 0; i < this->mSkeletonSetup.size(); i++)
+	{
+		Joint joint;
+
+		joint.globalBindInverse = this->mSkeletonSetup[i].globalBindInverse;
+		joint.parent = this->mSkeletonSetup[i].parent;
+
+		this->mSkeleton.push_back(joint);
+	}
+
+	D3D11_SUBRESOURCE_DATA data;
+	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
+	data.pSysMem = this->mSkeleton.data();
+
+
+	gData->createConstantBuffer(key, sizeof(Joint) * this->mSkeleton.size(), &data, device, true);
 
 	return false;
 }

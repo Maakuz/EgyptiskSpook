@@ -5,13 +5,14 @@
 #include "RiggedEntityRenderer.h"
 #include "Player.h"
 #include "Wall.h"
+#include "AnimatedEntity.h"
 #include "FBXLoader.h"
 
 class EntityHandler
 {
 private:
 	std::vector<Entity*> mEntities;
-	Entity* mRiggedTest;
+	AnimatedEntity* mRiggedTest;
 	Player* mPlayer;
 	FBXLoader mLoader;
 

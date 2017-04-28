@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <fbxsdk.h>
 #include <vector>
+#include "GraphicsData.h"
 
 #include <string>
 
@@ -15,8 +16,13 @@
 class FBXLoader
 {
 private:
+
+	struct KeyFrame
+	{
+		int test;
+	};
 	
-	struct Joint
+	struct JointSetup
 	{
 		int parent;
 		std::string name;
@@ -24,10 +30,21 @@ private:
 		FbxNode* node;
 	};
 
+	struct Joint
+	{
+		int parent;
+		FbxAMatrix globalBindInverse;
+	};
+
+
 	std::vector<Joint> mSkeleton;
+	std::vector<JointSetup> mSkeletonSetup;
+	std::vector<std::vector<EntityStruct::weightAndIndex>> mVertexWeights;
 
 	FbxManager* mFbxManager;
 	FbxIOSettings* mIOSettings;
+	FbxScene* mScene;
+	float mAnimLength;
 
 	const int SPLIT_ARRAY[6] = {0, 1, 2, 2, 3, 0};
 
@@ -47,8 +64,8 @@ public:
 	FBXLoader();
 	virtual ~FBXLoader();
 
-	bool loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray);
-	bool loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray);
+	bool loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray, std::string filename);
+	bool loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, std::string filename, GraphicsData* gData, int key, ID3D11Device* device);
 	
 
 };
