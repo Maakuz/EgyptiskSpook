@@ -85,7 +85,7 @@ float4 main(VS_OUT input) : SV_TARGET
     float depth = shadowMap.Sample(sSampler, posFromLight.xy).x;
 
     if (depth < posFromLight.z - 0.0001)
-        lighting *= float4(0.5, 0.5, 0.5, 1);
+        lighting *= float4(0.3, 0.3, 0.3, 1);
 
     //*****************SHADOW MAPPING FINALLY END*******************
 
