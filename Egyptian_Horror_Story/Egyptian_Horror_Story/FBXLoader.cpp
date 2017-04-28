@@ -178,7 +178,7 @@ int FBXLoader::findJoint(std::string name)
 {
 	int res = -1;
 	
-	for (int i = 0; i < this->mSkeleton.size() && res == -1; i++)
+	for (size_t i = 0; i < this->mSkeleton.size() && res == -1; i++)
 	{
 		if (this->mSkeleton[i].name == name)
 			res = i;
@@ -481,7 +481,7 @@ bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& 
 	this->setupJoints(RootNode);
 
 	//Initialize
-	for (int i = 0; i < verticeArray.size(); i++)
+	for (size_t i = 0; i < verticeArray.size(); i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
@@ -491,9 +491,9 @@ bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& 
 	}
 
 
-	for (int i = 0; i < verticeArray.size(); i++)
+	for (size_t i = 0; i < verticeArray.size(); i++)
 	{
-		for (int j = 0; j < this->mVertexWeights[i].size() && j < 4; j++)
+		for (size_t j = 0; j < this->mVertexWeights[i].size() && j < 4; j++)
 		{
 			verticeArray[i].weightIndex[j] = this->mVertexWeights[i][j];
 		}

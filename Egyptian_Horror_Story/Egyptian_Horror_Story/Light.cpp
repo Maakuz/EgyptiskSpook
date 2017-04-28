@@ -5,13 +5,13 @@ Light::Light(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 dire
 	this->mPosDir.pos = DirectX::SimpleMath::Vector4(pos.x, pos.y, pos.z, 1);
 	this->mPosDir.dir = DirectX::SimpleMath::Vector4(direction.x, direction.y, direction.z, 1);
 
-	this->mLightFOV = M_PI * 0.50f;
+	this->mLightFOV = M_PI * 0.5f;
 	this->mWidth = 1000;
 	this->mHeight = 1000;
 
 	this->mMatrices.view = DirectX::XMMatrixLookToLH(pos, direction, DirectX::SimpleMath::Vector3(0, 1, 0));
 
-	this->mMatrices.projection = DirectX::XMMatrixPerspectiveFovLH(mLightFOV, this->mWidth / this->mHeight, 0.1, 200);
+	this->mMatrices.projection = DirectX::XMMatrixPerspectiveFovLH(mLightFOV, this->mWidth / this->mHeight, 0.1f, 200);
 	this->mMatrices.projection = this->mMatrices.projection.Transpose();
 
 	this->mLightBufferKey = 300;
