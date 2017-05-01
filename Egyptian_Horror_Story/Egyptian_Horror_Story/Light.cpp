@@ -41,12 +41,15 @@ Light::~Light()
 
 void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 offset, DirectX::SimpleMath::Vector3 dir)
 {
-	DirectX::SimpleMath::Vector3 newPos(pos + offset);
+	using namespace DirectX::SimpleMath;
 
-	this->mPosDir.pos = DirectX::SimpleMath::Vector4(newPos.x, newPos.y, newPos.z, 1);
-	this->mPosDir.dir = DirectX::SimpleMath::Vector4(dir.x, dir.y, dir.z, 1);
+	//Needs to be a little in front of the model
+	Vector3 newPos(pos + offset + (dir * 1.25f));
 
-	this->mMatrices.view = DirectX::XMMatrixLookToLH(this->mPosDir.pos, this->mPosDir.dir, DirectX::SimpleMath::Vector3(0, 1, 0));
+	this->mPosDir.pos = Vector4(newPos.x, newPos.y, newPos.z, 1);
+	this->mPosDir.dir = Vector4(dir.x, dir.y, dir.z, 1);
+
+	this->mMatrices.view = DirectX::XMMatrixLookToLH(this->mPosDir.pos, this->mPosDir.dir, Vector3(0, 1, 0));
 	this->mMatrices.view = this->mMatrices.view.Transpose();
 
 	D3D11_MAPPED_SUBRESOURCE data;
@@ -86,11 +89,22 @@ void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector
 	this->mContext->Unmap(this->mGData2->getConstantBuffer(this->mMatrixBufferKey), 0);
 
 
-	//Transform matrix
-	DirectX::SimpleMath::Matrix transform = DirectX::SimpleMath::Matrix::CreateTranslation(pos);
+	//Transform matrix //THE 1.5 TIMES OFFSET IS A TEMPORARY FIX AND MAY GET TWEAKED
+	Matrix transform = Matrix::CreateTranslation(pos + dir + offset);
 	transform = transform.Transpose();
 
-	//TODO: FORTSÄTT
+	Vector3 d = dir;
+	d.Normalize();
+
+	float pitch = asin(-d.y) + (M_PI / 2);
+
+	float yaw = atan2(d.x, d.z);
+
+	Matrix rotation = Matrix::CreateFromYawPitchRoll(yaw, pitch, 0);
+	rotation = rotation.Transpose();
+
+	transform *= rotation;
+
 
 	this->mContext->Map(this->mGData2->getConstantBuffer(this->mLightGraphicsKey),
 		0, D3D11_MAP_WRITE_DISCARD, 0, &data);

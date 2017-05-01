@@ -1297,7 +1297,7 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 
 	std::vector<EntityStruct::SkinnedVertexStruct> test;
 
-	this->mLoader.loadSkinnedMesh(test, "ModelTestAnimate.fbx");
+	this->mLoader.loadSkinnedMesh(test, "ModelTestTri.fbx");
 
 	this->mRiggedEntityRenderer->loadObject(
 		device,
@@ -1333,7 +1333,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 	std::vector<EntityStruct::SkinnedVertexStruct> lightVec;
 
-	this->mLoader.loadSkinnedMesh(lightVec, "FlashLight.fbx");
+	this->mLoader.loadSkinnedMesh(lightVec, "flashLight.fbx");
 
 	this->mFlashlightModel = new Entity(this->mPlayer->getLight()->getGraphicsKey());
 
