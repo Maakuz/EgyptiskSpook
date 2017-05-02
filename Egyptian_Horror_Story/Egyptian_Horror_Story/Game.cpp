@@ -47,8 +47,8 @@ Game::~Game()
 
 void Game::update()
 {
-	this->mCamera->update(this->mGraphics->getDeviceContext());
 	this->mEntityHandler->update(this->mGraphics->getDeviceContext());
+	this->mCamera->update(this->mGraphics->getDeviceContext());
 
 	this->mGraphics->clear();
 	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer(), this->mEntityHandler->getEntityRenderer()->getGraphicsData()->getConstantBuffer(301));
