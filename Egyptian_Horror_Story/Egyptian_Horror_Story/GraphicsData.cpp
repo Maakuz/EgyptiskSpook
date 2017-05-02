@@ -11,6 +11,11 @@ GraphicsData::~GraphicsData()
 			key.second->Release();
 	}
 
+	for (auto const &key : this->mCBuffers) {
+		if (key.second)
+			key.second->Release();
+	}
+
 	for (auto const &key : this->mSrvs) {
 		if (key.second)
 			key.second->Release();
@@ -57,7 +62,7 @@ HRESULT GraphicsData::createConstantBuffer(int key, UINT size, D3D11_SUBRESOURCE
 		desc.Usage = D3D11_USAGE_DYNAMIC;
 	}
 
-	HRESULT hr = device->CreateBuffer(&desc, data, &this->mBuffers[key]);
+	HRESULT hr = device->CreateBuffer(&desc, data, &this->mCBuffers[key]);
 	return hr;
 }
 
@@ -92,14 +97,19 @@ void GraphicsData::createVerticeArray(int key, EntityStruct::VertexStruct* verti
 	}
 }
 
-void GraphicsData::addConstantBuffer(int key, ID3D11Buffer* buffer)
+void GraphicsData::setNrOfVertices(int key, int nrOfVertices)
 {
-	this->mBuffers[key] = buffer;
+	this->mNrOfVertices[key] = nrOfVertices;
 }
 
-ID3D11Buffer* GraphicsData::getBuffer(int key)
+ID3D11Buffer* GraphicsData::getVertexBuffer(int key)
 {
 	return this->mBuffers.at(key);
+}
+
+ID3D11Buffer* GraphicsData::getConstantBuffer(int key)
+{
+	return this->mCBuffers.at(key);
 }
 
 ID3D11ShaderResourceView* GraphicsData::getSRV(int key)
@@ -117,9 +127,14 @@ int GraphicsData::getNrOfVertices(int key)
 	return this->mNrOfVertices.at(key);
 }
 
-std::map<int, ID3D11Buffer*>* GraphicsData::getBufferMap()
+std::map<int, ID3D11Buffer*>* GraphicsData::getVertexBufferMap()
 {
 	return &this->mBuffers;
+}
+
+std::map<int, ID3D11Buffer*>* GraphicsData::getConstantBufferMap()
+{
+	return &this->mCBuffers;
 }
 
 std::map<int, ID3D11ShaderResourceView*>* GraphicsData::getSrvMap()

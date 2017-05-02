@@ -4,13 +4,11 @@
 #include "Renderer.h"
 #include "GraphicsData.h"
 #include "CameraClass.h"
-#include "Enemy.h" //TEST
 #include <SimpleMath.h>
 #include <vector>
 
 class ParticleRenderer : public Renderer {
 	private:
-		Enemy *enemy; // TTTEEESSTTT
 
 		struct ParticleVertex {
 			DirectX::SimpleMath::Vector3 position;
@@ -37,7 +35,7 @@ class ParticleRenderer : public Renderer {
 		void timeCheck(int start, int piece);
 		static float getRandomNr();
 	public:
-		ParticleRenderer(CameraClass *camera, Enemy *enemy);
+		ParticleRenderer(CameraClass *camera);
 		ParticleRenderer(ParticleRenderer const &renderer) = delete;
 		virtual ~ParticleRenderer();
 

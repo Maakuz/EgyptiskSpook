@@ -52,6 +52,7 @@ function onReachingPathEnd()
 		StopPathing()
 		SetEnemyWaypoint(waypoints[currentWaypoint])
 		onPath = false
+				pathToPlayer()
 	end
 end
 

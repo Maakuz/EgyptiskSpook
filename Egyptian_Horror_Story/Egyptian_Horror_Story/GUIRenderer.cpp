@@ -40,7 +40,7 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 
 void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders) {
 	UINT stride = sizeof(Vector3), offset = 0;
-	ID3D11Buffer *buffer = this->mGraphicsData->getBuffer(0);
+	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(0);
 	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
 	shaders.setShaders(context, SHADERS, SHADERS, SHADERS);
 

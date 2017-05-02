@@ -38,7 +38,6 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 	};
 	this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, WALLTEXTURE);
-
 	this->mEntities.push_back(wall);
 	
 
@@ -48,7 +47,6 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0.f, 6.f, 0.f),
 		Vector3(0.f, 0.f, 46.f),
 		Vector3(-1.f, 0.f, 0.f), this->mNrOfKeys++);
-
 
 	EntityStruct::VertexStruct testData3[] = {
 		Vector3(-3, -2.f , 3),
@@ -1292,16 +1290,30 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera)
 {
-	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData());
+	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData(), this->mRiggedEntityRenderer->getGraphicsData());
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, 4));
 
 	this->mEnemy = new Enemy(ENEMY_KEY);
+
+	std::vector<EntityStruct::SkinnedVertexStruct> test;
+
+	this->mLoader.loadSkinnedMesh(test, "ModelTestAnimate.fbx");
+
+	this->mRiggedEntityRenderer->loadObject(
+		device,
+		mEnemy->getKey(),
+		test.data(),
+		test.size(),
+		sizeof(DirectX::XMMATRIX),
+		L"dargon_bump.jpg");
+
 	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
 }
 
 EntityHandler::EntityHandler()
 {
 	this->mEntityRenderer = new EntityRenderer();
+	this->mRiggedEntityRenderer = new RiggedEntityRenderer();
 }
 
 EntityHandler::~EntityHandler()
@@ -1319,21 +1331,30 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 {
 	this->hardcodedMap(device);
 
-	std::vector<EntityStruct::VertexStruct> test;
+	//Test purposes
+	/*std::vector<EntityStruct::SkinnedVertexStruct> test;
 
-	this->mLoader.loadMesh(test, "9v.fbx");
+	this->mLoader.loadSkinnedMesh(test, "ModelTestAnimate.fbx");
 
-	Entity* testEnt = new Entity(this->mNrOfKeys++);
+	this->mRiggedTest = new Entity(0);
 
-	this->mEntities.push_back(testEnt);
-	this->mEntityRenderer->loadObject(device, testEnt->getKey(), test.data(), test.size(), L"mon.bmp");
+	this->mEntities.push_back(mRiggedTest);
+
+	this->mRiggedEntityRenderer->loadObject(
+		device, 
+		mRiggedTest->getKey(),
+		test.data(), 
+		test.size(),
+		L"dargon_bump.jpg");*/
+
 }
 
-void EntityHandler::update()
+void EntityHandler::update(ID3D11DeviceContext* context)
 {
 	DirectX::SimpleMath::Vector3 prevPos = this->mPlayer->getPosition();
 
 	this->mPlayer->updatePosition();
+	this->mEnemy->updatePosition(this->mRiggedEntityRenderer->getGraphicsData(), context);
 
 	//Wall intersection test
 	for (Entity *wall : this->mEntities) 
@@ -1382,9 +1403,14 @@ void EntityHandler::update()
 	}
 }
 
-EntityRenderer* EntityHandler::getRenderer()
+EntityRenderer* EntityHandler::getEntityRenderer()
 {
 	return this->mEntityRenderer;
+}
+
+RiggedEntityRenderer* EntityHandler::getRiggedEntityRenderer()
+{
+	return mRiggedEntityRenderer;
 }
 
 Player* EntityHandler::getPlayer()

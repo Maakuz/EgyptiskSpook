@@ -29,8 +29,8 @@ private:
 public:
 	//WTF
 	Capsule* col;
-	//WTF
-	Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int grapchicsKey, GraphicsData* gData);
+
+	Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int grapchicsKey, GraphicsData* gData, GraphicsData* gData2);
 	virtual ~Player();
 
 	void updatePosition();
