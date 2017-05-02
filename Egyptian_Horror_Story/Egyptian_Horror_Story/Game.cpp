@@ -21,11 +21,12 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height) {
 
 	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
 
+	mGuiRenderer = new GUIRenderer();
+	this->mGraphics->addRenderer(mGuiRenderer);
 
 	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera, GAMESTATE::PLAY));
 	this->mGraphics->addRenderer(this->mEntityHandler->getEntityRenderer());
 	this->mGraphics->addRenderer(this->mEntityHandler->getRiggedEntityRenderer());
-
 
 	this->mGraphics->setupRenderers();
 	this->mGraphics->setupLightViewport(mEntityHandler->getPlayer()->getLight());
@@ -34,6 +35,9 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height) {
 	this->mAIHandler = new AIHandler(mEntityHandler->getEnemy(), mEntityHandler->getPlayer());
 
 	//this->mGraphics->addRenderer(new ShadowRenderer(this->mEntityHandler->getPlayer()->getLight()));
+
+	this->mAudioManager.addSfx(0, L"test.wav");
+	this->mAudioManager.playSfx(0);
 }
 
 Game::~Game()
@@ -46,14 +50,17 @@ Game::~Game()
 
 void Game::updateGame()
 {
-	this->mCamera->update(this->mGraphics->getDeviceContext());
 	this->mEntityHandler->update(this->mGraphics->getDeviceContext());
+	this->mCamera->update(this->mGraphics->getDeviceContext());
 
 	this->mGraphics->clear();
 	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer(), this->mEntityHandler->getEntityRenderer()->getGraphicsData()->getConstantBuffer(301));
 	this->mGraphics->present();
 
 	this->mAIHandler->update();
+	if (this->mAIHandler->getNavigationTexture() != nullptr)
+		mGuiRenderer->setNavigationTest(mGraphics->getDevice(), this->mAIHandler->getNavigationTexture(),
+			this->mAIHandler->getNavMeshWidth(), this->mAIHandler->getNavMeshHeight());
 }
 
 void Game::update() {

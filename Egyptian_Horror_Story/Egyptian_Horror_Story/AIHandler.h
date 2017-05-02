@@ -54,6 +54,11 @@ class AIHandler {
 		void addTrap(char const *scriptPath, Trap *trap);
 
 		AIHandler* operator=(AIHandler const &aiHandler) = delete;
+
+		int getNavMeshWidth() const;
+		int getNavMeshHeight() const;
+
+		void* getNavigationTexture() const; //this is for debugging
 };
 
 #endif

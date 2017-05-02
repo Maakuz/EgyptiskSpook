@@ -7,11 +7,17 @@ GUIRenderer::GUIRenderer(int id) : Renderer(id){
 	this->mSize = 1;
 	this->mParticles = new Vector3[mSize];
 	this->mGraphicsData = new GraphicsData();
+
+	// for testing
+	navTest = nullptr;
 }
 
 GUIRenderer::~GUIRenderer() {
 	delete this->mGraphicsData;
 	delete[] this->mParticles;
+
+	if (navTest)
+		navTest->Release();
 }
 
 void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
@@ -42,6 +48,44 @@ void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders) {
 	context->IASetInputLayout(shaders.getInputLayout(SHADERS));
 	context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
 	context->PSSetShaderResources(0, 1, &srv);
+	if (navTest)
+		context->PSSetShaderResources(0, 1, &navTest);
 
 	context->Draw(this->mSize, 0);
+}
+
+void GUIRenderer::setNavigationTest(ID3D11Device *device, void* pixels, int w, int h) {
+	if (navTest)
+		navTest->Release();
+	mGraphicsData->loadTexture(0, L"NAVIGATION_TEST.bmp", device);
+
+	/*
+	ID3D11Texture2D *tex;
+	D3D11_TEXTURE2D_DESC desc;
+	ZeroMemory(&desc, sizeof(desc));
+
+	desc.Format = DXGI_FORMAT_R8G8B8A8_SNORM;
+	desc.Width = w;
+	desc.Height = h;
+	desc.ArraySize = desc.MipLevels = 1;
+	desc.Usage = D3D11_USAGE_IMMUTABLE;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.SampleDesc.Count = 1;
+
+	D3D11_SUBRESOURCE_DATA data;
+	ZeroMemory(&data, sizeof(data));
+	data.pSysMem = pixels;
+	data.SysMemPitch = w * 4;
+
+	HRESULT hr = device->CreateTexture2D(&desc, &data, &tex);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srDesc;
+	ZeroMemory(&srDesc, sizeof(srDesc));
+	srDesc.Format = desc.Format;
+	srDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srDesc.Texture2D.MipLevels = 1;
+	
+	hr = device->CreateShaderResourceView(tex, &srDesc, &navTest);
+	tex->Release();
+	*/
 }

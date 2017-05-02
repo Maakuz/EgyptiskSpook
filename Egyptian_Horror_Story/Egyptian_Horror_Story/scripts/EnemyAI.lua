@@ -1,9 +1,12 @@
 -- @author LW
 
-walkSpeed = 0.05
-runSpeed = 0.09
+onPath = false
+walkSpeed = 0.04
+runSpeed = 0.1
 prevWaypoint = 0
 currentWaypoint = 1
+frame = 0
+
 waypoints = { -- c = connections, length beetwen gets calc in c++
 				{x = -6, y = 0, z = 6, c = {2, 4}},
 				{x = -6, y = 0, z = -47, c = {1, 7, 5}},
@@ -21,7 +24,6 @@ function onStart()
 end
 
 function onReachingWaypoint()
-	Log("Reached Waypoint")
 	local toCon = math.random(1, #waypoints[currentWaypoint].c)
 	local temp = waypoints[currentWaypoint].c[toCon]
 	
@@ -34,20 +36,29 @@ function onReachingWaypoint()
 end
 
 function update()
-	local lSeesPlayer = SeesPlayer()
-	if lSeesPlayer then
+	frame = frame + 1
+	if not onPath and frame % 100 == 0 and SeesPlayer() then
 		SetEnemySpeed(runSpeed)
 		pathToPlayer()
 	end
+	--end
 end
 
 function onReachingPathEnd()
-	StopPathing()
-	SetEnemyWaypoint(waypoints[currentWaypoint]) -- should get closest waypoint in line of sight
+	Log("Path End")
+	if (SeesPlayer()) then
+		pathToPlayer()
+	else
+		StopPathing()
+		SetEnemyWaypoint(waypoints[currentWaypoint])
+		onPath = false
+				pathToPlayer()
+	end
 end
 
 function pathToPlayer()
 	SetCurrentPathNode(0)
 	LoadPathToPlayer()
 	StartPathing()
+	onPath = true
 end
