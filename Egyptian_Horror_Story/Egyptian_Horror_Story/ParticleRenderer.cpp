@@ -59,8 +59,8 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 		ParticleVertex *particle = &this->mParticleVertices[i];
 		ParticleData *data = &this->mParticleData[i];
 
-		// TEMP
-		particle->position += data->direction / 1000.f;
+		// TEMP It was 1000, 10 was faster particles
+		particle->position += data->direction / 10.f;
 		if (rand() % 1000 == 0) {
 			temp = getRandomNr() * 2 - 1;
 			data->direction = Vector3(temp, temp, temp);
