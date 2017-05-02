@@ -2,7 +2,7 @@
 
 AudioManager::AudioManager()
 {
-	
+	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
 	DirectX::AUDIO_ENGINE_FLAGS eflags = DirectX::AudioEngine_Default;
 #ifdef _DEBUG
