@@ -35,7 +35,8 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 
 	//this->mGraphics->addRenderer(new ShadowRenderer(this->mEntityHandler->getPlayer()->getLight()));
 
-	this->mAudioManager.playSfx();
+	this->mAudioManager.addSfx(0, L"test.wav");
+	this->mAudioManager.playSfx(0);
 }
 
 Game::~Game()
