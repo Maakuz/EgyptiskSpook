@@ -47,6 +47,7 @@ float4 main(VS_OUT input) : SV_TARGET
 
     float falloff = saturate((cosAngle - outerCone) / innerMinusOuter);
 
+
     float lambert = max(dot(input.normal, normalize(-lightToPos.xyz)), 0.f);
 
     if (lambert > 0)
@@ -67,8 +68,11 @@ float4 main(VS_OUT input) : SV_TARGET
 
     }
 
+    float attenuation = (1.f / (0.01 * max(20, pow(length(lightToPos.xyz), 2))));
+    
+    diffuse *= attenuation;
+    specularity *= attenuation;
     lighting = saturate(diffuse + ambient) + specularity;
-   // lighting *= (1.f / pow(length(lightToPos), 2));
 
     //*******************SHADOW MAPPING FINALLY*********************
     if (falloff > 0)
