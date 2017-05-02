@@ -6,8 +6,8 @@
 
 using namespace DirectX::SimpleMath;
 
-ParticleRenderer::ParticleRenderer(CameraClass *camera) 
-	: mCamera(camera) {
+ParticleRenderer::ParticleRenderer(CameraClass *camera, int id) 
+	: mCamera(camera), Renderer(id) {
 	this->mGraphicsData = new GraphicsData();
 	frame = 0;
 }

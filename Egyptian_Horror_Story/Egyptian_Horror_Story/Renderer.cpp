@@ -1,9 +1,13 @@
 #include "Renderer.h"
 
-Renderer::Renderer()
-{
+Renderer::Renderer(int i) {
+	this->mIdentifier = i;
 }
 
 Renderer::~Renderer()
 {
+}
+
+void Renderer::setState(int i) {
+	this->mIdentifier = i;
 }

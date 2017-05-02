@@ -13,7 +13,7 @@ private:
 	bool shadowPass;
 
 public:
-	EntityRenderer();
+	EntityRenderer(int id);
 	virtual ~EntityRenderer();
 
 	void setup(ID3D11Device *device, ShaderHandler &shaderHandler);

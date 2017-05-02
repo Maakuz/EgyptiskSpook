@@ -18,7 +18,7 @@ private:
 	void setupShaders(ID3D11Device* device, ShaderHandler &shaders);
 	void setupDSAndSRViews(ID3D11Device* device, ShaderHandler &shaders);
 public:
-	ShadowRenderer(Light* light);
+	ShadowRenderer(Light* light, int id);
 	virtual ~ShadowRenderer();
 
 	void setup(ID3D11Device* device, ShaderHandler& shaders);

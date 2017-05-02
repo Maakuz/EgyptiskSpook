@@ -1312,8 +1312,8 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 
 EntityHandler::EntityHandler()
 {
-	this->mEntityRenderer = new EntityRenderer();
-	this->mRiggedEntityRenderer = new RiggedEntityRenderer();
+	this->mEntityRenderer = new EntityRenderer(GAMESTATE::PLAY);
+	this->mRiggedEntityRenderer = new RiggedEntityRenderer(GAMESTATE::PLAY);
 }
 
 EntityHandler::~EntityHandler()
