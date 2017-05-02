@@ -65,30 +65,32 @@ float4 main(VS_OUT input) : SV_TARGET
         //float3 r = reflect(normalize(posToLight), input.normal.xyz);
         //specularity = pow(dot(normalize(posToCam), normalize(r)), specularIntensity) * falloff;
 
-		lighting = saturate(diffuse + ambient) + specularity;
-
-		if (falloff > 0) {
-			//*******************SHADOW MAPPING FINALLY*********************
-			float4 posFromLight = input.wPos;
-
-			posFromLight = mul(posFromLight, lView);
-			posFromLight = mul(posFromLight, lProjection);
-
-			posFromLight /= posFromLight.w;
-
-			//Convert to texture coords
-			posFromLight.x = (posFromLight.x * 0.5) + 0.5;
-			posFromLight.y = (posFromLight.y * -0.5) + 0.5;
-
-
-			float depth = shadowMap.Sample(sSampler, posFromLight.xy).x;
-
-			if (depth < posFromLight.z - 0.0001)
-				lighting *= float4(0.3, 0.3, 0.3, 1);
-
-			//*****************SHADOW MAPPING FINALLY END*******************
-		}
     }
+
+    lighting = saturate(diffuse + ambient) + specularity;
+
+    //*******************SHADOW MAPPING FINALLY*********************
+    if (falloff > 0)
+    {
+        float4 posFromLight = input.wPos;
+
+        posFromLight = mul(posFromLight, lView);
+        posFromLight = mul(posFromLight, lProjection);
+
+        posFromLight /= posFromLight.w;
+
+	//Convert to texture coords
+        posFromLight.x = (posFromLight.x * 0.5) + 0.5;
+        posFromLight.y = (posFromLight.y * -0.5) + 0.5;
+
+
+        float depth = shadowMap.Sample(sSampler, posFromLight.xy).x;
+
+        if (depth < posFromLight.z - 0.0001)
+            lighting *= float4(0.3, 0.3, 0.3, 1);
+    }
+
+    //*****************SHADOW MAPPING FINALLY END*******************
 
     //return shadowMap.Sample(sSampler, input.uv);
     return tex.Sample(sSampler, input.uv) * lighting;
