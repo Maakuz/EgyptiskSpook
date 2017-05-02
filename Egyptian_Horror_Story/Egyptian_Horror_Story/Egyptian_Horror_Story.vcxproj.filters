@@ -149,9 +149,6 @@
     <ClCompile Include="Enemy.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="AnimationHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Colliders.cpp">
       <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
@@ -169,6 +166,9 @@
     </ClCompile>
     <ClCompile Include="RiggedEntityRenderer.cpp">
       <Filter>Source Files\Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -226,9 +226,6 @@
     <ClInclude Include="Enemy.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Colliders.h">
       <Filter>Header Files\Game classes</Filter>
     </ClInclude>
@@ -240,7 +237,7 @@
     </ClInclude>
     <ClInclude Include="FBXLoader.h">
       <Filter>Header Files</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="RiggedEntityRenderer.h">
       <Filter>Header Files\Renderers</Filter>
     </ClInclude>
@@ -250,15 +247,18 @@
     <ClInclude Include="NavMesh.h">
       <Filter>Header Files\AI</Filter>
     </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="scripts\EnemyAI.lua">
       <Filter>Resource Files\Scripts</Filter>
     </None>
     <None Include="scripts\TrapStone.lua">
       <Filter>Resource Files\Scripts</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Key System.txt">
