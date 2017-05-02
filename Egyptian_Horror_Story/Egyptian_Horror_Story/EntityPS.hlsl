@@ -68,6 +68,7 @@ float4 main(VS_OUT input) : SV_TARGET
     }
 
     lighting = saturate(diffuse + ambient) + specularity;
+   // lighting *= (1.f / pow(length(lightToPos), 2));
 
     //*******************SHADOW MAPPING FINALLY*********************
     if (falloff > 0)
