@@ -9,8 +9,15 @@ AudioManager::AudioManager()
 	eflags = eflags | DirectX::AudioEngine_Debug;
 #endif
 	this->mAudioEngine = std::make_unique<DirectX::AudioEngine>(eflags);
+
+	this->mSoundEffect = std::make_unique<DirectX::SoundEffect>(this->mAudioEngine.get(), L"../Resource/Sfx/test.wav");
 }
 
 AudioManager::~AudioManager()
 {
+}
+
+void AudioManager::playSfx()
+{
+	this->mSoundEffect->Play();
 }

@@ -33,6 +33,8 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	this->mAIHandler = new AIHandler(mEntityHandler->getEnemy(), mEntityHandler->getPlayer());
 
 	//this->mGraphics->addRenderer(new ShadowRenderer(this->mEntityHandler->getPlayer()->getLight()));
+
+	this->mAudioManager.playSfx();
 }
 
 Game::~Game()

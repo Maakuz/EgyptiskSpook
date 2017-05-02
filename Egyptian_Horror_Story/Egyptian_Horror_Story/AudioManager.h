@@ -11,9 +11,13 @@ class AudioManager
 private:
 	std::unique_ptr<DirectX::AudioEngine> mAudioEngine;
 
+	std::unique_ptr<DirectX::SoundEffect> mSoundEffect;
+
 public:
 	AudioManager();
 	virtual ~AudioManager();
+
+	void playSfx();
 
 };
 
