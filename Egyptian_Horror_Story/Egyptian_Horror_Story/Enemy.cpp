@@ -87,7 +87,6 @@ Enemy::UPDATE_RETURNS Enemy::update() {
 		setPosition(mWaypoint);
 		
 		if (mFollowPath && ++currentPathNode < mPath.size()) {
-			assert(currentPathNode < mPath.size());
 			setWaypoint(mPath[currentPathNode]);
 			return ON_PATH_WAYPOINT; // on path waypoint
 		}
@@ -201,7 +200,6 @@ int Enemy::startPathing(lua_State *state) {
 	Enemy *enemy = static_cast<Enemy*>
 		(lua_touserdata(state, lua_upvalueindex(1)));
 
-	assert(enemy->mPath.size() > 0);
 	enemy->mPath[enemy->currentPathNode];
 	enemy->setFollowPath(true);
 	enemy->setWaypoint(enemy->mPath[enemy->currentPathNode]);

@@ -153,8 +153,8 @@ void AIHandler::update() {
 	}
 	Vector3 pPos = mPlayer->getPosition();
 	Vector2 pixelPos = navMesh.toPixelCoord(pPos.x, pPos.z);
-	SDL_Log("Pixel coords: %f/%f, Real coords: %f/%f",
-		pixelPos.x, pixelPos.y, pPos.x, pPos.z);
+	//SDL_Log("Pixel coords: %f/%f, Real coords: %f/%f",
+	//	pixelPos.x, pixelPos.y, pPos.x, pPos.z);
 
 	for (TrapScript &script : mTraps) {
 		lua_State *state = script.state;
@@ -234,8 +234,15 @@ int AIHandler::loadPathToEntity(lua_State *state) {
 	NavMesh *navMesh = static_cast<NavMesh*>
 		(lua_touserdata(state, lua_upvalueindex(3)));
 
-	enemy->setPath(navMesh->getPathToCoord(entity->getPosition().x,
-										   entity->getPosition().z));
+	Vector3 enemyPos = enemy->getPosition();
+	Vector3 entityPos = entity->getPosition();
+
+	enemy->setPath(navMesh->getPathToCoord(
+		enemyPos.x,
+		enemyPos.z,
+		entityPos.x,
+		entityPos.z
+	));
 
 	return 0;
 }
@@ -281,3 +288,15 @@ void AIHandler::testScript() {
 
 	lua_close(test);
 }
+
+int AIHandler::getNavMeshWidth() const {
+	return navMesh.getWidth();
+}
+
+int AIHandler::getNavMeshHeight() const {
+	return navMesh.getHeight();
+}
+
+void* AIHandler::getNavigationTexture() const {
+	return navMesh.getNavigationTexture();
+} //this is for debugging
