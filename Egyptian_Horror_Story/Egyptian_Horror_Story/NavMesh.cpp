@@ -230,7 +230,7 @@ int NavMesh::contains(std::unordered_map<int, Node> const &list,
 
 inline bool NavMesh::isWalkable(Vector2 const &node) const {
 	SDL_Color col = getPixel(node.x, node.y);
-	return col.r != BLOCKADE && col.r != AVOID;
+	return col.r != BLOCKADE;
 }
 
 Vector3 NavMesh::getPosition(Vector2 pixel) const {
@@ -242,8 +242,9 @@ Vector3 NavMesh::getPosition(Vector2 pixel) const {
 }
 
 float NavMesh::heuristic(Vector2 node, Vector2 toPos) const {
+	SDL_Color col = getPixel(node.x, node.y);
 	Vector2 to = toPos - node;
-	return to.x * to.x + to.y * to.y;
+	return to.x * to.x + to.y * to.y - col.r / 2;
 }
 
 NavMesh::Node NavMesh::getShortestNode(std::vector<Node> &openList) const {
