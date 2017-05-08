@@ -6,7 +6,7 @@ onPointPath = false
 
 -- Speeds
 walkSpeed = 0.04
-runSpeed = 0.1
+runSpeed = 0.15
 
 -- Waypoint System
 prevWaypoint = 0
@@ -46,7 +46,6 @@ end
 function update()
 	frame = frame + 1
 	if frame % 100 == 0 and SeesPlayer() then
-		SetEnemySpeed(runSpeed)
 		pathToPlayer()
 	end
 	--end
@@ -54,6 +53,7 @@ end
 
 function onReachingPathEnd()
 	Log("Path End")
+	SetEnemySpeed(walkSpeed)
 	if SeesPlayer() then
 		pathToPlayer()
 	elseif onPointPath then
@@ -72,6 +72,7 @@ function onReachingPointPathEnd()
 end
 
 function pathToPlayer()
+	SetEnemySpeed(runSpeed)
 	SetCurrentPathNode(0)
 	LoadPathToPlayer()
 	StartPathing()
