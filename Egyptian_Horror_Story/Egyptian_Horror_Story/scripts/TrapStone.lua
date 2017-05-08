@@ -15,11 +15,10 @@ function update()
 end
 
 function onPlayerCollision()
-	Log("Player Collision!")
 	x, y, z = GetPlayerPosition();
-	SetPlayerPosition(x, y + 10, z)
+	SetPlayerPosition(x, y + 0.1, z)
 end
 
 function onEnemyCollision()
-	Log("Enemy Collision!")
+
 end
