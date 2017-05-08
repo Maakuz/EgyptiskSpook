@@ -244,7 +244,7 @@ Vector3 NavMesh::getPosition(Vector2 pixel) const {
 float NavMesh::heuristic(Vector2 node, Vector2 toPos) const {
 	SDL_Color col = getPixel(node.x, node.y);
 	Vector2 to = toPos - node;
-	return to.x * to.x + to.y * to.y - col.r / 2;
+	return to.x * to.x + to.y * to.y - col.r / 16;
 }
 
 NavMesh::Node NavMesh::getShortestNode(std::vector<Node> &openList) const {
