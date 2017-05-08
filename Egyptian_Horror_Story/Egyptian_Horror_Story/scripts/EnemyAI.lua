@@ -1,11 +1,16 @@
 -- @author LW
 
+-- Pathing
 onPath = false
+onPointPath = false
+
+-- Speeds
 walkSpeed = 0.04
 runSpeed = 0.1
+
+-- Waypoint System
 prevWaypoint = 0
 currentWaypoint = 1
-frame = 0
 
 waypoints = { -- c = connections, length beetwen gets calc in c++
 				{x = -6, y = 0, z = 6, c = {2, 4}},
@@ -17,6 +22,9 @@ waypoints = { -- c = connections, length beetwen gets calc in c++
 				{x = 17, y = 0, z = -47, c = {2, 3, 8}},
 				{x = 17, y = 0, z = -61, c = {7}},
 			}
+			
+-- Frame Counter
+frame = 0
 
 function onStart()
 	SetEnemySpeed(walkSpeed)
@@ -37,7 +45,7 @@ end
 
 function update()
 	frame = frame + 1
-	if not onPath and frame % 100 == 0 and SeesPlayer() then
+	if frame % 100 == 0 and SeesPlayer() then
 		SetEnemySpeed(runSpeed)
 		pathToPlayer()
 	end
@@ -46,19 +54,36 @@ end
 
 function onReachingPathEnd()
 	Log("Path End")
-	if (SeesPlayer()) then
+	if SeesPlayer() then
 		pathToPlayer()
+	elseif onPointPath then
+		onReachingPointPathEnd()
 	else
 		StopPathing()
-		SetEnemyWaypoint(waypoints[currentWaypoint])
-		onPath = false
-				pathToPlayer()
+		pathToWaypoint()
 	end
+end
+
+function onReachingPointPathEnd()
+	StopPathing()
+	SetEnemyWaypoint(waypoints[currentWaypoint])
+		
+	onPointPath = false
 end
 
 function pathToPlayer()
 	SetCurrentPathNode(0)
 	LoadPathToPlayer()
 	StartPathing()
+	
 	onPath = true
+	onPointPath = false
+end
+
+function pathToWaypoint()
+	SetCurrentPathNode(0)
+	LoadPathToPoint(waypoints[currentWaypoint].x, waypoints[currentWaypoint].z)
+	StartPathing()
+	
+	onPointPath = true
 end

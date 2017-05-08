@@ -92,6 +92,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AICFunctions.cpp" />
     <ClCompile Include="AIHandler.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="CameraClass.cpp" />
@@ -119,6 +120,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AICFunctions.h" />
     <ClInclude Include="AIHandler.h" />
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="CameraClass.h" />

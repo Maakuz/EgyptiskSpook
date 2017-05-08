@@ -170,6 +170,9 @@
     <ClCompile Include="AudioManager.cpp">
       <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
+    <ClCompile Include="AICFunctions.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -249,6 +252,9 @@
     </ClInclude>
     <ClInclude Include="AudioManager.h">
       <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
+    <ClInclude Include="AICFunctions.h">
+      <Filter>Header Files\AI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
