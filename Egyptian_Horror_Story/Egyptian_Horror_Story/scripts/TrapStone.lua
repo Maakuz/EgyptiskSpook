@@ -8,7 +8,7 @@ function onStart()
 end
 
 function getSize() 
-	return 1, 3, 1 -- width, height, depth
+	return 5, 3, 5 -- width, height, depth
 end
 
 function update()
@@ -16,6 +16,8 @@ end
 
 function onPlayerCollision()
 	Log("Player Collision!")
+	x, y, z = GetPlayerPosition();
+	SetPlayerPosition(x, y + 10, z)
 end
 
 function onEnemyCollision()

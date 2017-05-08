@@ -15,6 +15,7 @@ class AIHandler {
 		struct TrapScript {
 			Trap* trap;
 			lua_State *state;
+			char const *scriptPath; //for easy debugging
 		};
 
 		Trap *testTrap;
@@ -27,7 +28,10 @@ class AIHandler {
 
 		// helper
 		void testScript(); //For testing
+
 		void setupTraps();
+		void setupTrapState(TrapScript &trap);
+
 		void setupEnemy();
 		bool handleError(lua_State *state, int error);
 

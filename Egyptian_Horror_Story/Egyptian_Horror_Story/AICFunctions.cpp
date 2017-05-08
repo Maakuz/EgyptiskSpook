@@ -15,10 +15,20 @@ int AICFunctions::setEnemySpeed(lua_State *state) {
 	Enemy *enemy = static_cast<Enemy*>
 		(lua_touserdata(state, lua_upvalueindex(1)));
 
-	if (lua_isnumber(state, -1)) {
+	if (lua_isnumber(state, -1))
 		enemy->setSpeed(static_cast<float> (lua_tonumber(state, -1)));
-		lua_pop(state, 1);
-	}
+
+	return 0;
+}
+
+int AICFunctions::setEntityPosition(lua_State *state) {
+	Entity *entity = static_cast<Entity*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+
+	if (lua_isnumber(state, -1) && lua_isnumber(state, -2)
+		&& lua_isnumber(state, -3))
+		entity->setPosition(Vector3(lua_tonumber(state, -3),
+			lua_tonumber(state, -2), lua_tonumber(state, -1)));
 
 	return 0;
 }

@@ -36,6 +36,7 @@ AIHandler::~AIHandler() {
 void AIHandler::setupTraps() {
 	for (TrapScript &trap : mTraps) {
 		lua_State *state = trap.state;
+		setupTrapState(trap);
 
 		lua_getglobal(state, "onStart");
 		handleError(state, lua_pcall(state, 0, 0, 0));
@@ -54,15 +55,15 @@ void AIHandler::setupTraps() {
 	}
 }
 
-void AIHandler::addTrap(char const *scriptPath, Trap *trap) {
-	lua_State *state = luaL_newstate();
-	int error = luaL_loadfile(state, scriptPath) || lua_pcall(state, 0, 0, 0);
-	handleError(state, error);
-	luaL_openlibs(state);
+void AIHandler::setupTrapState(TrapScript &trap) {
+	int error = luaL_loadfile(trap.state, trap.scriptPath) || lua_pcall(trap.state, 0, 0, 0);
+	handleError(trap.state, error);
+	luaL_openlibs(trap.state);
+	addLuaFunctionsTrap(trap.state, trap.trap);
+}
 
-	TrapScript script { trap, state };
-	addLuaFunctionsTrap(state, trap);
-	mTraps.push_back(script);
+void AIHandler::addTrap(char const *scriptPath, Trap *trap) {
+	mTraps.push_back({ trap, luaL_newstate(), scriptPath });
 }
 
 void AIHandler::setupEnemy() {
@@ -126,6 +127,7 @@ void AIHandler::addLuaFunctionsTrap(lua_State *state, Trap *trap) {
 	// PLAYER FUNCTIONS
 	void *userData2[] = { mPlayer };
 	addLuaFunction(state, "GetPlayerPosition", AICFunctions::getEntityPosition, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(state, "SetPlayerPosition", AICFunctions::setEntityPosition, userData2, ARRAYSIZE(userData2));
 
 	// Enemy FUNCTIONS
 	void *userData3[] = { mEnemy };
