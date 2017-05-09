@@ -30,7 +30,7 @@ public:
 	//WTF
 	Capsule* col;
 
-	Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int grapchicsKey, GraphicsData* gData, GraphicsData* gData2);
+	Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int grapchicsKey, GraphicsData* gData);
 	virtual ~Player();
 
 	void updatePosition();

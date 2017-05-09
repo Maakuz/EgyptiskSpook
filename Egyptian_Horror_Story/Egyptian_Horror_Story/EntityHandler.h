@@ -2,7 +2,6 @@
 #define ENTITYHANDLER_H
 #include <vector>
 #include "EntityRenderer.h"
-#include "RiggedEntityRenderer.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Wall.h"
@@ -22,7 +21,6 @@ private:
 
 	//Will be removed in GraphicsHandler
 	EntityRenderer* mEntityRenderer;
-	RiggedEntityRenderer* mRiggedEntityRenderer;
 
 	int mNrOfKeys;
 
@@ -37,7 +35,6 @@ public:
 	void update(ID3D11DeviceContext* context);
 
 	EntityRenderer* getEntityRenderer();
-	RiggedEntityRenderer* getRiggedEntityRenderer();
 	Player* getPlayer();
 	Enemy* getEnemy();
 };

@@ -233,14 +233,6 @@ void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightWVP)
 			
 			ptr->setShadowPass(false);
 		}
-
-		RiggedEntityRenderer* ptr2 = dynamic_cast<RiggedEntityRenderer*>(renderer);
-		if (ptr2)
-		{
-			ptr2->setShadowPass(true);
-			renderer->render(mContext, mShaderHandler);
-			ptr2->setShadowPass(false);
-		}
 	
 	}
 

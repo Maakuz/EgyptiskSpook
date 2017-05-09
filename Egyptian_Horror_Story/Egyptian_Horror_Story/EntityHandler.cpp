@@ -37,7 +37,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector2(1.f, 1.f)
 
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 	
 
@@ -73,7 +73,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(-1, 0, 0),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData3, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData3, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 	this->mEntities.push_back(wall);
 	
@@ -112,7 +112,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(1, 0, 0),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData4, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData4, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 	
 
@@ -150,7 +150,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0, 0, 1),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData5, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData5, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	//Ingång
@@ -187,7 +187,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0, 0, 1),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData10, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData10, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 	
 
@@ -225,7 +225,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(-1, 0, 0),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData11, 6, WALLTEXTURE);//
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData11, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);//
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -260,7 +260,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(1, 0, 0),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData12, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData12, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -296,7 +296,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0, 0, 1),
 		Vector2(1.f, 1.f),
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData13, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData13, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -331,7 +331,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0, 0, -1),
 		Vector2(1.f, 1.f),
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData14, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData14, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 	
 	wall = new Wall(
@@ -367,7 +367,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0, 0, -1),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData15, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData15, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 	//End rum
 
@@ -404,7 +404,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0, 0, -1),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData6, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData6, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -439,7 +439,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(1, 0, 0),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData7, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData7, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -475,7 +475,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(-1, 0, 0),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData8, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData8, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -511,7 +511,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(-1, 0, 0),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData16, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData16, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -547,7 +547,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(1, 0, 0),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData9, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData9, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -583,7 +583,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0, 0, -1),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData17, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData17, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -619,7 +619,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0, 0, 1),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData18, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData18, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -655,7 +655,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0, 0, 1),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData19, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData19, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -691,7 +691,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0, 0, -1),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData40, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData40, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -728,7 +728,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(-1, 0, 0),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData41, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData41, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 	this->mEntities.push_back(wall);
 
@@ -765,7 +765,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0, 0, -1),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData42, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData42, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	wall = new Wall(
@@ -801,7 +801,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0, 0, 1),
 		Vector2(1.f, 1.f)
 	};
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData44, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData44, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 	this->mEntities.push_back(wall);
 
 	//another test
@@ -833,7 +833,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector2(0.f, 1.f)
 	};
 	this->mEntities.push_back(ent);
-	this->mEntityRenderer->loadObject(device, ent->getKey(), testData2, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, ent->getKey(), testData2, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 	ent = new Entity(this->mNrOfKeys++);
 	EntityStruct::VertexStruct testData21[] = {
@@ -863,7 +863,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	};
 
 	this->mEntities.push_back(ent);
-	this->mEntityRenderer->loadObject(device, ent->getKey(), testData21, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, ent->getKey(), testData21, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 	ent = new Entity(this->mNrOfKeys++);
 	EntityStruct::VertexStruct testData22[] = {
@@ -893,7 +893,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	};
 
 	this->mEntities.push_back(ent);
-	this->mEntityRenderer->loadObject(device, ent->getKey(), testData22, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, ent->getKey(), testData22, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 	//Rum
 	ent = new Entity(this->mNrOfKeys++);
@@ -924,7 +924,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	};
 
 	this->mEntities.push_back(ent);
-	this->mEntityRenderer->loadObject(device, ent->getKey(), testData23, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, ent->getKey(), testData23, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 	ent = new Entity(this->mNrOfKeys++);
 	EntityStruct::VertexStruct testData29[] = {
@@ -954,7 +954,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	};
 
 	this->mEntities.push_back(ent);
-	this->mEntityRenderer->loadObject(device, ent->getKey(), testData29, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, ent->getKey(), testData29, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 	//Tak
 	//Rumtak
@@ -992,7 +992,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	};
 
 	this->mEntities.push_back(wall);
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData24, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData24, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 	wall = new Wall(
 		Vector3(40, 4, -78),
@@ -1028,7 +1028,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	};
 
 	this->mEntities.push_back(wall);
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData25, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData25, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 	wall = new Wall(
 		Vector3(-10, 4, -78),
@@ -1063,7 +1063,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector2(1.f, 0.f)
 	};
 	this->mEntities.push_back(wall);
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData27, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData27, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 
 	wall = new Wall(
@@ -1100,7 +1100,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	};
 
 	this->mEntities.push_back(wall);
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData28, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData28, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 
 	wall = new Wall(
@@ -1136,7 +1136,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector2(1.f, 0.f)
 	};
 	this->mEntities.push_back(wall);
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData30, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData30, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 
 	//DETTA ÄR ETT GOLV
@@ -1174,7 +1174,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	};
 
 	this->mEntities.push_back(wall);
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData31, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData31, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 
 	wall = new Wall(
@@ -1211,7 +1211,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	};
 
 	this->mEntities.push_back(wall);
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData32, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData32, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 
 	wall = new Wall(
@@ -1248,7 +1248,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	};
 
 	this->mEntities.push_back(wall);
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData33, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData33, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 	wall = new Wall(
 		Vector3(-3, 4, -78),
@@ -1284,27 +1284,27 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	};
 
 	this->mEntities.push_back(wall);
-	this->mEntityRenderer->loadObject(device, wall->getKey(), testData34, 6, WALLTEXTURE);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData34, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
 }
 
 void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera)
 {
-	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData(), this->mRiggedEntityRenderer->getGraphicsData());
+	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData());
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, 4));
 
 	this->mEnemy = new Enemy(ENEMY_KEY);
 
-	std::vector<EntityStruct::SkinnedVertexStruct> test;
+	std::vector<EntityStruct::VertexStruct> test;
 
-	this->mLoader.loadSkinnedMesh(test, "ModelTestTri.fbx");
+	this->mLoader.loadMesh(test, "ModelTestTri.fbx");
 
-	this->mRiggedEntityRenderer->loadObject(
+	this->mEntityRenderer->loadObject(
 		device,
 		mEnemy->getKey(),
 		test.data(),
 		test.size(),
-		sizeof(DirectX::XMMATRIX),
+		sizeof(DirectX::XMFLOAT4X4),
 		L"dargon_bump.jpg");
 
 	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
@@ -1313,7 +1313,6 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 EntityHandler::EntityHandler()
 {
 	this->mEntityRenderer = new EntityRenderer();
-	this->mRiggedEntityRenderer = new RiggedEntityRenderer();
 }
 
 EntityHandler::~EntityHandler()
@@ -1331,15 +1330,15 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 {
 	this->hardcodedMap(device);
 
-	std::vector<EntityStruct::SkinnedVertexStruct> lightVec;
+	std::vector<EntityStruct::VertexStruct> lightVec;
 
-	this->mLoader.loadSkinnedMesh(lightVec, "flashLight.fbx");
+	this->mLoader.loadMesh(lightVec, "flashLight.fbx");
 
 	this->mFlashlightModel = new Entity(this->mPlayer->getLight()->getGraphicsKey());
 
 	this->mEntities.push_back(mFlashlightModel);
 
-	this->mRiggedEntityRenderer->loadObject(
+	this->mEntityRenderer->loadObject(
 		device, 
 		mFlashlightModel->getKey(),
 		lightVec.data(),
@@ -1354,7 +1353,7 @@ void EntityHandler::update(ID3D11DeviceContext* context)
 	DirectX::SimpleMath::Vector3 prevPos = this->mPlayer->getPosition();
 
 	this->mPlayer->updatePosition();
-	this->mEnemy->updatePosition(this->mRiggedEntityRenderer->getGraphicsData(), context, this->mPlayer->getPosition());
+	this->mEnemy->updatePosition(this->mEntityRenderer->getGraphicsData(), context, this->mPlayer->getPosition());
 
 	//Wall intersection test
 	for (Entity *wall : this->mEntities) 
@@ -1406,11 +1405,6 @@ void EntityHandler::update(ID3D11DeviceContext* context)
 EntityRenderer* EntityHandler::getEntityRenderer()
 {
 	return this->mEntityRenderer;
-}
-
-RiggedEntityRenderer* EntityHandler::getRiggedEntityRenderer()
-{
-	return mRiggedEntityRenderer;
 }
 
 Player* EntityHandler::getPlayer()

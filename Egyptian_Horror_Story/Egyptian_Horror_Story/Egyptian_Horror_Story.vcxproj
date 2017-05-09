@@ -112,7 +112,6 @@
     <ClCompile Include="ParticleRenderer.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="RiggedEntityRenderer.cpp" />
     <ClCompile Include="ShaderHandler.cpp" />
     <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="Trap.cpp" />
@@ -140,7 +139,6 @@
     <ClInclude Include="ParticleRenderer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="RiggedEntityRenderer.h" />
     <ClInclude Include="ShaderHandler.h" />
     <ClInclude Include="ShadowRenderer.h" />
     <ClInclude Include="Trap.h" />
