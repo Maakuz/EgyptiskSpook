@@ -1,4 +1,5 @@
 #include "EntityRenderer.h"
+#define ENTITY_SHADER 20
 
 EntityRenderer::EntityRenderer()
 {
@@ -13,25 +14,25 @@ void EntityRenderer::setup(ID3D11Device* device, ShaderHandler& shaderHandler)
 {
 	D3D11_INPUT_ELEMENT_DESC desc[] = {
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 3 * sizeof(float), D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 6 * sizeof(float), D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
-	HRESULT hr = shaderHandler.setupVertexShader(device, 20, L"EntityVS.hlsl", "main", desc, ARRAYSIZE(desc));
+	HRESULT hr = shaderHandler.setupVertexShader(device, ENTITY_SHADER, L"EntityVS.hlsl", "main", desc, ARRAYSIZE(desc));
 
-	shaderHandler.setupPixelShader(device, 20, L"EntityPS.hlsl", "main");
+	shaderHandler.setupPixelShader(device, ENTITY_SHADER, L"EntityPS.hlsl", "main");
 }
 
 void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderHandler)
 {
 	UINT stride = sizeof(EntityStruct::VertexStruct), offset = 0;
 
-	shaderHandler.setShaders(context, 20, 20, -1);
+	shaderHandler.setShaders(context, ENTITY_SHADER, ENTITY_SHADER, ShaderHandler::UNBIND_SHADER);
 
 	ID3D11Buffer* temp;
 
 	if (this->shadowPass)
 	{
-		shaderHandler.setPixelShader(context, -1);
+		shaderHandler.setPixelShader(context, ShaderHandler::UNBIND_SHADER);
 	}
 
 	else
@@ -43,7 +44,7 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 		context->PSSetConstantBuffers(1, 1, &temp);
 	}
 
-	context->IASetInputLayout(shaderHandler.getInputLayout(20));
+	context->IASetInputLayout(shaderHandler.getInputLayout(ENTITY_SHADER));
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	int key = 0;
@@ -82,7 +83,7 @@ bool EntityRenderer::loadObject(ID3D11Device* device, int key, EntityStruct::Ver
 
 	if (FAILED(this->mGraphicsData.createVertexBuffer(key, this->mGraphicsData.getNrOfVertices(key) * sizeof(EntityStruct::VertexStruct), &data, device)))
 	{
-		MessageBox(0, L"Entity vertex buffer creation failed", L"error", MB_OK);
+		MessageBox(0, L"Entity vertex buffer creation failed (EntityRenderer.cpp)", L"error", MB_OK);
 		return false;
 	}
 

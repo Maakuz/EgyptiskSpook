@@ -131,6 +131,7 @@ int Enemy::updateWaypoint(lua_State *state) {
 }
 
 
+// !!! Deprecated !!!
 int Enemy::seesPlayer(lua_State *state) {
 	Enemy *enemy = static_cast<Enemy*>
 		(lua_touserdata(state, lua_upvalueindex(1)));
