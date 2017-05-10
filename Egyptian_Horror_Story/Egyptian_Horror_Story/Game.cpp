@@ -12,7 +12,7 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 		this->mEntityHandler->getEntityRenderer()->getGraphicsData(),
 		width, height);
 	
-
+	this->mEntityHandler->setAudioManager(&this->mAudioManager);
 	this->mEntityHandler->setupPlayer(this->mGraphics->getDevice(), 
 		this->mGraphics->getDeviceContext(),
 		this->mCamera);
@@ -33,8 +33,11 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 
 	//this->mGraphics->addRenderer(new ShadowRenderer(this->mEntityHandler->getPlayer()->getLight()));
 
-	this->mAudioManager.addSfx(0, L"test.wav");
+	this->mAudioManager.addSfx(0, L"monster.wav");
+	this->mAudioManager.addSfx(1, L"footStepLouder.wav");
+	this->mAudioManager.createInstance(1, 1);
 	this->mAudioManager.playSfx(0);
+
 }
 
 Game::~Game()

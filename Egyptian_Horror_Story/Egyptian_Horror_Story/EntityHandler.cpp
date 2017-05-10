@@ -1313,6 +1313,7 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 EntityHandler::EntityHandler()
 {
 	this->mEntityRenderer = new EntityRenderer();
+	this->footstepsPlaying = false;
 }
 
 EntityHandler::~EntityHandler()
@@ -1346,6 +1347,11 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 		sizeof(DirectX::XMMATRIX),
 		L"dargon_bump.jpg");
 
+}
+
+void EntityHandler::setAudioManager(AudioManager* manager)
+{
+	this->mAudioManager = manager;
 }
 
 void EntityHandler::update(ID3D11DeviceContext* context)
@@ -1399,6 +1405,25 @@ void EntityHandler::update(ID3D11DeviceContext* context)
 					
 
 		}
+	}
+
+	//Playing footsteps when player walks
+	if (abs(this->mPlayer->getVelocity().x) + abs(this->mPlayer->getVelocity().z) >= 0.3f 
+		&& !this->footstepsPlaying
+		&& this->mPlayer->getVelocity().y == 0)
+	{
+		//Pitch should wary to make it less repetetive
+		this->mAudioManager->playInstance(1, true, -0.6f);
+		this->footstepsPlaying = true;
+	}
+
+	else if ((abs(this->mPlayer->getVelocity().x) + abs(this->mPlayer->getVelocity().z) < 0.3f 
+		|| this->mPlayer->getVelocity().y != 0)
+		&& this->footstepsPlaying 
+		)
+	{
+		this->mAudioManager->stopInstance(1, false);
+		this->footstepsPlaying = false;
 	}
 }
 

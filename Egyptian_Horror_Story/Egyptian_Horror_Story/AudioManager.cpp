@@ -11,6 +11,8 @@ AudioManager::AudioManager()
 	eflags = eflags | DirectX::AudioEngine_Debug;
 #endif
 	this->mAudioEngine = std::make_unique<DirectX::AudioEngine>(eflags);
+
+	this->mListener.SetPosition(DirectX::XMFLOAT3(0, 0, 0));
 }
 
 AudioManager::~AudioManager()
@@ -33,6 +35,46 @@ void AudioManager::addSfx(int key, wchar_t* filename)
 	else
 		this->mSoundEffects[key] = nullptr;
 
+}
+
+void AudioManager::createInstance(int instanceKey, int sfxKey)
+{
+	if (this->mSoundEffects[sfxKey])
+		this->mInstances[instanceKey] = this->mSoundEffects[sfxKey].get()->CreateInstance();
+}
+
+void AudioManager::playInstance(int key, bool isLooped, float pitch, int emitterKey)
+{
+	if (this->mInstances[key])
+	{
+		this->mInstances[key] = this->mSoundEffects[key].get()->CreateInstance();
+
+		if (emitterKey != -1 && this->mEmitters[key])
+			this->mInstances[key].get()->Apply3D(this->mListener, *this->mEmitters[key]);
+		
+		this->mInstances[key].get()->SetPitch(pitch);
+		this->mInstances[key].get()->Play(isLooped);
+	}
+}
+
+void AudioManager::stopInstance(int key, bool immediately)
+{
+	if (this->mInstances[key] && 
+		(this->mInstances[key].get()->GetState() == DirectX::PLAYING || 
+			this->mInstances[key].get()->GetState() == DirectX::PAUSED))
+	{
+		this->mInstances[key].get()->Stop(immediately);
+	}
+	
+}
+
+int AudioManager::getInstanceState(int key)
+{
+	int ret = -1;
+	if (this->mInstances[key])
+		ret = this->mInstances[key].get()->GetState();
+
+	return ret;
 }
 
 void AudioManager::playSfx(int key)
