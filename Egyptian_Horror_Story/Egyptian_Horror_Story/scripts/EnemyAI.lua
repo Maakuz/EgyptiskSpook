@@ -53,7 +53,6 @@ function update()
 		pathToPlayer()
 		sawPlayerLastFrame = false
 	end
-	--end
 end
 
 function onReachingPathEnd()

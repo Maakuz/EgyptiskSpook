@@ -16,7 +16,6 @@ function update()
 end
 
 function onPlayerCollision()
-	Log("Test" .. position.x)
 	if (first) then
 		PushbackPlayer(position.x, position.y, position.z, 1)
 		first = false

@@ -49,12 +49,15 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 
 	int key = 0;
 
-	for (auto const &item : *this->mGraphicsData.getVertexMap()) 
+	for (auto const &item : *this->mGraphicsData.getVertexBufferMap()) 
 	{
 		key = item.first;
 
 		temp = this->mGraphicsData.getVertexBuffer(key);
 		context->IASetVertexBuffers(0, 1, &temp, &stride, &offset);
+
+		temp = this->mGraphicsData.getConstantBuffer(key);
+		context->VSSetConstantBuffers(1, 1, &temp);
 
 
 		if (!this->shadowPass)
@@ -69,23 +72,28 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 	}
 }
 
-bool EntityRenderer::loadObject(ID3D11Device* device, int key, EntityStruct::VertexStruct* vertices, int nrOfVertices, wchar_t* texturePath)
+bool EntityRenderer::loadObject(ID3D11Device *device, int key, EntityStruct::VertexStruct* vertices, int nrOfVertices, UINT cbufferSize, wchar_t* texturePath, bool isDynamic)
 {
-	this->mGraphicsData.createVerticeArray(key, vertices, nrOfVertices);
-
-	
-
 	D3D11_SUBRESOURCE_DATA data;
 	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
-	data.pSysMem = this->mGraphicsData.getVertices(key);
+	data.pSysMem = vertices;
 
 	this->mGraphicsData.loadTexture(key, texturePath, device);
+	this->mGraphicsData.setNrOfVertices(key, nrOfVertices);
 
-	if (FAILED(this->mGraphicsData.createVertexBuffer(key, this->mGraphicsData.getNrOfVertices(key) * sizeof(EntityStruct::VertexStruct), &data, device)))
+	if (FAILED(this->mGraphicsData.createVertexBuffer(key, nrOfVertices * sizeof(EntityStruct::VertexStruct), &data, device)))
 	{
-		MessageBox(0, L"Entity vertex buffer creation failed (EntityRenderer.cpp)", L"error", MB_OK);
+		MessageBox(0, L"Entity vertex buffer creation failed", L"error", MB_OK);
 		return false;
 	}
+
+	if (cbufferSize == sizeof(DirectX::XMFLOAT4X4))
+	{
+		DirectX::SimpleMath::Matrix data2 = DirectX::SimpleMath::Matrix::Identity;
+		data.pSysMem = &data2;
+	}
+
+	this->mGraphicsData.createConstantBuffer(key, cbufferSize, &data, device, isDynamic);
 
 	return true;
 }

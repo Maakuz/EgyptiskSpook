@@ -20,7 +20,6 @@ private:
 
 	ID3D11Buffer* mVPBuffer;
 	GraphicsData* mGraphicsData;
-	GraphicsData* mGraphicsData2;
 	static const int CAMPOSKEY = 302;
 
 	DirectX::SimpleMath::Vector3 mPos;
@@ -32,7 +31,7 @@ private:
 	float mYaw;
 
 public:
-	CameraClass(ID3D11Device* device, GraphicsData* gData, GraphicsData* gData2, float width, float height);
+	CameraClass(ID3D11Device* device, GraphicsData* gData, float width, float height);
 	virtual ~CameraClass();
 
 	void createVPBuffer(ID3D11Device* device);

@@ -13,7 +13,7 @@
 
 using namespace DirectX::SimpleMath;
 
-Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int key, GraphicsData* gData, GraphicsData* gData2)
+Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int key, GraphicsData* gData)
 	:Entity(key)
 {
 	this->mCamera = camera;
@@ -33,7 +33,7 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 	this->mJumping = false;
 	this->mJumpingVelocity = 0;
 
-	this->mLight = new Light(this->mCamera->getPos(), this->mCamera->getForward(), device, context, gData, gData2);
+	this->mLight = new Light(this->mCamera->getPos(), this->mCamera->getForward(), device, context, gData);
 }
 
 Player::~Player()
@@ -166,6 +166,11 @@ void Player::handleMouseMotion(SDL_MouseMotionEvent const &motion)
 Light* Player::getLight()
 {
 	return this->mLight;
+}
+
+CameraClass* Player::getCamera()
+{
+	return this->mCamera;
 }
 
 void Player::setPosition(DirectX::SimpleMath::Vector3 pos)

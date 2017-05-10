@@ -13,7 +13,6 @@ ShadowRenderer: 1
 EntityRenderer: 2
 ParticleRenderer: 3
 GUI: 4
-RiggedEntity: 5
 
 Same goes for booking space in the GraphicsData!
 
@@ -26,7 +25,6 @@ Light Matrix Buffer: 301 only buffer
 Camera pos:302
 Enemy: 400
 Traps: 10xx
-
 
 SOUND EFFECTS: 
 monster: 0
