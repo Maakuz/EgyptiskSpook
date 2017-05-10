@@ -1,8 +1,9 @@
 -- @author LW
 
 -- Pathing
-onPath = false
+onPlayerPath = false
 onPointPath = false
+sawPlayerLastFrame = false
 
 -- Speeds
 walkSpeed = 0.04
@@ -45,14 +46,17 @@ end
 
 function update()
 	frame = frame + 1
-	if frame % 100 == 0 and SeesPlayer() then
+	if frame % 10 == 0 and not onPlayerPath and SeesPlayer() then
 		pathToPlayer()
+		sawPlayerLastFrame = true
+	elseif frame & 10 == 0 and sawPlayerLastFrame and not SeesPlayer() then
+		pathToPlayer()
+		sawPlayerLastFrame = false
 	end
 	--end
 end
 
 function onReachingPathEnd()
-	Log("Path End")
 	SetEnemySpeed(walkSpeed)
 	if SeesPlayer() then
 		pathToPlayer()
@@ -77,7 +81,7 @@ function pathToPlayer()
 	LoadPathToPlayer()
 	StartPathing()
 	
-	onPath = true
+	onPlayerPath = true
 	onPointPath = false
 end
 
@@ -87,4 +91,5 @@ function pathToWaypoint()
 	StartPathing()
 	
 	onPointPath = true
+	onPlayerPath = false
 end

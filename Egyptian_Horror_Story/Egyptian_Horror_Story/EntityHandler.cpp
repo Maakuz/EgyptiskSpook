@@ -1,5 +1,6 @@
 #include "EntityHandler.h"
 #define ENEMY_KEY 400
+#define BASE_TRAP_KEY 1000
 
 void EntityHandler::hardcodedMap(ID3D11Device* device)
 {
@@ -1285,7 +1286,6 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 	this->mEntities.push_back(wall);
 	this->mEntityRenderer->loadObject(device, wall->getKey(), testData34, 6, WALLTEXTURE);
-
 }
 
 void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera)

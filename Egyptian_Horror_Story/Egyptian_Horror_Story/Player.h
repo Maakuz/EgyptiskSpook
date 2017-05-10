@@ -46,6 +46,8 @@ public:
 
 	void setPosition(DirectX::SimpleMath::Vector3 pos);
 	void setPrevPos(DirectX::SimpleMath::Vector3 pos);
+
+	void damage();
 };
 
 #endif

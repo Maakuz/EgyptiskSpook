@@ -14,7 +14,7 @@ AIHandler::AIHandler(Enemy *enemy, Player *player) :
 	mEnemyState = luaL_newstate();
 
 	// TESTING
-	testTrap = new Trap(0, 17, 0, -74);
+	testTrap = new Trap(0, 25, 0, -74);
 	addTrap("scripts/TrapStone.lua", testTrap);
 
 	setupAI();
@@ -128,10 +128,17 @@ void AIHandler::addLuaFunctionsTrap(lua_State *state, Trap *trap) {
 	void *userData2[] = { mPlayer };
 	addLuaFunction(state, "GetPlayerPosition", AICFunctions::getEntityPosition, userData2, ARRAYSIZE(userData2));
 	addLuaFunction(state, "SetPlayerPosition", AICFunctions::setEntityPosition, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(state, "SlowPlayer", AICFunctions::slowEntity, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(state, "StunPlayer", AICFunctions::stunEntity, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(state, "PushbackPlayer", AICFunctions::pushbackEntity, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(state, "DamagePlayer", AICFunctions::damagePlayer, userData2, ARRAYSIZE(userData2));
 
 	// Enemy FUNCTIONS
 	void *userData3[] = { mEnemy };
 	addLuaFunction(state, "GetEnemyPosition", AICFunctions::getEntityPosition, userData3, ARRAYSIZE(userData3));
+	addLuaFunction(state, "SlowEnemy", AICFunctions::slowEntity, userData3, ARRAYSIZE(userData3));
+	addLuaFunction(state, "StunEnemy", AICFunctions::stunEntity, userData3, ARRAYSIZE(userData3));
+	addLuaFunction(state, "PushbackEnemy", AICFunctions::pushbackEntity, userData3, ARRAYSIZE(userData3));
 }
 
 void AIHandler::addLuaFunction(lua_State *state, const char *name,

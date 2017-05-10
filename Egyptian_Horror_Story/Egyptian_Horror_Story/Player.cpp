@@ -247,3 +247,7 @@ float inline Player::getMovementMultiplier() {
 	
 	return 1.f;
 }
+
+void Player::damage() {
+	// todo
+}

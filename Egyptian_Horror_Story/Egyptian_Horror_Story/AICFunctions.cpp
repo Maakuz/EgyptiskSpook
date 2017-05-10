@@ -21,6 +21,15 @@ int AICFunctions::setEnemySpeed(lua_State *state) {
 	return 0;
 }
 
+int AICFunctions::damagePlayer(lua_State *state) {
+	Player *player = static_cast<Player*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+
+	player->damage();
+
+	return 0;
+}
+
 int AICFunctions::setEntityPosition(lua_State *state) {
 	Entity *entity = static_cast<Entity*>
 		(lua_touserdata(state, lua_upvalueindex(1)));
@@ -41,6 +50,51 @@ int AICFunctions::getEntityPosition(lua_State *state) {
 	lua_pushnumber(state, position.y);
 	lua_pushnumber(state, position.z);
 	return 3;
+}
+
+int AICFunctions::slowEntity(lua_State *state) {
+	Entity *entity = static_cast<Entity*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+
+	// ! this is bad design, extends Entity class or maybe make moveable Entity class !
+	if (lua_isnumber(state, -1)) {
+		if (Enemy *enemy = dynamic_cast<Enemy*> (entity)) {
+			enemy->setSpeed(enemy->getVelocity().Length() * lua_tonumber(state, -1));
+		}
+		else if (Player *player = dynamic_cast<Player*> (entity)) {
+			// TODO
+		}
+	}
+
+	return 0;
+}
+
+int AICFunctions::stunEntity(lua_State *state) {
+	Entity *entity = static_cast<Entity*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+
+	entity->setPosition(entity->getPosition() * 3); //TODO
+
+	return 0;
+}
+
+int AICFunctions::pushbackEntity(lua_State *state) {
+	Entity *entity = static_cast<Entity*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+
+	if (lua_isnumber(state, -4) && lua_isnumber(state, -3)
+		&& lua_isnumber(state, -2) && lua_isnumber(state, -1)) {
+		Vector3 coord(lua_tonumber(state, -4),
+			lua_tonumber(state, -3),
+			lua_tonumber(state, -2));
+
+		float length = lua_tonumber(state, -1);
+
+		Vector3 newPos = (entity->getPosition() - coord) ;
+
+	}
+
+	return 0;
 }
 
 int AICFunctions::getDistanceBetween(lua_State *state) {
