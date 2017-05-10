@@ -1,6 +1,6 @@
 #include "AudioManager.h"
 
-#define AUDIOPATH L"../Resourrce/Sfx/"
+#define AUDIOPATH L"../Resource/Sfx/"
 
 AudioManager::AudioManager()
 {
