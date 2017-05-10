@@ -24,7 +24,7 @@ public:
 	AudioManager();
 	virtual ~AudioManager();
 
-	void updateListener(DirectX::SimpleMath::Vector3 position);
+	void updateListener(DirectX::SimpleMath::Vector3 position, DirectX::SimpleMath::Vector3 forward, DirectX::SimpleMath::Vector3 up);
 
 	void addSfx(int key, wchar_t* filename);
 
@@ -32,7 +32,7 @@ public:
 	//where the sound is stored
 	void createInstance(int instanceKey, int sfxKey);
 
-	void createEmitter(int key, DirectX::SimpleMath::Vector3 position);
+	void createEmitter(int key, DirectX::SimpleMath::Vector3 position = DirectX::SimpleMath::Vector3(0, 0, 0));
 	void updateEmitter(int key, DirectX::SimpleMath::Vector3 position);
 
 	//Pitch ranges from -1 to 1

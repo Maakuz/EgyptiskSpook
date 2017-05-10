@@ -261,5 +261,8 @@
     <Text Include="Key System.txt">
       <Filter>Resource Files\Information</Filter>
     </Text>
+    <Text Include="Sound keys.txt">
+      <Filter>Resource Files\Information</Filter>
+    </Text>
   </ItemGroup>
 </Project>

@@ -41,6 +41,7 @@ public:
 	void handleMouseMotion(SDL_MouseMotionEvent const &motion);
 	
 	Light* getLight();
+	CameraClass* getCamera();
 	DirectX::SimpleMath::Vector3 getPrevPos() const;
 	DirectX::SimpleMath::Vector3 getVelocity() const;
 

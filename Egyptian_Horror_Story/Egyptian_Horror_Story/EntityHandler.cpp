@@ -1349,9 +1349,14 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 }
 
-void EntityHandler::setAudioManager(AudioManager* manager)
+void EntityHandler::setupAudioManager(AudioManager* manager)
 {
 	this->mAudioManager = manager;
+	this->mAudioManager->addSfx(0, L"monster.wav");
+	this->mAudioManager->addSfx(1, L"footStepLouder.wav");
+	this->mAudioManager->createInstance(1, 1);
+	this->mAudioManager->createEmitter(1);
+	this->mAudioManager->playSfx(0);
 }
 
 void EntityHandler::update(ID3D11DeviceContext* context)
@@ -1407,13 +1412,24 @@ void EntityHandler::update(ID3D11DeviceContext* context)
 		}
 	}
 
-	//Playing footsteps when player walks
+	//Updating emitters
+	DirectX::SimpleMath::Vector3 feet = this->mPlayer->getPosition();
+	feet.x -= 0.5f;
+
+	this->mAudioManager->updateEmitter(1, feet);
+	this->mAudioManager->updateListener(this->mPlayer->getPosition(),
+		this->mPlayer->getCamera()->getForward(),
+		this->mPlayer->getCamera()->getUp());
+
+
+	//Playing footsteps when player walks. could be moved into
+	//player class. Right now more of a proof of concept
 	if (abs(this->mPlayer->getVelocity().x) + abs(this->mPlayer->getVelocity().z) >= 0.3f 
 		&& !this->footstepsPlaying
 		&& this->mPlayer->getVelocity().y == 0)
 	{
 		//Pitch should wary to make it less repetetive
-		this->mAudioManager->playInstance(1, true, -0.6f);
+		this->mAudioManager->playInstance(1, true, -0.6f, 1);
 		this->footstepsPlaying = true;
 	}
 

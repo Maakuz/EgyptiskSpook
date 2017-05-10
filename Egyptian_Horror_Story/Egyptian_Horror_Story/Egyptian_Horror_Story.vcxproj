@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Key System.txt" />
+    <Text Include="Sound keys.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FF0FB6A1-E8EC-4896-BF80-4532FA45D94E}</ProjectGuid>
