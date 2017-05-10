@@ -91,7 +91,11 @@ int AICFunctions::pushbackEntity(lua_State *state) {
 		float length = lua_tonumber(state, -1);
 
 		Vector3 newPos = (entity->getPosition() - coord) ;
+		newPos.y = 0; //Just to make sure y is the same
+		newPos.Normalize();
+		newPos *= length;
 
+		entity->setPosition(entity->getPosition() + newPos);
 	}
 
 	return 0;
