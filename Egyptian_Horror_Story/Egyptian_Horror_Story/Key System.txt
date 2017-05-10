@@ -24,11 +24,3 @@ Light Pos & Dir Buffer: 300 only buffer
 Light Matrix Buffer: 301 only buffer
 Camera pos:302
 Enemy: 400
-
-
-SOUND EFFECTS: 
-monster: 0
-footsteps: 1
-
-SOUND EFFECT INSTANCES:
-footstep loop: 1
