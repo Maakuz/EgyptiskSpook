@@ -108,7 +108,6 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ShaderHandler.cpp" />
-    <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="Trap.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -136,7 +135,6 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ShaderHandler.h" />
-    <ClInclude Include="ShadowRenderer.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="Wall.h" />
