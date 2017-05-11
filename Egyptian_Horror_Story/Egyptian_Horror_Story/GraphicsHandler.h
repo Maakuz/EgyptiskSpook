@@ -8,9 +8,6 @@
 #include "OptionsHandler.h"
 #include <vector>
 
-#define WIDTH 1080
-#define HEIGHT 720
-
 class GraphicsHandler {
 private:
 	ShaderHandler mShaderHandler;
@@ -39,11 +36,10 @@ private:
 
 	void createDepthStencil();
 public:
-	GraphicsHandler();
+	GraphicsHandler(OptionsHandler* options);
 	GraphicsHandler(GraphicsHandler const &gh) = delete;
 	~GraphicsHandler();
 
-	void setOptions(OptionsHandler* options);
 	HRESULT setupSwapChain();
 	void setupViewport(int width, int height);
 

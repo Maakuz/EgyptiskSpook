@@ -31,7 +31,7 @@ private:
 	float mYaw;
 
 public:
-	CameraClass(ID3D11Device* device, GraphicsData* gData, float width, float height);
+	CameraClass(ID3D11Device* device, GraphicsData* gData, settings::GraphicSettings settings);
 	virtual ~CameraClass();
 
 	void createVPBuffer(ID3D11Device* device);

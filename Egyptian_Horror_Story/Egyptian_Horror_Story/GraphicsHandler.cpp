@@ -9,8 +9,8 @@ void GraphicsHandler::createDepthStencil()
 	descTex.ArraySize = descTex.MipLevels = 1;
 	descTex.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	descTex.Format = DXGI_FORMAT_D32_FLOAT;
-	descTex.Height = HEIGHT;
-	descTex.Width = WIDTH;
+	descTex.Height = this->mOptions->getGraphicSettings().height;
+	descTex.Width = this->mOptions->getGraphicSettings().width;
 	descTex.SampleDesc.Count = 4;
 	
 	HRESULT hr = this->mDevice->CreateTexture2D(&descTex, NULL, &texture);
@@ -49,8 +49,9 @@ void GraphicsHandler::createDepthStencil()
 
 }
 
-GraphicsHandler::GraphicsHandler()
+GraphicsHandler::GraphicsHandler(OptionsHandler* options)
 {
+	this->mOptions = options;
 	mSwapChain = nullptr;
 	mBackBufferRTV = nullptr;
 	mDSS = nullptr;
@@ -95,10 +96,6 @@ GraphicsHandler::~GraphicsHandler() {
 	this->mDebugDevice->Release();
 }
 
-void GraphicsHandler::setOptions(OptionsHandler* options)
-{
-	this->mOptions = options;
-}
 
 HRESULT GraphicsHandler::setupSwapChain() {
 	DXGI_SWAP_CHAIN_DESC mSwapChainDesc;
@@ -164,8 +161,8 @@ void GraphicsHandler::setupSamplerState() {
 
 void GraphicsHandler::setupLightViewport(Light* light)
 {
-	this->mViewportShadow.Height = this->mViewport.Height;//light->getHeight();
-	this->mViewportShadow.Width = this->mViewport.Width;// light->getWidth();
+	this->mViewportShadow.Height = this->mViewport.Height;
+	this->mViewportShadow.Width = this->mViewport.Width;
 	this->mViewportShadow.MaxDepth = 1.f;
 	this->mViewportShadow.MinDepth = 0.f;
 	this->mViewportShadow.TopLeftX = mViewport.TopLeftY = 0;
@@ -190,8 +187,8 @@ void GraphicsHandler::setupDSAndSRViews() {
 	descTex.MipLevels = 1;
 	descTex.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 	descTex.Format = DXGI_FORMAT_R32_TYPELESS;
-	descTex.Height = HEIGHT;
-	descTex.Width = WIDTH;
+	descTex.Height = this->mOptions->getGraphicSettings().height;
+	descTex.Width = this->mOptions->getGraphicSettings().width;
 	descTex.SampleDesc.Count = 1;
 
 	if (FAILED(this->mDevice->CreateTexture2D(&descTex, NULL, &texture)))

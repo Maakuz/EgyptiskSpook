@@ -5,7 +5,15 @@
 #include <SDL.h>
 #include <fstream>
 #include "Structs.h"
+//För att kunna använda M_PI
+#define _USE_MATH_DEFINES
+#include <math.h>
 
+
+#define DEFAULTWIDTH 1280
+#define DEFAULTHEIGHT 720
+#define DEFAULTFOV 0.45
+#define DEFAULTFARPLANE 100;
 
 class OptionsHandler
 {

@@ -1,17 +1,17 @@
 #include "CameraClass.h"
 
-CameraClass::CameraClass(ID3D11Device* device, GraphicsData* gData, float width, float height)
+CameraClass::CameraClass(ID3D11Device* device, GraphicsData* gData, settings::GraphicSettings settings)
 {
 	this->mVPBuffer = nullptr;
 	this->mGraphicsData = gData;
-	float fovAngle = static_cast<float> (M_PI) * 0.45f;
-	float aspectRatio = width / height;
+	float fovAngle = static_cast<float>(M_PI) * settings.fov;
+	float aspectRatio = (float)settings.width / (float)settings.height;
 
 	this->mPitch = 0;
 	this->mYaw = 0;
 
 	DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(
-		fovAngle, aspectRatio, 0.1f, 10000.f);
+		fovAngle, aspectRatio, 0.1f, settings.farPlane);
 
 	projection = DirectX::XMMatrixTranspose(projection);
 

@@ -55,7 +55,11 @@ namespace settings
 {
 	struct GraphicSettings
 	{
+		int width;
+		int height;
+		float fov;
 		float brightness;
+		float farPlane;
 	};
 }
 

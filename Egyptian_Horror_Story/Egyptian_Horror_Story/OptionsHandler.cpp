@@ -30,8 +30,11 @@ OptionsHandler::OptionsHandler()
 
 	if (in.is_open())
 	{
+		in >> this->mGraphics.width;
+		in >> this->mGraphics.height;
+		in >> this->mGraphics.fov;
+		in >> this->mGraphics.farPlane;
 		in >> this->mGraphics.brightness;
-
 
 		in.close();
 	}
@@ -39,6 +42,10 @@ OptionsHandler::OptionsHandler()
 	else
 	{
 		this->mGraphics.brightness = 0.f;
+		this->mGraphics.height = DEFAULTHEIGHT;
+		this->mGraphics.width = DEFAULTWIDTH;
+		this->mGraphics.farPlane = DEFAULTFARPLANE;
+		this->mGraphics.fov = DEFAULTFOV;
 	}
 
 }
@@ -49,6 +56,10 @@ OptionsHandler::~OptionsHandler()
 
 	if (out.is_open())
 	{
+		out << this->mGraphics.width << "\n";
+		out << this->mGraphics.height << "\n";
+		out << this->mGraphics.fov << "\n";
+		out << this->mGraphics.farPlane << "\n";
 		out << this->mGraphics.brightness << "\n";
 
 

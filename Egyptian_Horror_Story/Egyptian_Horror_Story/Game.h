@@ -17,9 +17,9 @@ private:
 	AIHandler* mAIHandler;
 	GUIRenderer *mGuiRenderer; //temp
 	AudioManager mAudioManager;
-	OptionsHandler mOptionHandler;
+	OptionsHandler* mOptionHandler;
 public:
-	Game(GraphicsHandler* graphicsHandler, float width, float height);
+	Game(GraphicsHandler* graphicsHandler, OptionsHandler* options);
 	virtual ~Game();
 
 	void update();
@@ -28,6 +28,7 @@ public:
 	bool handleMouseKeyRelease(SDL_KeyboardEvent const &key);
 	void handleMouseMotion(SDL_MouseMotionEvent const &motion);
 	void updateLua();
+	void setWindowSize(SDL_Window* window);
 };
 
 

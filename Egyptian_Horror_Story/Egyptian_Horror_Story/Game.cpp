@@ -1,20 +1,19 @@
 #include "Game.h"
 #include "ParticleRenderer.h"
 
-Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
+Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options)
 {
 	this->mGraphics = mGraphicsHandler;
+	this->mOptionHandler = options;
 
-	this->mOptionHandler.setup(this->mGraphics->getDevice());
-
-	this->mGraphics->setOptions(&this->mOptionHandler);
-
+	this->mOptionHandler->setup(this->mGraphics->getDevice());
 
 	this->mEntityHandler = new EntityHandler();
 
 	this->mCamera = new CameraClass(this->mGraphics->getDevice(),
 		this->mEntityHandler->getEntityRenderer()->getGraphicsData(),
-		width, height);
+		this->mOptionHandler->getGraphicSettings()
+	);
 	
 	this->mEntityHandler->setupAudioManager(&this->mAudioManager);
 	this->mEntityHandler->setupPlayer(this->mGraphics->getDevice(), 
@@ -64,10 +63,10 @@ bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
 	bool res = this->mEntityHandler->getPlayer()->handleMouseKeyPress(key);
 
 	if (res)
-		this->mOptionHandler.handleButtonPress(key, this->mGraphics->getDeviceContext());
+		this->mOptionHandler->handleButtonPress(key, this->mGraphics->getDeviceContext());
 
 	else
-		res = this->mOptionHandler.handleButtonPress(key, this->mGraphics->getDeviceContext());
+		res = this->mOptionHandler->handleButtonPress(key, this->mGraphics->getDeviceContext());
 
 	return res;
 }
@@ -77,10 +76,10 @@ bool Game::handleMouseKeyRelease(SDL_KeyboardEvent const& key)
 	bool res = this->mEntityHandler->getPlayer()->handleMouseKeyRelease(key);
 
 	if (res)
-		this->mOptionHandler.handleButtonRelease(key, this->mGraphics->getDeviceContext());
+		this->mOptionHandler->handleButtonRelease(key, this->mGraphics->getDeviceContext());
 
 	else
-		res = this->mOptionHandler.handleButtonRelease(key, this->mGraphics->getDeviceContext());
+		res = this->mOptionHandler->handleButtonRelease(key, this->mGraphics->getDeviceContext());
 
 	return res;
 }
@@ -93,4 +92,11 @@ void Game::handleMouseMotion(SDL_MouseMotionEvent const &motion)
 
 void Game::updateLua() {
 	this->mAIHandler->setupAI();
+}
+
+void Game::setWindowSize(SDL_Window* window)
+{
+	SDL_SetWindowSize(window, 
+		this->mOptionHandler->getGraphicSettings().width, 
+		this->mOptionHandler->getGraphicSettings().height);
 }
