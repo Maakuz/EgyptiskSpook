@@ -1,8 +1,8 @@
 #include "ParticleRenderer.h"
 #include <math.h> 
 #define SHADERS 30
-#define DIVIDE 4// should be divisible by 2
-#define START_SIZE 4096  // should be divisible by 2
+#define DIVIDE 2// should be divisible by 2
+#define START_SIZE 2048  // should be divisible by 2
 
 using namespace DirectX::SimpleMath;
 
@@ -23,6 +23,7 @@ void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	};
 
 	shaders.setupVertexShader(device, SHADERS, L"ParticleVS.hlsl", "main", desc, ARRAYSIZE(desc));
+	shaders.setupPixelShader(device, SHADERS, L"ParticlePS.hlsl", "main");
 	shaders.setupGeometryShader(device, SHADERS, L"ParticleGS.hlsl", "main");
 
 	for (int i = 0; i < START_SIZE; i++) {
@@ -58,7 +59,7 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 		ParticleData *data = &this->mParticleData[i];
 
 		// TEMP It was 1000, 10 was faster particles
-		particle->position += data->direction / 10.f;
+		particle->position += data->direction / 40.f;
 		if (rand() % 1000 == 0) {
 			temp = getRandomNr() * 2 - 1;
 			data->direction = Vector3(temp, temp, temp);
@@ -80,7 +81,7 @@ void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shade
 						   *cam = this->mGraphicsData->getConstantBuffer(1),
 						   *vp = this->mCamera->getMatrixBuffer();
 	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
-	shaders.setShaders(context, SHADERS, 20, SHADERS); //20 is from entity shader, change later
+	shaders.setShaders(context, SHADERS, SHADERS, SHADERS); //20 is from entity shader, change later
 
 	updateCameraBuffer(context);
 	updateParticles(context);
@@ -104,12 +105,13 @@ void ParticleRenderer::addRandomParticle(bool timeIsRandom) {
 	ParticleData partData;
 
 	//TEMP
-	particle.position = Vector3(getRandomNr() * 30 - 15, getRandomNr() * 20 - 5, getRandomNr() * 30 - 15);
+	//particle.position = Vector3(getRandomNr() * 30 - 15, getRandomNr() * 20 - 5, getRandomNr() * 30 - 15);
+	particle.position = Vector3(getRandomNr() * 20 - 10, getRandomNr() * 15 - 3, getRandomNr() * 20 - 10);
 	particle.position += this->mCamera->getPos();
 	particle.dimensions = Vector2(0.01f, 0.01f);
 
-	partData.direction = Vector3(getRandomNr() * 2 - 1, getRandomNr() * 2 - 1, 2 - 1);
-	partData.timeLeft = timeIsRandom ? getRandomNr() * 3.5f : 3.5f;
+	partData.direction = Vector3(getRandomNr() * 2 - 1, getRandomNr() * 2 - 1,getRandomNr() * 2 - 1);
+	partData.timeLeft = timeIsRandom ? getRandomNr() * 3.5f : 2.f;
 
 	this->mParticleVertices.push_back(particle);
 	this->mParticleData.push_back(partData);

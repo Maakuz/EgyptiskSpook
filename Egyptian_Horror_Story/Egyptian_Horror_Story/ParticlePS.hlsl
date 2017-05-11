@@ -1,13 +1,93 @@
-struct PS_IN
+texture2D tex : register(t0);
+texture2D shadowMap : register(t1);
+SamplerState sSampler;
+
+struct VS_OUT
 {
-	float4 pos : SV_POSITION;
-	float2 uv : TEX_COORD;
+    float4 pos : SV_POSITION;
+    float4 wPos : WORLDPOS;
+    float3 normal : NORMAL;
+    float2 uv : TEXCOORD;
 };
 
-Texture2D tex : register(t0);
-SamplerState sampState : register(s0);
-
-float4 main(PS_IN input) : SV_TARGET
+cbuffer lightBuffer : register(b0)
 {
-	return tex.Sample(sampState, input.uv);
+    float4 lightPos;
+    float4 lightDir;
+};
+
+cbuffer cameraPos : register(b1)
+{
+    float4 camPos;
+}
+
+cbuffer lightVP : register(b2)
+{
+    //OPTIMERING
+    matrix lView;
+    matrix lProjection;
+}
+
+//Basically to update this just copy paste the normal pixel shader and remove the specular part
+float4 main(VS_OUT input) : SV_TARGET
+{
+    float4 lighting = float4(1, 1, 1, 1);
+    float4 lightToPos = input.wPos - lightPos;
+    float specularIntensity = 400.f;
+    float outerCone = 0.8f;
+    float innerCone = 0.95f;
+    float innerMinusOuter = innerCone - outerCone;
+    
+    float diffuse = 0;
+    float ambient = 0.1;
+
+    //Kanske ska vara negativ
+    float cosAngle = dot(normalize(lightToPos.xyz), normalize(lightDir.xyz));
+
+    float falloff = saturate((cosAngle - outerCone) / innerMinusOuter);
+
+
+    float lambert = max(dot(input.normal, normalize(-lightToPos.xyz)), 0.f);
+
+    if (lambert > 0)
+    {
+        diffuse = lambert * falloff;
+
+
+        //Creds till Jakob Nyberg för formeln han stal!
+        float3 posToCam = camPos.xyz - input.wPos.xyz;
+       // float3 H = normalize(lightDir.xyz + posToCam); // kanske rättare?
+        float3 H = normalize(posToCam - lightDir.xyz);
+    }
+
+    float attenuation = (1.f / (0.01 * max(20, pow(length(lightToPos.xyz), 2))));
+    
+    diffuse *= attenuation;
+    lighting = saturate(diffuse + ambient);
+
+    //*******************SHADOW MAPPING FINALLY*********************
+    if (falloff > 0)
+    {
+        float4 posFromLight = input.wPos;
+
+        posFromLight = mul(posFromLight, lView);
+        posFromLight = mul(posFromLight, lProjection);
+
+        posFromLight /= posFromLight.w;
+
+	    //Convert to texture coords
+        posFromLight.x = (posFromLight.x * 0.5) + 0.5;
+        posFromLight.y = (posFromLight.y * -0.5) + 0.5;
+
+
+        float depth = shadowMap.Sample(sSampler, posFromLight.xy).x;
+
+        if (depth < posFromLight.z - 0.0001)
+            lighting *= float4(0.3, 0.3, 0.3, 1);
+    }
+
+    //*****************SHADOW MAPPING FINALLY END*******************
+
+    //return shadowMap.Sample(sSampler, input.uv);
+    return tex.Sample(sSampler, input.uv) * lighting;
 }
