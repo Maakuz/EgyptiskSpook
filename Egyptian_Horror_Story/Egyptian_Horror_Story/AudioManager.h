@@ -35,7 +35,7 @@ public:
 	void createEmitter(int key, DirectX::SimpleMath::Vector3 position = DirectX::SimpleMath::Vector3(0, 0, 0));
 	void updateEmitter(int key, DirectX::SimpleMath::Vector3 position);
 
-	//Pitch ranges from -1 to 1
+	//Pitch ranges from -1 to 1 and 3D does not work right now
 	void playInstance(int key, bool isLooped = false, float pitch = 0, int emitterKey = -1);
 	void stopInstance(int key, bool immediately = true);
 
