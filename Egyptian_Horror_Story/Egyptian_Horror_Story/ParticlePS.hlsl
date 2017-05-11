@@ -50,15 +50,7 @@ float4 main(VS_OUT input) : SV_TARGET
     float lambert = max(dot(input.normal, normalize(-lightToPos.xyz)), 0.f);
 
     if (lambert > 0)
-    {
         diffuse = lambert * falloff;
-
-
-        //Creds till Jakob Nyberg för formeln han stal!
-        float3 posToCam = camPos.xyz - input.wPos.xyz;
-       // float3 H = normalize(lightDir.xyz + posToCam); // kanske rättare?
-        float3 H = normalize(posToCam - lightDir.xyz);
-    }
 
     float attenuation = (1.f / (0.01 * max(20, pow(length(lightToPos.xyz), 2))));
     
