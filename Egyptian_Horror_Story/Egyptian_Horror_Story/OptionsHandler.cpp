@@ -72,6 +72,8 @@ OptionsHandler::~OptionsHandler()
 		out << "ViewDistance " << this->mGraphics.farPlane << "\n";
 		out << "Brightness " << this->mGraphics.brightness << "\n";
 
+		out << "\nThis file will be overwritten on exit!\n";
+
 
 		out.close();
 	}
