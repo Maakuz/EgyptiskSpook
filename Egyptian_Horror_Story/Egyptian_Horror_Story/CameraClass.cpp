@@ -10,6 +10,8 @@ CameraClass::CameraClass(ID3D11Device* device, GraphicsData* gData, settings::Gr
 	this->mPitch = 0;
 	this->mYaw = 0;
 
+	this->mProjUpdated = true;
+
 	DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(
 		fovAngle, aspectRatio, 0.1f, settings.farPlane);
 
@@ -69,8 +71,9 @@ void CameraClass::update(ID3D11DeviceContext* context)
 	DirectX::SimpleMath::Matrix view =
 		DirectX::XMMatrixLookAtLH(this->mPos, this->mPos + this->mForward, this->mUp);
 	view = view.Transpose();
-	if (mMatrices.view != view) {
+	if (mMatrices.view != view || this->mProjUpdated) {
 		mMatrices.view = view;
+		this->mProjUpdated = false;
 
 		D3D11_MAPPED_SUBRESOURCE data;
 		ZeroMemory(&data, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -104,6 +107,21 @@ void CameraClass::updateRotation(ID3D11DeviceContext* context) {
 	mUp = rotation.Up();
 	mForward = rotation.Forward();
 	mRight = rotation.Right() * -1; //Right gets inverted, better solution exists nice
+}
+
+void CameraClass::updateProjection(ID3D11DeviceContext* context, settings::GraphicSettings& settings)
+{
+	DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(
+		settings.fov * (float)M_PI,
+		(float)settings.width / (float)settings.height, 
+		0.1f, 
+		settings.farPlane);
+
+	projection = DirectX::XMMatrixTranspose(projection);
+
+	this->mMatrices.projection = projection;
+
+	this->mProjUpdated = true;
 }
 
 ID3D11Buffer* CameraClass::getMatrixBuffer()

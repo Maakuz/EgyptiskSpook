@@ -30,6 +30,8 @@ private:
 	float mPitch;
 	float mYaw;
 
+	bool mProjUpdated;
+
 public:
 	CameraClass(ID3D11Device* device, GraphicsData* gData, settings::GraphicSettings settings);
 	virtual ~CameraClass();
@@ -37,6 +39,7 @@ public:
 	void createVPBuffer(ID3D11Device* device);
 	void update(ID3D11DeviceContext* context);
 	void updateRotation(ID3D11DeviceContext* context);
+	void updateProjection(ID3D11DeviceContext* context, settings::GraphicSettings& settings);
 
 	ID3D11Buffer* getMatrixBuffer();
 

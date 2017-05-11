@@ -51,7 +51,7 @@ OptionsHandler::OptionsHandler()
 
 	else
 	{
-		this->mGraphics.brightness = 0.f;
+		this->mGraphics.brightness = DEFAULTBRIGHTNESS;
 		this->mGraphics.height = DEFAULTHEIGHT;
 		this->mGraphics.width = DEFAULTWIDTH;
 		this->mGraphics.farPlane = DEFAULTFARPLANE;
@@ -111,7 +111,21 @@ bool OptionsHandler::handleButtonPress(SDL_KeyboardEvent const& key, ID3D11Devic
 		this->mGraphics.brightness -= 0.01f;
 		this->updateBuffer(context);
 		break;
+
+	case FOVUPKEY:
+		this->mGraphics.fov += 0.01;
+		break;
+
+	case FOVDOWNKEY:
+		this->mGraphics.fov -= 0.01;
+		break;
 	}
+
+	if (this->mGraphics.fov > 0.9f)
+		this->mGraphics.fov = 0.9f;
+
+	else if (this->mGraphics.fov < 0.3f)
+		this->mGraphics.fov = 0.3f;
 
 	return true;
 }

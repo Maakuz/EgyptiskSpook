@@ -68,6 +68,16 @@ bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
 	else
 		res = this->mOptionHandler->handleButtonPress(key, this->mGraphics->getDeviceContext());
 
+	switch (key.keysym.scancode)
+	{
+	case FOVUPKEY:
+	case FOVDOWNKEY:
+		this->mCamera->updateProjection(
+			this->mGraphics->getDeviceContext(), 
+			this->mOptionHandler->getGraphicSettings());
+		break;
+	}
+
 	return res;
 }
 
