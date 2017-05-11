@@ -4,6 +4,7 @@
 #include "Direct3DHeader.h"
 #include <SDL.h>
 #include <fstream>
+#include <string>
 #include "Structs.h"
 //För att kunna använda M_PI
 #define _USE_MATH_DEFINES

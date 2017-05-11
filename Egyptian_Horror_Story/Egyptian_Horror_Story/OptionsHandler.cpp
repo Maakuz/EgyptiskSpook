@@ -27,13 +27,23 @@ void OptionsHandler::updateBuffer(ID3D11DeviceContext* context)
 OptionsHandler::OptionsHandler()
 {
 	std::ifstream in(SETTINGPATH);
+	std::string str;
 
 	if (in.is_open())
 	{
+		in >> str;
 		in >> this->mGraphics.width;
+		
+		in >> str;
 		in >> this->mGraphics.height;
+		
+		in >> str;
 		in >> this->mGraphics.fov;
+		
+		in >> str;
 		in >> this->mGraphics.farPlane;
+		
+		in >> str;
 		in >> this->mGraphics.brightness;
 
 		in.close();
@@ -56,11 +66,11 @@ OptionsHandler::~OptionsHandler()
 
 	if (out.is_open())
 	{
-		out << this->mGraphics.width << "\n";
-		out << this->mGraphics.height << "\n";
-		out << this->mGraphics.fov << "\n";
-		out << this->mGraphics.farPlane << "\n";
-		out << this->mGraphics.brightness << "\n";
+		out << "ScreenWidth " << this->mGraphics.width << "\n";
+		out << "ScreenHeight " << this->mGraphics.height << "\n";
+		out << "FieldOfView " << this->mGraphics.fov << "\n";
+		out << "ViewDistance " << this->mGraphics.farPlane << "\n";
+		out << "Brightness " << this->mGraphics.brightness << "\n";
 
 
 		out.close();
