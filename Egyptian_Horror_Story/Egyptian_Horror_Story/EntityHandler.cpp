@@ -1429,7 +1429,7 @@ void EntityHandler::update(ID3D11DeviceContext* context)
 		&& this->mPlayer->getVelocity().y == 0)
 	{
 		//Pitch should wary to make it less repetetive
-		this->mAudioManager->playInstance(1, true, -0.6f, 1);
+		this->mAudioManager->playInstance(1, true, -0.6f);
 		this->footstepsPlaying = true;
 	}
 

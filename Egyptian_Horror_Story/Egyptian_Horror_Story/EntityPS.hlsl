@@ -57,15 +57,9 @@ float4 main(VS_OUT input) : SV_TARGET
 
         //Creds till Jakob Nyberg för formeln han stal!
         float3 posToCam = camPos.xyz - input.wPos.xyz;
-       // float3 H = normalize(lightDir.xyz + posToCam); // kanske rättare?
         float3 H = normalize(posToCam - lightDir.xyz);
 
         specularity = pow(saturate(dot(input.normal.xyz, H)), specularIntensity) * falloff;
-
-        //float3 posToLight = lightPos.xyz - input.wPos.xyz;
-        //float3 r = reflect(normalize(posToLight), input.normal.xyz);
-        //specularity = pow(dot(normalize(posToCam), normalize(r)), specularIntensity) * falloff;
-
     }
 
     float attenuation = (1.f / (0.01 * max(20, pow(length(lightToPos.xyz), 2))));
@@ -84,7 +78,7 @@ float4 main(VS_OUT input) : SV_TARGET
 
         posFromLight /= posFromLight.w;
 
-	//Convert to texture coords
+	    //Convert to texture coords
         posFromLight.x = (posFromLight.x * 0.5) + 0.5;
         posFromLight.y = (posFromLight.y * -0.5) + 0.5;
 
