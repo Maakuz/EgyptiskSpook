@@ -152,9 +152,6 @@
     <ClCompile Include="Trap.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="FBXLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NavMesh.cpp">
       <Filter>Source Files\AI</Filter>
     </ClCompile>
@@ -166,6 +163,12 @@
     </ClCompile>
     <ClCompile Include="AICFunctions.cpp">
       <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionsHandler.cpp">
+      <Filter>Source Files\Game Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXLoader.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -232,9 +235,6 @@
     <ClInclude Include="Structs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FBXLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AIHandler.h">
       <Filter>Header Files\AI</Filter>
     </ClInclude>
@@ -246,6 +246,12 @@
     </ClInclude>
     <ClInclude Include="AICFunctions.h">
       <Filter>Header Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionsHandler.h">
+      <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
