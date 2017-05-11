@@ -1,10 +1,14 @@
 #include "Game.h"
-#include "ShadowRenderer.h"
 #include "ParticleRenderer.h"
 
 Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 {
 	this->mGraphics = mGraphicsHandler;
+
+	this->mOptionHandler.setup(this->mGraphics->getDevice());
+
+	this->mGraphics->setOptions(&this->mOptionHandler);
+
 
 	this->mEntityHandler = new EntityHandler();
 
@@ -30,9 +34,6 @@ Game::Game(GraphicsHandler* mGraphicsHandler, float width, float height)
 	this->mGraphics->setupDSAndSRViews();
 
 	this->mAIHandler = new AIHandler(mEntityHandler->getEnemy(), mEntityHandler->getPlayer());
-
-	//this->mGraphics->addRenderer(new ShadowRenderer(this->mEntityHandler->getPlayer()->getLight()));
-
 }
 
 Game::~Game()
@@ -55,16 +56,33 @@ void Game::update()
 	if (this->mAIHandler->getNavigationTexture() != nullptr)
 		mGuiRenderer->setNavigationTest(mGraphics->getDevice(), this->mAIHandler->getNavigationTexture(),
 			this->mAIHandler->getNavMeshWidth(), this->mAIHandler->getNavMeshHeight());
+
 }
 
 bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
 {
-	return this->mEntityHandler->getPlayer()->handleMouseKeyPress(key);
+	bool res = this->mEntityHandler->getPlayer()->handleMouseKeyPress(key);
+
+	if (res)
+		this->mOptionHandler.handleButtonPress(key, this->mGraphics->getDeviceContext());
+
+	else
+		res = this->mOptionHandler.handleButtonPress(key, this->mGraphics->getDeviceContext());
+
+	return res;
 }
 
 bool Game::handleMouseKeyRelease(SDL_KeyboardEvent const& key)
 {
-	return this->mEntityHandler->getPlayer()->handleMouseKeyRelease(key);
+	bool res = this->mEntityHandler->getPlayer()->handleMouseKeyRelease(key);
+
+	if (res)
+		this->mOptionHandler.handleButtonRelease(key, this->mGraphics->getDeviceContext());
+
+	else
+		res = this->mOptionHandler.handleButtonRelease(key, this->mGraphics->getDeviceContext());
+
+	return res;
 }
 
 void Game::handleMouseMotion(SDL_MouseMotionEvent const &motion)

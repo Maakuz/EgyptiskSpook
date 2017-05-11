@@ -5,6 +5,7 @@
 #include "EntityRenderer.h"
 #include "Light.h"
 #include "GraphicsData.h"
+#include "OptionsHandler.h"
 #include <vector>
 
 #define WIDTH 1080
@@ -31,6 +32,7 @@ private:
 
 	ID3D11DepthStencilView* mDSVShadow;
 	ID3D11ShaderResourceView* mSRVShadow;
+	OptionsHandler* mOptions;
 
 
 	std::vector<Renderer*> mRenderers;
@@ -41,6 +43,7 @@ public:
 	GraphicsHandler(GraphicsHandler const &gh) = delete;
 	~GraphicsHandler();
 
+	void setOptions(OptionsHandler* options);
 	HRESULT setupSwapChain();
 	void setupViewport(int width, int height);
 

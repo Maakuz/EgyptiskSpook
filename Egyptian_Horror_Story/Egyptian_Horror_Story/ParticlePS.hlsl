@@ -28,6 +28,11 @@ cbuffer lightVP : register(b2)
     matrix lProjection;
 }
 
+cbuffer brightnessBuffer : register(b3)
+{
+    float brightness;
+}
+
 //Basically to update this just copy paste the normal pixel shader and remove the specular part
 float4 main(VS_OUT input) : SV_TARGET
 {
@@ -39,7 +44,7 @@ float4 main(VS_OUT input) : SV_TARGET
     float innerMinusOuter = innerCone - outerCone;
     
     float diffuse = 0;
-    float ambient = 0.1;
+    float ambient = 0.1f + brightness;
 
     //Kanske ska vara negativ
     float cosAngle = dot(normalize(lightToPos.xyz), normalize(lightDir.xyz));

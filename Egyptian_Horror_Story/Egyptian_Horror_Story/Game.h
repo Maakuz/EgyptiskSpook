@@ -5,6 +5,7 @@
 #include "CameraClass.h"
 #include "AIHandler.h"
 #include "GUIRenderer.h"
+#include "OptionsHandler.h"
 #include "AudioManager.h"
 
 class Game
@@ -16,6 +17,7 @@ private:
 	AIHandler* mAIHandler;
 	GUIRenderer *mGuiRenderer; //temp
 	AudioManager mAudioManager;
+	OptionsHandler mOptionHandler;
 public:
 	Game(GraphicsHandler* graphicsHandler, float width, float height);
 	virtual ~Game();

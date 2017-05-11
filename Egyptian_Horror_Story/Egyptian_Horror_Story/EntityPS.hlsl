@@ -28,6 +28,11 @@ cbuffer lightVP : register(b2)
     matrix lProjection;
 }
 
+cbuffer brightnessBuffer : register(b3)
+{
+    float brightness;
+}
+
 
 float4 main(VS_OUT input) : SV_TARGET
 {
@@ -40,7 +45,7 @@ float4 main(VS_OUT input) : SV_TARGET
     
     float diffuse = 0;
     float specularity = 0;
-    float ambient = 0.1;
+    float ambient = 0.1 + brightness;
 
     //Kanske ska vara negativ
     float cosAngle = dot(normalize(lightToPos.xyz), normalize(lightDir.xyz));

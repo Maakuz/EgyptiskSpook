@@ -51,7 +51,13 @@ namespace camera
 }
 
 
-
+namespace settings
+{
+	struct GraphicSettings
+	{
+		float brightness;
+	};
+}
 
 
 #endif

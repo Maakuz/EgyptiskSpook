@@ -95,6 +95,11 @@ GraphicsHandler::~GraphicsHandler() {
 	this->mDebugDevice->Release();
 }
 
+void GraphicsHandler::setOptions(OptionsHandler* options)
+{
+	this->mOptions = options;
+}
+
 HRESULT GraphicsHandler::setupSwapChain() {
 	DXGI_SWAP_CHAIN_DESC mSwapChainDesc;
 	ZeroMemory(&mSwapChainDesc, sizeof(mSwapChainDesc));
@@ -240,6 +245,11 @@ void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightWVP)
 	this->mContext->OMSetRenderTargets(1, &this->mBackBufferRTV, this->mDSV);
 	this->mContext->PSSetShaderResources(1, 1, &this->mSRVShadow);
 	this->mContext->PSSetConstantBuffers(2, 1, &lightWVP);
+
+	ID3D11Buffer* temp = mOptions->getBrightnessBuffer();
+	this->mContext->PSSetConstantBuffers(3, 1, &temp);
+	
+
 	this->mContext->RSSetViewports(1, &this->mViewport);
 
 	for (const auto& renderer : mRenderers) {
