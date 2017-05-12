@@ -43,6 +43,22 @@ AABB Entity::getAABB()
 		return *this->mAABB;
 }
 
+void Entity::updateTransformBuffer(ID3D11DeviceContext* context, GraphicsData* gData)
+{
+	DirectX::SimpleMath::Matrix posMat = DirectX::SimpleMath::Matrix::CreateTranslation(this->mPos);
+	posMat = posMat.Transpose();
+
+
+	D3D11_MAPPED_SUBRESOURCE data;
+	ZeroMemory(&data, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
+	context->Map(gData->getConstantBuffer(this->mGraphicsKey), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+
+	memcpy(data.pData, &posMat, sizeof(DirectX::XMMATRIX));
+
+	context->Unmap(gData->getConstantBuffer(this->mGraphicsKey), 0);
+}
+
 int Entity::getKey() const
 {
 	return this->mGraphicsKey;

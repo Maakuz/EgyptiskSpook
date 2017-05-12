@@ -18,7 +18,6 @@ class AIHandler {
 			char const *scriptPath; //for easy debugging
 		};
 
-		Trap *testTrap;
 		Enemy *mEnemy; //pointer to enemy that will use the AI
 		Player *mPlayer;
 		lua_State *mEnemyState;

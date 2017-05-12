@@ -3,7 +3,6 @@
 #include "GraphicsHandler.h"
 #include "EntityHandler.h"
 #include "CameraClass.h"
-#include "AIHandler.h"
 #include "GUIRenderer.h"
 #include "OptionsHandler.h"
 #include "AudioManager.h"

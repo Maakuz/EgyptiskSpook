@@ -12,12 +12,6 @@ using namespace DirectX::SimpleMath;
 AIHandler::AIHandler(Enemy *enemy, Player *player) :
 	mEnemy(enemy), mPlayer(player) {
 	mEnemyState = luaL_newstate();
-
-	// TESTING
-	testTrap = new Trap(0, 25, 0, -74);
-	addTrap("scripts/TrapStone.lua", testTrap);
-
-	setupAI();
 }
 
 AIHandler::~AIHandler() {
@@ -28,9 +22,6 @@ AIHandler::~AIHandler() {
 		assert(lua_gettop(trap.state) == 0);
 		lua_close(trap.state);
 	}
-
-	// TESTING
-	delete testTrap;
 }
 
 void AIHandler::setupTraps() {

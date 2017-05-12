@@ -7,6 +7,7 @@
 #include "Wall.h"
 #include "FBXLoader.h"
 #include "AudioManager.h"
+#include "AIHandler.h"
 
 #define WALLTEXTURE L"pyramidStone.png"
 
@@ -14,6 +15,7 @@ class EntityHandler
 {
 private:
 	std::vector<Entity*> mEntities;
+	std::vector<Trap*> mTraps;
 	AudioManager* mAudioManager;
 	Entity* mFlashlightModel;
 	Player* mPlayer;
@@ -28,11 +30,12 @@ private:
 	int mNrOfKeys;
 
 	void hardcodedMap(ID3D11Device* device);
-	void loadEntityModel(std::string modelName, wchar_t* textureName, int key, ID3D11Device* device);
+	void loadEntityModel(std::string modelName, wchar_t* textureName, Entity* entity, ID3D11Device* device);
 public:
 	EntityHandler();
 	virtual ~EntityHandler();
 
+	void setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context);
 	void setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera);
 	void setupEntities(ID3D11Device* device);
 	void setupAudioManager(AudioManager* manager);

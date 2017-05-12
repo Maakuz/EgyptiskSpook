@@ -72,7 +72,7 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 	}
 }
 
-bool EntityRenderer::loadObject(ID3D11Device *device, int key, EntityStruct::VertexStruct* vertices, int nrOfVertices, UINT cbufferSize, wchar_t* texturePath, bool isDynamic)
+bool EntityRenderer::loadObject(ID3D11Device *device, int key, EntityStruct::VertexStruct* vertices, int nrOfVertices, UINT cbufferSize, wchar_t* texturePath, DirectX::SimpleMath::Vector3 translation, bool isDynamic)
 {
 	D3D11_SUBRESOURCE_DATA data;
 	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -89,7 +89,9 @@ bool EntityRenderer::loadObject(ID3D11Device *device, int key, EntityStruct::Ver
 
 	if (cbufferSize == sizeof(DirectX::XMFLOAT4X4))
 	{
-		DirectX::SimpleMath::Matrix data2 = DirectX::SimpleMath::Matrix::Identity;
+		DirectX::SimpleMath::Matrix data2 = DirectX::SimpleMath::Matrix::CreateTranslation(translation);
+		data2 = data2.Transpose();
+
 		data.pSysMem = &data2;
 	}
 

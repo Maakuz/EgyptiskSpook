@@ -1288,7 +1288,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	this->mEntityRenderer->loadObject(device, wall->getKey(), testData34, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 }
 
-void EntityHandler::loadEntityModel(std::string modelName, wchar_t* textureName, int key, ID3D11Device* device)
+void EntityHandler::loadEntityModel(std::string modelName, wchar_t* textureName, Entity* entity, ID3D11Device* device)
 {
 	std::vector<EntityStruct::VertexStruct> temp;
 
@@ -1296,12 +1296,26 @@ void EntityHandler::loadEntityModel(std::string modelName, wchar_t* textureName,
 
 	this->mEntityRenderer->loadObject(
 		device,
-		key,
+		entity->getKey(),
 		temp.data(),
 		temp.size(),
 		sizeof(DirectX::XMFLOAT4X4),
-		textureName
+		textureName,
+		entity->getPosition()
 		);
+
+}
+
+void EntityHandler::setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context)
+{
+	Trap* test = new Trap(1000, 25, 0, -74);
+	ai->addTrap("scripts/TrapStone.lua", test);
+
+	this->loadEntityModel("testCube.fbx", L"", test, device);
+	this->mTraps.push_back(test);
+	
+	
+	ai->setupAI();
 }
 
 void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera)
@@ -1311,9 +1325,10 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 
 	this->mEnemy = new Enemy(ENEMY_KEY);
 
-	this->loadEntityModel("ModelTestTri.fbx", L"dargon_bump.jpg", this->mEnemy->getKey(), device);
-			
 	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
+
+	this->loadEntityModel("ModelTestTri.fbx", L"dargon_bump.jpg", this->mEnemy, device);
+			
 }
 
 EntityHandler::EntityHandler()
@@ -1329,9 +1344,10 @@ EntityHandler::~EntityHandler()
 	delete this->mFlashlightModel;
 
 	for (size_t i = 0; i < this->mEntities.size(); i++)
-	{
 		delete this->mEntities[i];
-	}
+
+	for (size_t i = 0; i < this->mTraps.size(); i++)
+		delete this->mTraps[i];
 }
 
 void EntityHandler::setupEntities(ID3D11Device* device)
@@ -1340,7 +1356,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 
 	this->mFlashlightModel = new Entity(this->mPlayer->getLight()->getGraphicsKey());
 
-	this->loadEntityModel("flashLight.fbx", L"dargon_bump.jpg", mFlashlightModel->getKey(), device);
+	this->loadEntityModel("flashLight.fbx", L"dargon_bump.jpg", mFlashlightModel, device);
 
 }
 

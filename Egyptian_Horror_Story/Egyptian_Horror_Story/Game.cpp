@@ -35,6 +35,8 @@ Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options) {
 	this->mGraphics->setupDSAndSRViews();
 
 	this->mAIHandler = new AIHandler(mEntityHandler->getEnemy(), mEntityHandler->getPlayer());
+
+	this->mEntityHandler->setupTraps(this->mAIHandler, this->mGraphics->getDevice(), this->mGraphics->getDeviceContext());
 }
 
 Game::~Game()
