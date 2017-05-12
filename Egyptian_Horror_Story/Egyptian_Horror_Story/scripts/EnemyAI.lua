@@ -57,8 +57,8 @@ function update()
 		end
 	end
 	
-	if frame % 100 then
-		if seesPlayer() then
+	if frame % 200 == 0 then
+		if onPlayerPath and SeesPlayer() then
 			pathToPlayer()
 			sawPlayerLastFrame = true
 		end
