@@ -1370,11 +1370,11 @@ void EntityHandler::setupAudioManager(AudioManager* manager)
 	this->mAudioManager->playSfx(0);
 }
 
-void EntityHandler::update(ID3D11DeviceContext* context)
+void EntityHandler::update(ID3D11DeviceContext* context, float dt)
 {
 	DirectX::SimpleMath::Vector3 prevPos = this->mPlayer->getPosition();
 
-	this->mPlayer->updatePosition();
+	this->mPlayer->updatePosition(dt);
 	this->mEnemy->updatePosition(this->mEntityRenderer->getGraphicsData(), context, this->mPlayer->getPosition());
 
 	//Wall intersection test

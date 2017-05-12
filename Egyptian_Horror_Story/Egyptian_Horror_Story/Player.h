@@ -33,7 +33,7 @@ public:
 	Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int grapchicsKey, GraphicsData* gData);
 	virtual ~Player();
 
-	void updatePosition();
+	void updatePosition(float dt);
 	void handleJumping();
 
 	bool handleMouseKeyPress(SDL_KeyboardEvent const &key);

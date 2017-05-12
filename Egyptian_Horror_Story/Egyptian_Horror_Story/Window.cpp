@@ -32,6 +32,10 @@ bool Window::setupWindowAndSDL(int width, int height) {
 void Window::startWindowLoop(GraphicsHandler* graphicsHandler, OptionsHandler* options) {
 	mRunning = true;
 	SDL_Event event;
+	
+	INT64 currentTime = SDL_GetPerformanceCounter();
+	INT64 prevTime = 0;
+	float deltaTime = 0;
 
 	this->mGame = new Game(graphicsHandler, options);
 	this->mGame->setWindowSize(this->mWindow);
@@ -43,8 +47,16 @@ void Window::startWindowLoop(GraphicsHandler* graphicsHandler, OptionsHandler* o
 				mRunning = false;
 		}
 
+		prevTime = currentTime;
+		currentTime = SDL_GetPerformanceCounter();
+
+		deltaTime = (float)(currentTime - prevTime) / SDL_GetPerformanceFrequency();
+		
+		//Säkert jätteprestandatagande
+		//SDL_Log("Time: %f\n", deltaTime);
+
 		//do stuff
-		this->mGame->update();
+		this->mGame->update(deltaTime);
 		this->mGame->draw();
 
 		SDL_Delay(1); // 5 ms delay per frame

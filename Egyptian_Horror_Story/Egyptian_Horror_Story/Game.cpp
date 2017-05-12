@@ -47,9 +47,9 @@ Game::~Game()
 	delete this->mAIHandler;
 }
 
-void Game::updateGame()
+void Game::updateGame(float dt)
 {
-	this->mEntityHandler->update(this->mGraphics->getDeviceContext());
+	this->mEntityHandler->update(this->mGraphics->getDeviceContext(), dt);
 	this->mCamera->update(this->mGraphics->getDeviceContext());
 
 	this->mAIHandler->update();
@@ -67,8 +67,8 @@ void Game::draw() {
 	this->mGraphics->present();
 }
 
-void Game::update() {
-	this->mStateHandler->update(this);
+void Game::update(float dt) {
+	this->mStateHandler->update(this, dt);
 }
 
 bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
@@ -124,14 +124,14 @@ void Game::StateHandler::setState(GAMESTATE state) {
 	this->state = state;
 }
 
-void Game::StateHandler::update(Game* g) {
+void Game::StateHandler::update(Game* g, float dt) {
 	switch (this->state) {
 	case GAMESTATE::DEFAULT:
 		break;
 	case GAMESTATE::MAIN_MENU:
 		break;
 	case GAMESTATE::PLAY:
-		g->updateGame();
+		g->updateGame(dt);
 		break;
 	}
 }

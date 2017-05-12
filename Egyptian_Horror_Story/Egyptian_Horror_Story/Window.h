@@ -9,7 +9,6 @@ class Window {
 private:
 	SDL_Window *mWindow;
 	bool mRunning;
-
 	Game* mGame;
 	SDL_bool mLockCursor;
 public:

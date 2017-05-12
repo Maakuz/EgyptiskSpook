@@ -18,7 +18,7 @@ private:
 	public:
 		GAMESTATE getState();
 		void setState(GAMESTATE state);
-		void update(Game* g);
+		void update(Game* g, float dt);
 	}* mStateHandler;
 
 	GraphicsHandler* mGraphics;
@@ -32,8 +32,8 @@ public:
 	Game(GraphicsHandler* graphicsHandler, OptionsHandler* options);
 	virtual ~Game();
 
-	void updateGame();
-	void update();
+	void updateGame(float dt);
+	void update(float dt);
 	void draw();
 
 	bool handleMouseKeyPress(SDL_KeyboardEvent const &key);

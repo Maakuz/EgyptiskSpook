@@ -23,7 +23,7 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 	this->mSprinting = false;
 
 	this->mMaxStamina = 15.f;
-	this->mSpeed = 0.15f; //magic numbers
+	this->mSpeed = 15.f; //magic numbers
 	this->mStamina = this->mMaxStamina;
 
 	//REMOVE
@@ -44,14 +44,14 @@ Player::~Player()
 	delete this->col;
 }
 
-void Player::updatePosition()
+void Player::updatePosition(float dt)
 {
 	this->mPrevPos = this->getPosition();
 	computeVelocity();
 	handleJumping();
 	handleSprinting();
 
-	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed * getMovementMultiplier();
+	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed * getMovementMultiplier() * dt;
 
 	this->setPosition(newPos);
 	if (this->mSneaking) newPos.y += SNEAK_Y;
