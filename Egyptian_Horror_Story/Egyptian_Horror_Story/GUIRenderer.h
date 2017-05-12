@@ -10,15 +10,18 @@ private:
 	GraphicsData *mGraphicsData;
 
 	UINT mSize;
-	DirectX::SimpleMath::Vector3 *mParticles;
-	ID3D11ShaderResourceView *navTest;
+	DirectX::SimpleMath::Vector3 *mElements;
+	ID3D11ShaderResourceView *navTest, *menu;
 public:
-	GUIRenderer(int identifier);
+	GUIRenderer();
 	GUIRenderer(GUIRenderer const &renderer) = delete;
 	virtual ~GUIRenderer();
 
 	void setup(ID3D11Device *device, ShaderHandler &shaders);
-	void render(ID3D11DeviceContext *context, ShaderHandler &shaders);
+	void render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state);
+
+	void renderStartMenu(ID3D11DeviceContext *context, ShaderHandler &shaders);
+	void renderHud(ID3D11DeviceContext *context, ShaderHandler &shaders);
 
 	void setNavigationTest(ID3D11Device *device, void* pixels, int w, int h); //for testing
 

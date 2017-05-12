@@ -1,7 +1,7 @@
 #include "EntityRenderer.h"
 #define ENTITY_SHADER 20
 
-EntityRenderer::EntityRenderer(int id) : Renderer(id)
+EntityRenderer::EntityRenderer(GAMESTATE identifier) : Renderer(identifier)
 {
 	this->shadowPass = false;
 }
@@ -22,7 +22,7 @@ void EntityRenderer::setup(ID3D11Device* device, ShaderHandler& shaderHandler)
 	shaderHandler.setupPixelShader(device, ENTITY_SHADER, L"EntityPS.hlsl", "main");
 }
 
-void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderHandler)
+void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderHandler, GAMESTATE const &state)
 {
 	UINT stride = sizeof(EntityStruct::VertexStruct), offset = 0;
 

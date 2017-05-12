@@ -45,6 +45,7 @@ void Window::startWindowLoop(GraphicsHandler* graphicsHandler, OptionsHandler* o
 
 		//do stuff
 		this->mGame->update();
+		this->mGame->draw();
 
 		SDL_Delay(1); // 5 ms delay per frame
 	}

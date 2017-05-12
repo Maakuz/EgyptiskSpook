@@ -35,12 +35,12 @@ class ParticleRenderer : public Renderer {
 		void timeCheck(int start, int piece);
 		static float getRandomNr();
 	public:
-		ParticleRenderer(CameraClass *camera, int id);
+		ParticleRenderer(CameraClass *camera, GAMESTATE identifier);
 		ParticleRenderer(ParticleRenderer const &renderer) = delete;
 		virtual ~ParticleRenderer();
 
 		void setup(ID3D11Device *device, ShaderHandler &shaders);
-		void render(ID3D11DeviceContext *context, ShaderHandler &shaders);
+		void render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state);
 
 		ParticleRenderer* operator=(ParticleRenderer const &renderer) = delete;
 };

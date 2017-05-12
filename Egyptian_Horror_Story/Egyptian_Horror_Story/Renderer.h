@@ -4,27 +4,28 @@
 #include "Direct3DHeader.h"
 #include "ShaderHandler.h"
 
+enum GAMESTATE {
+	DEFAULT,
+	MAIN_MENU,
+	PLAY,
+	UNDEFINED //Renderer can be used for multiple purposes
+};
+
 class Renderer {
-protected:
-	int mIdentifier;
+private:
+	GAMESTATE mIdentifier;
 public:
-	Renderer(int i);
+	Renderer(GAMESTATE state = UNDEFINED);
 	virtual ~Renderer();
 	Renderer(Renderer const &renderer) = delete;
 
 	virtual void setup(ID3D11Device *device, ShaderHandler &shaderHandler) = 0;
-	virtual void render(ID3D11DeviceContext *context, ShaderHandler &shaderHandler) = 0;
+	virtual void render(ID3D11DeviceContext *context, ShaderHandler &shaderHandler, GAMESTATE const &state) = 0;
 		
-	void setState(int i);
+	void setIdentifier(GAMESTATE state);
+	GAMESTATE getIdentifier();
+
 	Renderer* operator=(Renderer const &renderer) = delete;
 };
-
-
-enum GAMESTATE {
-	DEFAULT,
-	MAIN_MENU,
-	PLAY
-};
-
 
 #endif

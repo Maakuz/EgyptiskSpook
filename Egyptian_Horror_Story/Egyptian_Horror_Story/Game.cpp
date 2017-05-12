@@ -24,10 +24,10 @@ Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options) {
 
 	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
 	
-	mGuiRenderer = new GUIRenderer(GAMESTATE::PLAY);
+	mGuiRenderer = new GUIRenderer();
 	this->mGraphics->addRenderer(mGuiRenderer);
 
-	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera, GAMESTATE::PLAY));
+	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera, mStateHandler->getState()));
 	this->mGraphics->addRenderer(this->mEntityHandler->getEntityRenderer());
 
 	this->mGraphics->setupRenderers();
@@ -52,15 +52,19 @@ void Game::updateGame()
 	this->mEntityHandler->update(this->mGraphics->getDeviceContext());
 	this->mCamera->update(this->mGraphics->getDeviceContext());
 
-	this->mGraphics->clear();
-	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer(), this->mEntityHandler->getEntityRenderer()->getGraphicsData()->getConstantBuffer(301));
-	this->mGraphics->present();
-
 	this->mAIHandler->update();
 	if (this->mAIHandler->getNavigationTexture() != nullptr)
 		mGuiRenderer->setNavigationTest(mGraphics->getDevice(), this->mAIHandler->getNavigationTexture(),
 			this->mAIHandler->getNavMeshWidth(), this->mAIHandler->getNavMeshHeight());
 
+}
+
+void Game::draw() {
+	this->mGraphics->clear();
+	this->mGraphics->renderRenderers(this->mCamera->getMatrixBuffer(),
+									this->mEntityHandler->getEntityRenderer()->getGraphicsData()->getConstantBuffer(301),
+									mStateHandler->getState());
+	this->mGraphics->present();
 }
 
 void Game::update() {
@@ -73,7 +77,6 @@ bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
 
 	if (res)
 		this->mOptionHandler->handleButtonPress(key, this->mGraphics->getDeviceContext());
-
 	else
 		res = this->mOptionHandler->handleButtonPress(key, this->mGraphics->getDeviceContext());
 
@@ -113,12 +116,12 @@ void Game::updateLua() {
 	this->mAIHandler->setupAI();
 }
 
-int Game::StateHandler::getState() {
+GAMESTATE Game::StateHandler::getState() {
 	return this->state;
 }
 
-void Game::StateHandler::setState(int i) {
-	this->state = i;
+void Game::StateHandler::setState(GAMESTATE state) {
+	this->state = state;
 }
 
 void Game::StateHandler::update(Game* g) {

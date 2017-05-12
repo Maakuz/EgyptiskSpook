@@ -3,9 +3,9 @@
 
 using namespace DirectX::SimpleMath;
 
-GUIRenderer::GUIRenderer(int id) : Renderer(id){
+GUIRenderer::GUIRenderer() : Renderer(){
 	this->mSize = 1;
-	this->mParticles = new Vector3[mSize];
+	this->mElements = new Vector3[mSize];
 	this->mGraphicsData = new GraphicsData();
 
 	// for testing
@@ -14,7 +14,7 @@ GUIRenderer::GUIRenderer(int id) : Renderer(id){
 
 GUIRenderer::~GUIRenderer() {
 	delete this->mGraphicsData;
-	delete[] this->mParticles;
+	delete[] this->mElements;
 
 	if (navTest)
 		navTest->Release();
@@ -29,25 +29,48 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	shaders.setupPixelShader(device, SHADERS, L"GUIPS.hlsl", "main");
 	shaders.setupGeometryShader(device, SHADERS, L"GUIGS.hlsl", "main");
 
-	this->mParticles[0] = Vector3(-0.95f, 0.55f, 0);
+	this->mElements[0] = Vector3(-0.95f, 0.55f, 0);
 
 	D3D11_SUBRESOURCE_DATA data;
-	data.pSysMem = &this->mParticles[0];
+	data.pSysMem = &this->mElements[0];
 
 	mGraphicsData->createVertexBuffer(0, this->mSize * sizeof(Vector3), &data, device);
-	mGraphicsData->loadTexture(0, L"../Resource/Textures/placeholder.png", device);
+	mGraphicsData->loadTexture(0, L"menutest.png", device);
 }
 
-void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders) {
+void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state) {
+	context->IASetInputLayout(shaders.getInputLayout(SHADERS));
+	shaders.setShaders(context, SHADERS, SHADERS, SHADERS);
+
+	if (state == GAMESTATE::PLAY)
+		renderHud(context, shaders);
+	else if (state == GAMESTATE::MAIN_MENU)
+		renderStartMenu(context, shaders);
+}
+
+void GUIRenderer::renderStartMenu(ID3D11DeviceContext *context, ShaderHandler &shaders) {
 	UINT stride = sizeof(Vector3), offset = 0;
 	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(0);
 	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
-	shaders.setShaders(context, SHADERS, SHADERS, SHADERS);
+
+
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
+	context->PSSetShaderResources(0, 1, &srv);
+
+	context->Draw(this->mSize, 0);
+}
+
+void GUIRenderer::renderHud(ID3D11DeviceContext *context, ShaderHandler &shaders) {
+	UINT stride = sizeof(Vector3), offset = 0;
+	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(0);
+	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
 
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	context->IASetInputLayout(shaders.getInputLayout(SHADERS));
 	context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
 	context->PSSetShaderResources(0, 1, &srv);
+
 	if (navTest)
 		context->PSSetShaderResources(0, 1, &navTest);
 

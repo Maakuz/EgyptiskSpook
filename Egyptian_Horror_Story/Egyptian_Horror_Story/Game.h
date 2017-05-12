@@ -1,3 +1,4 @@
+
 #ifndef GAME_H
 #define GAME_H
 #include "GraphicsHandler.h"
@@ -13,10 +14,10 @@ private:
 
 	class StateHandler {
 	private:
-		int state;
+		GAMESTATE state;
 	public:
-		int getState();
-		void setState(int i);
+		GAMESTATE getState();
+		void setState(GAMESTATE state);
 		void update(Game* g);
 	}* mStateHandler;
 
@@ -33,6 +34,7 @@ public:
 
 	void updateGame();
 	void update();
+	void draw();
 
 	bool handleMouseKeyPress(SDL_KeyboardEvent const &key);
 	bool handleMouseKeyRelease(SDL_KeyboardEvent const &key);
