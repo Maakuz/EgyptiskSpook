@@ -1306,6 +1306,89 @@ void EntityHandler::loadEntityModel(std::string modelName, wchar_t* textureName,
 
 }
 
+void EntityHandler::updateAudio()
+{
+	//Updating emitters
+	DirectX::SimpleMath::Vector3 feet = this->mPlayer->getPosition();
+	feet.x -= 0.5f;
+
+	this->mAudioManager->updateEmitter(1, feet);
+	this->mAudioManager->updateListener(this->mPlayer->getPosition(),
+		this->mPlayer->getCamera()->getForward(),
+		this->mPlayer->getCamera()->getUp());
+
+
+	//Playing footsteps when player walks. could be moved into
+	//player class. Right now more of a proof of concept
+	if (abs(this->mPlayer->getVelocity().x) + abs(this->mPlayer->getVelocity().z) >= 0.3f
+		&& !this->footstepsPlaying
+		&& this->mPlayer->getVelocity().y == 0)
+	{
+		//Pitch should wary to make it less repetetive
+		this->mAudioManager->playInstance(1, true, -0.6f);
+		this->footstepsPlaying = true;
+	}
+
+	else if ((abs(this->mPlayer->getVelocity().x) + abs(this->mPlayer->getVelocity().z) < 0.3f
+		|| this->mPlayer->getVelocity().y != 0)
+		&& this->footstepsPlaying
+		)
+	{
+		this->mAudioManager->stopInstance(1, false);
+		this->footstepsPlaying = false;
+	}
+}
+
+void EntityHandler::updateCollision()
+{
+	//Wall intersection test
+	for (Entity *wall : this->mEntities)
+	{
+		Wall* ptr = dynamic_cast<Wall*>(wall);
+
+		if (ptr && ptr->getAABB().aabbVSCapsule(*this->getPlayer()->col)) {
+			DirectX::SimpleMath::Vector3 ptop = this->mPlayer->getPrevPos() - this->mPlayer->getPosition();
+
+
+
+			DirectX::SimpleMath::Vector3 norm = ptr->getNormal();
+			//DirectX::SimpleMath::Vector3 norm = ptr->getAABB().calculateNormal(*this->mPlayer->col);
+
+			//DirectX::SimpleMath::Vector3 norm = ptr->getAABB().getNormal(*this->getPlayer()->col);
+			//DirectX::SimpleMath::Vector3 diff;
+			//diff = mPlayer->getPosition() - ptr->getAABB().mPoint;
+			//
+			//DirectX::SimpleMath::Vector3 tmp1 = diff;
+			//DirectX::SimpleMath::Vector3 tmp2 = norm;
+			//
+			//tmp1.Normalize();
+			//tmp2.Normalize();
+			//
+			//diff = (tmp2.Dot(tmp1) * diff); //STÄMMER KAPPA
+			//diff = norm - diff;
+			//norm.Normalize();
+			//this->mPlayer->setPosition(mPlayer->getPosition() + diff + norm * mPlayer->col->mRadius);
+
+
+
+			//ptop = ptop - (norm.Dot(ptop) * norm);
+
+			ptop = ptop - (ptr->getNormal().Dot(ptop) * norm);
+
+			//this->mPlayer->setPrevPos(this->mPlayer->getPrevPos() + ptop);
+
+			ptop = -ptop;
+			this->mPlayer->setPosition(this->mPlayer->getPrevPos() + ptop);
+
+			//this->mPlayer->setPosition(ptr->getOBB().mPoint);
+
+
+
+		}
+	}
+
+}
+
 void EntityHandler::setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	Trap* test = new Trap(1000, 25, 0, -74);
@@ -1377,81 +1460,9 @@ void EntityHandler::update(ID3D11DeviceContext* context, float dt)
 	this->mPlayer->updatePosition(dt);
 	this->mEnemy->updatePosition(this->mEntityRenderer->getGraphicsData(), context, this->mPlayer->getPosition());
 
-	//Wall intersection test
-	for (Entity *wall : this->mEntities) 
-	{
-		Wall* ptr = dynamic_cast<Wall*>(wall);
+	this->updateCollision();
 
-		if (ptr && ptr->getAABB().aabbVSCapsule(*this->getPlayer()->col)) {
-			DirectX::SimpleMath::Vector3 ptop = this->mPlayer->getPrevPos() - this->mPlayer->getPosition();
-
-			
-
-			DirectX::SimpleMath::Vector3 norm = ptr->getNormal();
-			//DirectX::SimpleMath::Vector3 norm = ptr->getAABB().calculateNormal(*this->mPlayer->col);
-
-			//DirectX::SimpleMath::Vector3 norm = ptr->getAABB().getNormal(*this->getPlayer()->col);
-			//DirectX::SimpleMath::Vector3 diff;
-			//diff = mPlayer->getPosition() - ptr->getAABB().mPoint;
-			//
-			//DirectX::SimpleMath::Vector3 tmp1 = diff;
-			//DirectX::SimpleMath::Vector3 tmp2 = norm;
-			//
-			//tmp1.Normalize();
-			//tmp2.Normalize();
-			//
-			//diff = (tmp2.Dot(tmp1) * diff); //STÄMMER KAPPA
-			//diff = norm - diff;
-			//norm.Normalize();
-			//this->mPlayer->setPosition(mPlayer->getPosition() + diff + norm * mPlayer->col->mRadius);
-
-
-
-			//ptop = ptop - (norm.Dot(ptop) * norm);
-
-			ptop = ptop - (ptr->getNormal().Dot(ptop) * norm);
-
-			//this->mPlayer->setPrevPos(this->mPlayer->getPrevPos() + ptop);
-			
-			ptop = -ptop;
-			this->mPlayer->setPosition(this->mPlayer->getPrevPos() + ptop);
-			
-			//this->mPlayer->setPosition(ptr->getOBB().mPoint);
-			
-					
-
-		}
-	}
-
-	//Updating emitters
-	DirectX::SimpleMath::Vector3 feet = this->mPlayer->getPosition();
-	feet.x -= 0.5f;
-
-	this->mAudioManager->updateEmitter(1, feet);
-	this->mAudioManager->updateListener(this->mPlayer->getPosition(),
-		this->mPlayer->getCamera()->getForward(),
-		this->mPlayer->getCamera()->getUp());
-
-
-	//Playing footsteps when player walks. could be moved into
-	//player class. Right now more of a proof of concept
-	if (abs(this->mPlayer->getVelocity().x) + abs(this->mPlayer->getVelocity().z) >= 0.3f 
-		&& !this->footstepsPlaying
-		&& this->mPlayer->getVelocity().y == 0)
-	{
-		//Pitch should wary to make it less repetetive
-		this->mAudioManager->playInstance(1, true, -0.6f);
-		this->footstepsPlaying = true;
-	}
-
-	else if ((abs(this->mPlayer->getVelocity().x) + abs(this->mPlayer->getVelocity().z) < 0.3f 
-		|| this->mPlayer->getVelocity().y != 0)
-		&& this->footstepsPlaying 
-		)
-	{
-		this->mAudioManager->stopInstance(1, false);
-		this->footstepsPlaying = false;
-	}
+	this->updateAudio();
 }
 
 EntityRenderer* EntityHandler::getEntityRenderer()

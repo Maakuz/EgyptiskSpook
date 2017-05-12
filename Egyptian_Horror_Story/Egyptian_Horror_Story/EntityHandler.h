@@ -31,6 +31,9 @@ private:
 
 	void hardcodedMap(ID3D11Device* device);
 	void loadEntityModel(std::string modelName, wchar_t* textureName, Entity* entity, ID3D11Device* device);
+	void updateAudio();
+	void updateCollision();
+
 public:
 	EntityHandler();
 	virtual ~EntityHandler();
