@@ -1,12 +1,8 @@
-
 #ifndef GAME_H
 #define GAME_H
 #include "GraphicsHandler.h"
 #include "EntityHandler.h"
-#include "CameraClass.h"
 #include "GUIRenderer.h"
-#include "OptionsHandler.h"
-#include "AudioManager.h"
 
 class Game
 {
@@ -28,6 +24,9 @@ private:
 	GUIRenderer *mGuiRenderer; //temp
 	AudioManager mAudioManager;
 	OptionsHandler* mOptionHandler;
+
+	void setupRenderers();
+	void setupEntityHandler();
 public:
 	Game(GraphicsHandler* graphicsHandler, OptionsHandler* options);
 	virtual ~Game();

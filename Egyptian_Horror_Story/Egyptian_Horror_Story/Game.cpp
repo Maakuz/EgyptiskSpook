@@ -1,29 +1,8 @@
 #include "Game.h"
 #include "ParticleRenderer.h"
 
-Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options) {
-	this->mStateHandler = new StateHandler();
-	this->mStateHandler->setState(GAMESTATE::PLAY);
-
-	this->mGraphics = mGraphicsHandler;
-	this->mOptionHandler = options;
-
-	this->mOptionHandler->setup(this->mGraphics->getDevice());
-
-	this->mEntityHandler = new EntityHandler();
-
-	this->mCamera = new CameraClass(this->mGraphics->getDevice(),
-		this->mEntityHandler->getEntityRenderer()->getGraphicsData(),
-		this->mOptionHandler->getGraphicSettings()
-	);
-	
-	this->mEntityHandler->setupAudioManager(&this->mAudioManager);
-	this->mEntityHandler->setupPlayer(this->mGraphics->getDevice(), 
-		this->mGraphics->getDeviceContext(),
-		this->mCamera);
-
-	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
-	
+void Game::setupRenderers()
+{
 	mGuiRenderer = new GUIRenderer();
 	this->mGraphics->addRenderer(mGuiRenderer);
 
@@ -33,10 +12,42 @@ Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options) {
 	this->mGraphics->setupRenderers();
 	this->mGraphics->setupLightViewport(mEntityHandler->getPlayer()->getLight());
 	this->mGraphics->setupDSAndSRViews();
+}
 
+void Game::setupEntityHandler()
+{
+
+	this->mEntityHandler->setupAudioManager(&this->mAudioManager);
+	this->mEntityHandler->setupPlayer(this->mGraphics->getDevice(),
+		this->mGraphics->getDeviceContext(),
+		this->mCamera);
+
+	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
+
+	//this is neccessary for the traps
 	this->mAIHandler = new AIHandler(mEntityHandler->getEnemy(), mEntityHandler->getPlayer());
 
 	this->mEntityHandler->setupTraps(this->mAIHandler, this->mGraphics->getDevice(), this->mGraphics->getDeviceContext());
+}
+
+Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options) {
+	this->mStateHandler = new StateHandler();
+	this->mEntityHandler = new EntityHandler();
+
+	this->mStateHandler->setState(GAMESTATE::PLAY);
+
+	this->mGraphics = mGraphicsHandler;
+	this->mOptionHandler = options;
+
+	this->mOptionHandler->setup(this->mGraphics->getDevice());
+	
+	this->mCamera = new CameraClass(this->mGraphics->getDevice(),
+		this->mEntityHandler->getEntityRenderer()->getGraphicsData(),
+		this->mOptionHandler->getGraphicSettings());
+
+	this->setupEntityHandler();
+
+	this->setupRenderers();
 }
 
 Game::~Game()
@@ -73,12 +84,8 @@ void Game::update(float dt) {
 
 bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
 {
-	bool res = this->mEntityHandler->getPlayer()->handleMouseKeyPress(key);
-
-	if (res)
-		this->mOptionHandler->handleButtonPress(key, this->mGraphics->getDeviceContext());
-	else
-		res = this->mOptionHandler->handleButtonPress(key, this->mGraphics->getDeviceContext());
+	this->mEntityHandler->getPlayer()->handleMouseKeyPress(key);
+	this->mOptionHandler->handleButtonPress(key, this->mGraphics->getDeviceContext());
 
 	switch (key.keysym.scancode)
 	{
@@ -90,20 +97,15 @@ bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
 		break;
 	}
 
-	return res;
+	return true;
 }
 
 bool Game::handleMouseKeyRelease(SDL_KeyboardEvent const& key)
 {
-	bool res = this->mEntityHandler->getPlayer()->handleMouseKeyRelease(key);
+	this->mEntityHandler->getPlayer()->handleMouseKeyRelease(key);
+	this->mOptionHandler->handleButtonRelease(key, this->mGraphics->getDeviceContext());
 
-	if (res)
-		this->mOptionHandler->handleButtonRelease(key, this->mGraphics->getDeviceContext());
-
-	else
-		res = this->mOptionHandler->handleButtonRelease(key, this->mGraphics->getDeviceContext());
-
-	return res;
+	return true;
 }
 
 void Game::handleMouseMotion(SDL_MouseMotionEvent const &motion)
