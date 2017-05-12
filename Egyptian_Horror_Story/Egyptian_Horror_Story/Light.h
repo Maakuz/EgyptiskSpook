@@ -14,8 +14,6 @@ class Light
 {
 private:
 	float mLightFOV;
-	float mWidth;
-	float mHeight;
 
 	lightStructs::VP mMatrices;
 	lightStructs::lightPosDir mPosDir;
@@ -34,9 +32,6 @@ public:
 	void update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 offset, DirectX::SimpleMath::Vector3 dir);
 
 	void operator=(const Light& other) = delete;
-	
-	float getHeight() const;
-	float getWidth() const;
 
 	int getGraphicsKey() const;
 
