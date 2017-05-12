@@ -12,6 +12,10 @@ function getSize()
 	return 5, 3, 5 -- width, height, depth
 end
 
+function isImpassible()
+	return not first
+end
+
 function update()
 end
 

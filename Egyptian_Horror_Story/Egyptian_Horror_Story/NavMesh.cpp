@@ -160,8 +160,8 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 		}
 	}
 
-	path.push_back(Vector3(toX, 0, toZ));
-	path.push_back(getPosition(node));
+	// path.push_back(Vector3(toX, 0, toZ)); Dont need to go to player exact pixel,
+											// enemy can attack, wrestling is not needed
 	while (true) {
 		path.push_back(getPosition(parent.node));
 		if (parent.parentIndex == 0) break;
@@ -174,7 +174,6 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 
 	savePathTest(path);
 
-	SDL_Log("Path started, Size: %d", path.size());
 	return path;
 }
 

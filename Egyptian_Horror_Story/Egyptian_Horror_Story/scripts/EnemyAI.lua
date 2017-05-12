@@ -7,7 +7,7 @@ sawPlayerLastFrame = false
 
 -- Speeds
 walkSpeed = 0.04
-runSpeed = 0.15
+runSpeed = 0.10
 
 -- Waypoint System
 prevWaypoint = 0
@@ -46,12 +46,22 @@ end
 
 function update()
 	frame = frame + 1
-	if frame % 10 == 0 and not onPlayerPath and SeesPlayer() then
-		pathToPlayer()
-		sawPlayerLastFrame = true
-	elseif frame & 10 == 0 and sawPlayerLastFrame and not SeesPlayer() then
-		pathToPlayer()
-		sawPlayerLastFrame = false
+	if frame % 10 == 0 then
+		seesPlayer = SeesPlayer()
+		if not onPlayerPath or not sawPlayerLastFrame and seesPlayer then
+			pathToPlayer()
+			sawPlayerLastFrame = true
+		elseif sawPlayerLastFrame and not seesPlayer then
+			pathToPlayer()
+			sawPlayerLastFrame = false
+		end
+	end
+	
+	if frame % 100 then
+		if seesPlayer() then
+			pathToPlayer()
+			sawPlayerLastFrame = true
+		end
 	end
 end
 
