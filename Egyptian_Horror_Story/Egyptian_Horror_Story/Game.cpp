@@ -21,7 +21,7 @@ Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options)
 		this->mCamera);
 
 	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
-
+	
 	mGuiRenderer = new GUIRenderer();
 	this->mGraphics->addRenderer(mGuiRenderer);
 
