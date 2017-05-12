@@ -159,15 +159,6 @@ void GraphicsHandler::setupSamplerState() {
 	mContext->PSSetSamplers(0, 1, &mSamplerState);
 }
 
-void GraphicsHandler::setupLightViewport(Light* light)
-{
-	this->mViewportShadow.Height = this->mViewport.Height;
-	this->mViewportShadow.Width = this->mViewport.Width;
-	this->mViewportShadow.MaxDepth = 1.f;
-	this->mViewportShadow.MinDepth = 0.f;
-	this->mViewportShadow.TopLeftX = mViewport.TopLeftY = 0;
-}
-
 void GraphicsHandler::addRenderer(Renderer *renderer) {
 	mRenderers.push_back(renderer);
 }
@@ -232,7 +223,6 @@ void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightWVP,
 
 			this->mContext->VSSetConstantBuffers(0, 1, &lightWVP);
 			this->mContext->OMSetRenderTargets(0, nullptr, this->mDSVShadow);
-			this->mContext->RSSetViewports(1, &this->mViewportShadow);
 
 			renderer->render(mContext, mShaderHandler, state);
 			
@@ -248,9 +238,6 @@ void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightWVP,
 
 	ID3D11Buffer* temp = mOptions->getBrightnessBuffer();
 	this->mContext->PSSetConstantBuffers(3, 1, &temp);
-	
-
-	this->mContext->RSSetViewports(1, &this->mViewport);
 
 	for (const auto& renderer : mRenderers) {
 		if (renderer->getIdentifier() != state &&

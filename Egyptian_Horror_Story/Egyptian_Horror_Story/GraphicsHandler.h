@@ -1,10 +1,8 @@
 #ifndef GRAPHICSHANDLER_H
 #define GRAPHICSHANDLER_H
 
-#include "ShaderHandler.h"
 #include "EntityRenderer.h"
 #include "Light.h"
-#include "GraphicsData.h"
 #include "OptionsHandler.h"
 #include <vector>
 
@@ -25,8 +23,6 @@ private:
 
 	ID3D11Debug* mDebugDevice;
 
-	D3D11_VIEWPORT mViewportShadow;
-
 	ID3D11DepthStencilView* mDSVShadow;
 	ID3D11ShaderResourceView* mSRVShadow;
 	OptionsHandler* mOptions;
@@ -44,7 +40,6 @@ public:
 	void setupViewport(int width, int height);
 
 	void setupSamplerState();
-	void setupLightViewport(Light* light);
 	void setupDSAndSRViews();
 
 	//this class will delete the renderers!

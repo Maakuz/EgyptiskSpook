@@ -10,7 +10,6 @@ void Game::setupRenderers()
 	this->mGraphics->addRenderer(this->mEntityHandler->getEntityRenderer());
 
 	this->mGraphics->setupRenderers();
-	this->mGraphics->setupLightViewport(mEntityHandler->getPlayer()->getLight());
 	this->mGraphics->setupDSAndSRViews();
 }
 
