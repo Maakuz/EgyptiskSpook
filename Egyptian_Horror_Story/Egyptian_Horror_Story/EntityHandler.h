@@ -28,6 +28,7 @@ private:
 	int mNrOfKeys;
 
 	void hardcodedMap(ID3D11Device* device);
+	void loadEntityModel(std::string modelName, wchar_t* textureName, int key, ID3D11Device* device);
 public:
 	EntityHandler();
 	virtual ~EntityHandler();

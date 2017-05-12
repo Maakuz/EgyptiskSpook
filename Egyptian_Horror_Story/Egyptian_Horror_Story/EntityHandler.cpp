@@ -1288,6 +1288,22 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	this->mEntityRenderer->loadObject(device, wall->getKey(), testData34, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 }
 
+void EntityHandler::loadEntityModel(std::string modelName, wchar_t* textureName, int key, ID3D11Device* device)
+{
+	std::vector<EntityStruct::VertexStruct> temp;
+
+	this->mLoader.loadMesh(temp, modelName);
+
+	this->mEntityRenderer->loadObject(
+		device,
+		key,
+		temp.data(),
+		temp.size(),
+		sizeof(DirectX::XMFLOAT4X4),
+		textureName
+		);
+}
+
 void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera)
 {
 	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData());
@@ -1295,18 +1311,8 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 
 	this->mEnemy = new Enemy(ENEMY_KEY);
 
-	std::vector<EntityStruct::VertexStruct> test;
-
-	this->mLoader.loadMesh(test, "ModelTestTri.fbx");
-
-	this->mEntityRenderer->loadObject(
-		device,
-		mEnemy->getKey(),
-		test.data(),
-		test.size(),
-		sizeof(DirectX::XMFLOAT4X4),
-		L"dargon_bump.jpg");
-
+	this->loadEntityModel("ModelTestTri.fbx", L"dargon_bump.jpg", this->mEnemy->getKey(), device);
+			
 	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
 }
 
@@ -1320,6 +1326,7 @@ EntityHandler::~EntityHandler()
 {
 	delete this->mPlayer;
 	delete this->mEnemy;
+	delete this->mFlashlightModel;
 
 	for (size_t i = 0; i < this->mEntities.size(); i++)
 	{
@@ -1331,21 +1338,9 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 {
 	this->hardcodedMap(device);
 
-	std::vector<EntityStruct::VertexStruct> lightVec;
-
-	this->mLoader.loadMesh(lightVec, "flashLight.fbx");
-
 	this->mFlashlightModel = new Entity(this->mPlayer->getLight()->getGraphicsKey());
 
-	this->mEntities.push_back(mFlashlightModel);
-
-	this->mEntityRenderer->loadObject(
-		device, 
-		mFlashlightModel->getKey(),
-		lightVec.data(),
-		lightVec.size(),
-		sizeof(DirectX::XMMATRIX),
-		L"dargon_bump.jpg");
+	this->loadEntityModel("flashLight.fbx", L"dargon_bump.jpg", mFlashlightModel->getKey(), device);
 
 }
 
