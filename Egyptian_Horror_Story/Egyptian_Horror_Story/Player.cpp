@@ -13,7 +13,7 @@
 
 using namespace DirectX::SimpleMath;
 
-Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int key, GraphicsData* gData, GraphicsData* gData2)
+Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int key, GraphicsData* gData)
 	:Entity(key)
 {
 	this->mCamera = camera;
@@ -33,7 +33,7 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 	this->mJumping = false;
 	this->mJumpingVelocity = 0;
 
-	this->mLight = new Light(this->getPosition(), this->mCamera->getForward(), device, context, gData, gData2);
+	this->mLight = new Light(this->mCamera->getPos(), this->mCamera->getForward(), device, context, gData);
 }
 
 Player::~Player()
@@ -168,6 +168,11 @@ Light* Player::getLight()
 	return this->mLight;
 }
 
+CameraClass* Player::getCamera()
+{
+	return this->mCamera;
+}
+
 void Player::setPosition(DirectX::SimpleMath::Vector3 pos)
 {
 	Entity::setPosition(pos);
@@ -191,12 +196,12 @@ void Player::setPrevPos(DirectX::SimpleMath::Vector3 pos)
 
 // private
 void Player::updateLightPosition() {
-	DirectX::SimpleMath::Vector3 lightPos = this->mCamera->getPos();
+	DirectX::SimpleMath::Vector3 offset;
 
-	lightPos += this->mCamera->getRight() * 0.7f;
-	lightPos += this->mCamera->getUp() * -1.f;
+	offset += this->mCamera->getRight() * 0.7f;
+	offset += this->mCamera->getUp() * -1.f;
 
-	this->mLight->update(lightPos, this->mCamera->getForward());
+	this->mLight->update(this->mCamera->getPos(), offset, this->mCamera->getForward());
 }
 
 void Player::computeVelocity() {
@@ -246,4 +251,8 @@ float inline Player::getMovementMultiplier() {
 	}
 	
 	return 1.f;
+}
+
+void Player::damage() {
+	// todo
 }

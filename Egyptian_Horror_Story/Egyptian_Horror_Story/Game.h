@@ -4,6 +4,9 @@
 #include "EntityHandler.h"
 #include "CameraClass.h"
 #include "AIHandler.h"
+#include "GUIRenderer.h"
+#include "OptionsHandler.h"
+#include "AudioManager.h"
 
 class Game
 {
@@ -22,8 +25,11 @@ private:
 	CameraClass* mCamera;
 	EntityHandler* mEntityHandler;
 	AIHandler* mAIHandler;
+	GUIRenderer *mGuiRenderer; //temp
+	AudioManager mAudioManager;
+	OptionsHandler* mOptionHandler;
 public:
-	Game(GraphicsHandler* graphicsHandler, float width, float height);
+	Game(GraphicsHandler* graphicsHandler, OptionsHandler* options);
 	virtual ~Game();
 
 	void updateGame();
@@ -33,6 +39,7 @@ public:
 	bool handleMouseKeyRelease(SDL_KeyboardEvent const &key);
 	void handleMouseMotion(SDL_MouseMotionEvent const &motion);
 	void updateLua();
+	void setWindowSize(SDL_Window* window);
 };
 
 

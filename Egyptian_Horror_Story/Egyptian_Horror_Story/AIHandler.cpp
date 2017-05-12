@@ -1,8 +1,11 @@
-#include "AIHandler.h"
 #include <SDL.h> //for printing errors and stuff
+
+#include "AIHandler.h"
+#include "SimpleMath.h"
+#include "AICFunctions.h"
+
 #define TEST "scripts/test.lua"
 #define AI "scripts/EnemyAI.lua"
-#include "SimpleMath.h"
 
 using namespace DirectX::SimpleMath;
 
@@ -11,7 +14,7 @@ AIHandler::AIHandler(Enemy *enemy, Player *player) :
 	mEnemyState = luaL_newstate();
 
 	// TESTING
-	testTrap = new Trap(0, 17, 0, -74);
+	testTrap = new Trap(0, 25, 0, -74);
 	addTrap("scripts/TrapStone.lua", testTrap);
 
 	setupAI();
@@ -33,6 +36,7 @@ AIHandler::~AIHandler() {
 void AIHandler::setupTraps() {
 	for (TrapScript &trap : mTraps) {
 		lua_State *state = trap.state;
+		setupTrapState(trap);
 
 		lua_getglobal(state, "onStart");
 		handleError(state, lua_pcall(state, 0, 0, 0));
@@ -51,15 +55,15 @@ void AIHandler::setupTraps() {
 	}
 }
 
-void AIHandler::addTrap(char const *scriptPath, Trap *trap) {
-	lua_State *state = luaL_newstate();
-	int error = luaL_loadfile(state, scriptPath) || lua_pcall(state, 0, 0, 0);
-	handleError(state, error);
-	luaL_openlibs(state);
+void AIHandler::setupTrapState(TrapScript &trap) {
+	int error = luaL_loadfile(trap.state, trap.scriptPath) || lua_pcall(trap.state, 0, 0, 0);
+	handleError(trap.state, error);
+	luaL_openlibs(trap.state);
+	addLuaFunctionsTrap(trap.state, trap.trap);
+}
 
-	TrapScript script { trap, state };
-	addLuaFunctionsTrap(state, trap);
-	mTraps.push_back(script);
+void AIHandler::addTrap(char const *scriptPath, Trap *trap) {
+	mTraps.push_back({ trap, luaL_newstate(), scriptPath });
 }
 
 void AIHandler::setupEnemy() {
@@ -81,12 +85,12 @@ void AIHandler::setupAI() {
 
 void AIHandler::addLuaFunctionsEnemy() {
 	// For debugging
-	addLuaFunction(mEnemyState, "Log", log, nullptr, 0);
+	addLuaFunction(mEnemyState, "Log", AICFunctions::log, nullptr, 0);
 
 	// ENEMY SPEED & POSITION
 	void *userData[] = { mEnemy };
-	addLuaFunction(mEnemyState, "SetEnemySpeed", setEnemySpeed, userData, ARRAYSIZE(userData));
-	addLuaFunction(mEnemyState, "GetEnemyPosition", getEntityPosition, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "SetEnemySpeed", AICFunctions::setEnemySpeed, userData, ARRAYSIZE(userData));
+	addLuaFunction(mEnemyState, "GetEnemyPosition", AICFunctions::getEntityPosition, userData, ARRAYSIZE(userData));
 	addLuaFunction(mEnemyState, "SetEnemyWaypoint", Enemy::updateWaypoint, userData, ARRAYSIZE(userData));
 
 	addLuaFunction(mEnemyState, "IsEnemyOnPath", Enemy::onPathLua, userData, ARRAYSIZE(userData));
@@ -98,32 +102,43 @@ void AIHandler::addLuaFunctionsEnemy() {
 
 	// PLAYER POSITION
 	void *userData2[] = { mPlayer };
-	addLuaFunction(mEnemyState, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(mEnemyState, "GetPlayerPosition", AICFunctions::getEntityPosition, userData2, ARRAYSIZE(userData2));
 	
 	// GET DISTANCE BEETWEN
 	void *userData3[] = { mEnemy, mPlayer };
-	addLuaFunction(mEnemyState, "GetDistanceBetween", getDistanceBetween, userData3, ARRAYSIZE(userData3));
+	addLuaFunction(mEnemyState, "GetDistanceBetween", AICFunctions::getDistanceBetween, userData3, ARRAYSIZE(userData3));
 
 	void *userData4[] = { mEnemy, mPlayer, &navMesh };
-	addLuaFunction(mEnemyState, "LoadPathToPlayer", loadPathToEntity, userData4, ARRAYSIZE(userData4));
-	addLuaFunction(mEnemyState, "SeesPlayer", entitySeesEntity, userData4, ARRAYSIZE(userData4));
+	addLuaFunction(mEnemyState, "LoadPathToPlayer", AICFunctions::loadPathToEntity, userData4, ARRAYSIZE(userData4));
+	addLuaFunction(mEnemyState, "SeesPlayer", AICFunctions::entitySeesEntity, userData4, ARRAYSIZE(userData4));
+
+	void *userData5[] = { mEnemy, &navMesh };
+	addLuaFunction(mEnemyState, "LoadPathToPoint", AICFunctions::loadPathToPoint, userData5, ARRAYSIZE(userData5));
 }
 
 void AIHandler::addLuaFunctionsTrap(lua_State *state, Trap *trap) {
 	// For testing
-	addLuaFunction(state, "Log", log, nullptr, 0);
+	addLuaFunction(state, "Log", AICFunctions::log, nullptr, 0);
 
 	// TRAP FUNCTIONS
 	void *userData[] = { trap };
-	addLuaFunction(state, "GetPosition", getEntityPosition, userData, ARRAYSIZE(userData));
+	addLuaFunction(state, "GetPosition", AICFunctions::getEntityPosition, userData, ARRAYSIZE(userData));
 
 	// PLAYER FUNCTIONS
 	void *userData2[] = { mPlayer };
-	addLuaFunction(state, "GetPlayerPosition", getEntityPosition, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(state, "GetPlayerPosition", AICFunctions::getEntityPosition, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(state, "SetPlayerPosition", AICFunctions::setEntityPosition, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(state, "SlowPlayer", AICFunctions::slowEntity, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(state, "StunPlayer", AICFunctions::stunEntity, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(state, "PushbackPlayer", AICFunctions::pushbackEntity, userData2, ARRAYSIZE(userData2));
+	addLuaFunction(state, "DamagePlayer", AICFunctions::damagePlayer, userData2, ARRAYSIZE(userData2));
 
 	// Enemy FUNCTIONS
 	void *userData3[] = { mEnemy };
-	addLuaFunction(state, "GetEnemyPosition", getEntityPosition, userData3, ARRAYSIZE(userData3));
+	addLuaFunction(state, "GetEnemyPosition", AICFunctions::getEntityPosition, userData3, ARRAYSIZE(userData3));
+	addLuaFunction(state, "SlowEnemy", AICFunctions::slowEntity, userData3, ARRAYSIZE(userData3));
+	addLuaFunction(state, "StunEnemy", AICFunctions::stunEntity, userData3, ARRAYSIZE(userData3));
+	addLuaFunction(state, "PushbackEnemy", AICFunctions::pushbackEntity, userData3, ARRAYSIZE(userData3));
 }
 
 void AIHandler::addLuaFunction(lua_State *state, const char *name,
@@ -153,8 +168,8 @@ void AIHandler::update() {
 	}
 	Vector3 pPos = mPlayer->getPosition();
 	Vector2 pixelPos = navMesh.toPixelCoord(pPos.x, pPos.z);
-	SDL_Log("Pixel coords: %f/%f, Real coords: %f/%f",
-		pixelPos.x, pixelPos.y, pPos.x, pPos.z);
+	//SDL_Log("Pixel coords: %f/%f, Real coords: %f/%f",
+	//	pixelPos.x, pixelPos.y, pPos.x, pPos.z);
 
 	for (TrapScript &script : mTraps) {
 		lua_State *state = script.state;
@@ -174,89 +189,13 @@ void AIHandler::update() {
 	}
 }
 
-// LUA
-int AIHandler::setEnemySpeed(lua_State *state) {
-	Enemy *enemy = static_cast<Enemy*>
-		(lua_touserdata(state, lua_upvalueindex(1)));
-
-	if (lua_isnumber(state, -1)) {
-		enemy->setSpeed(static_cast<float> (lua_tonumber(state, -1)));
-		lua_pop(state, 1);
-	}
-
-	return 0;
-}
-
-int AIHandler::getEntityPosition(lua_State *state) {
-	Entity *entity = static_cast<Entity*>
-		(lua_touserdata(state, lua_upvalueindex(1)));
-	Vector3 position = entity->getPosition();
-	lua_pushnumber(state, position.x);
-	lua_pushnumber(state, position.y);
-	lua_pushnumber(state, position.z);
-	return 3;
-}
-
-int AIHandler::getDistanceBetween(lua_State *state) {
-	Entity *entity1 = static_cast<Entity*>
-		(lua_touserdata(state, lua_upvalueindex(1)));
-	Entity *entity2 = static_cast<Entity*>
-		(lua_touserdata(state, lua_upvalueindex(2)));
-
-	Vector3 eToE2 = entity1->getPosition() - entity2->getPosition();
-
-	lua_pushnumber(state, eToE2.Length());
-
-	return 1;
-}
-
-int AIHandler::entitySeesEntity(lua_State *state) {
-	Enemy *entity1 = static_cast<Enemy*>
-		(lua_touserdata(state, lua_upvalueindex(1)));
-	Entity *entity2 = static_cast<Entity*>
-		(lua_touserdata(state, lua_upvalueindex(2)));
-	NavMesh *navMesh = static_cast<NavMesh*>
-		(lua_touserdata(state, lua_upvalueindex(3)));
-
-	Vector3 e1Pos = entity1->getPosition();
-	Vector3 e2Pos = entity2->getPosition();
-
-	lua_pushboolean(state, navMesh->canSeeFrom(e1Pos.x, e1Pos.z, e2Pos.x, e2Pos.z));
-
-	return 1;
-}
-
-int AIHandler::loadPathToEntity(lua_State *state) {
-	Enemy *enemy = static_cast<Enemy*>
-		(lua_touserdata(state, lua_upvalueindex(1)));
-	Entity *entity = static_cast<Entity*>
-		(lua_touserdata(state, lua_upvalueindex(2)));
-	NavMesh *navMesh = static_cast<NavMesh*>
-		(lua_touserdata(state, lua_upvalueindex(3)));
-
-	enemy->setPath(navMesh->getPathToCoord(entity->getPosition().x,
-										   entity->getPosition().z));
-
-	return 0;
-}
-
-
-int AIHandler::log(lua_State *state) {
-	if (lua_isstring(state, -1)) {
-		SDL_Log(lua_tostring(state, -1));
-	}
-
-	return 0;
-}
-
-// private
 bool inline AIHandler::handleError(lua_State *state, int error) {
 	if (error) {
-			SDL_Log("Error: %s", lua_tostring(state, -1));
-			lua_pop(state, 1);
-			return false;
+		SDL_Log("Error: %s", lua_tostring(state, -1));
+		lua_pop(state, 1);
+		return false;
 	}
-	
+
 	return true;
 }
 
@@ -281,3 +220,15 @@ void AIHandler::testScript() {
 
 	lua_close(test);
 }
+
+int AIHandler::getNavMeshWidth() const {
+	return navMesh.getWidth();
+}
+
+int AIHandler::getNavMeshHeight() const {
+	return navMesh.getHeight();
+}
+
+void* AIHandler::getNavigationTexture() const {
+	return navMesh.getNavigationTexture();
+} //this is for debugging

@@ -33,12 +33,13 @@ bool GraphicsData::loadTexture(int key, wchar_t* fileName, ID3D11Device* device)
 
 	path += fileName;
 
+	if (mSrvs[key])
+		mSrvs[key]->Release();
 	HRESULT hr = DirectX::CreateWICTextureFromFile(device, path.c_str(), nullptr, &mSrvs[key]);
 
 
 	if (SUCCEEDED(hr))
 		return true;
-
 	else
 		hr = DirectX::CreateWICTextureFromFile(device, L"../Resource/Textures/placeholder.png", nullptr, &mSrvs[key]);
 
@@ -90,7 +91,7 @@ void GraphicsData::createVerticeArray(int key, EntityStruct::VertexStruct* verti
 	this->mNrOfVertices[key] = nrOfVertices;
 	this->mVertices[key] = new EntityStruct::VertexStruct[nrOfVertices];
 
-	for (size_t i = 0; i < nrOfVertices; i++)
+	for (int i = 0; i < nrOfVertices; i++)
 	{
 		this->mVertices.at(key)[i] = vertices[i];
 	}

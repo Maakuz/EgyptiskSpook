@@ -1,9 +1,18 @@
 -- @author LW
 
-walkSpeed = 0.05
-runSpeed = 0.09
+-- Pathing
+onPlayerPath = false
+onPointPath = false
+sawPlayerLastFrame = false
+
+-- Speeds
+walkSpeed = 0.04
+runSpeed = 0.10
+
+-- Waypoint System
 prevWaypoint = 0
 currentWaypoint = 1
+
 waypoints = { -- c = connections, length beetwen gets calc in c++
 				{x = -6, y = 0, z = 6, c = {2, 4}},
 				{x = -6, y = 0, z = -47, c = {1, 7, 5}},
@@ -14,6 +23,9 @@ waypoints = { -- c = connections, length beetwen gets calc in c++
 				{x = 17, y = 0, z = -47, c = {2, 3, 8}},
 				{x = 17, y = 0, z = -61, c = {7}},
 			}
+			
+-- Frame Counter
+frame = 0
 
 function onStart()
 	SetEnemySpeed(walkSpeed)
@@ -21,7 +33,6 @@ function onStart()
 end
 
 function onReachingWaypoint()
-	Log("Reached Waypoint")
 	local toCon = math.random(1, #waypoints[currentWaypoint].c)
 	local temp = waypoints[currentWaypoint].c[toCon]
 	
@@ -34,20 +45,60 @@ function onReachingWaypoint()
 end
 
 function update()
-	local lSeesPlayer = SeesPlayer()
-	if lSeesPlayer then
-		SetEnemySpeed(runSpeed)
-		pathToPlayer()
+	frame = frame + 1
+	if frame % 10 == 0 then
+		seesPlayer = SeesPlayer()
+		if not onPlayerPath or not sawPlayerLastFrame and seesPlayer then
+			pathToPlayer()
+			sawPlayerLastFrame = true
+		elseif sawPlayerLastFrame and not seesPlayer then
+			pathToPlayer()
+			sawPlayerLastFrame = false
+		end
+	end
+	
+	if frame % 200 == 0 then
+		if onPlayerPath and SeesPlayer() then
+			pathToPlayer()
+			sawPlayerLastFrame = true
+		end
 	end
 end
 
 function onReachingPathEnd()
+	SetEnemySpeed(walkSpeed)
+	if SeesPlayer() then
+		pathToPlayer()
+	elseif onPointPath then
+		onReachingPointPathEnd()
+	else
+		StopPathing()
+		pathToWaypoint()
+	end
+end
+
+function onReachingPointPathEnd()
 	StopPathing()
-	SetEnemyWaypoint(waypoints[currentWaypoint]) -- should get closest waypoint in line of sight
+	SetEnemyWaypoint(waypoints[currentWaypoint])
+		
+	onPointPath = false
 end
 
 function pathToPlayer()
+	SetEnemySpeed(runSpeed)
 	SetCurrentPathNode(0)
 	LoadPathToPlayer()
 	StartPathing()
+	
+	onPlayerPath = true
+	onPointPath = false
+end
+
+function pathToWaypoint()
+	SetCurrentPathNode(0)
+	LoadPathToPoint(waypoints[currentWaypoint].x, waypoints[currentWaypoint].z)
+	StartPathing()
+	
+	onPointPath = true
+	onPlayerPath = false
 end

@@ -1,8 +1,8 @@
 #include "ParticleRenderer.h"
 #include <math.h> 
 #define SHADERS 30
-#define DIVIDE 4 // should be divisible by 2
-#define START_SIZE 4096  // should be divisible by 2
+#define DIVIDE 2// should be divisible by 2
+#define START_SIZE 2048  // should be divisible by 2
 
 using namespace DirectX::SimpleMath;
 
@@ -36,7 +36,6 @@ void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	mGraphicsData->createVertexBuffer(0, getSize(), &data, device, true);
 	mGraphicsData->createConstantBuffer(1, sizeof(Vector4), nullptr, device, true);
 	mGraphicsData->loadTexture(0, L"sand.png", device);
-	mGraphicsData->loadTexture(1, L"enemy.png", device);
 }
 
 void ParticleRenderer::updateCameraBuffer(ID3D11DeviceContext *context) {
@@ -59,8 +58,8 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 		ParticleVertex *particle = &this->mParticleVertices[i];
 		ParticleData *data = &this->mParticleData[i];
 
-		// TEMP
-		particle->position += data->direction / 1000.f;
+		// TEMP It was 1000, 10 was faster particles
+		particle->position += data->direction / 40.f;
 		if (rand() % 1000 == 0) {
 			temp = getRandomNr() * 2 - 1;
 			data->direction = Vector3(temp, temp, temp);
@@ -82,8 +81,7 @@ void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shade
 						   *cam = this->mGraphicsData->getConstantBuffer(1),
 						   *vp = this->mCamera->getMatrixBuffer();
 	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
-	ID3D11ShaderResourceView *srv2 = this->mGraphicsData->getSRV(1);
-	shaders.setShaders(context, SHADERS, 20, SHADERS); //20 is from entity shader, change later
+	shaders.setShaders(context, SHADERS, SHADERS, SHADERS); //20 is from entity shader, change later
 
 	updateCameraBuffer(context);
 	updateParticles(context);
@@ -96,8 +94,6 @@ void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shade
 	context->GSSetConstantBuffers(1, 1, &cam);
 
 	context->Draw(this->mParticleVertices.size() - 1, 0);
-	context->PSSetShaderResources(0, 1, &srv2);
-	context->Draw(1, this->mParticleVertices.size() - 1);
 }
 
 UINT ParticleRenderer::getSize() const {
@@ -109,12 +105,13 @@ void ParticleRenderer::addRandomParticle(bool timeIsRandom) {
 	ParticleData partData;
 
 	//TEMP
-	particle.position = Vector3(getRandomNr() * 30 - 15, getRandomNr() * 20 - 5, getRandomNr() * 30 - 15);
+	//particle.position = Vector3(getRandomNr() * 30 - 15, getRandomNr() * 20 - 5, getRandomNr() * 30 - 15);
+	particle.position = Vector3(getRandomNr() * 20 - 10, getRandomNr() * 15 - 3, getRandomNr() * 20 - 10);
 	particle.position += this->mCamera->getPos();
 	particle.dimensions = Vector2(0.01f, 0.01f);
 
-	partData.direction = Vector3(getRandomNr() * 2 - 1, getRandomNr() * 2 - 1, 2 - 1);
-	partData.timeLeft = timeIsRandom ? getRandomNr() * 3.5f : 3.5f;
+	partData.direction = Vector3(getRandomNr() * 2 - 1, getRandomNr() * 2 - 1,getRandomNr() * 2 - 1);
+	partData.timeLeft = timeIsRandom ? getRandomNr() * 3.5f : 2.f;
 
 	this->mParticleVertices.push_back(particle);
 	this->mParticleData.push_back(partData);

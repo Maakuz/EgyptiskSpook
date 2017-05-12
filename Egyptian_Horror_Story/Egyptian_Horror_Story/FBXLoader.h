@@ -51,7 +51,6 @@ private:
 
 
 	bool loadVertices(std::vector<EntityStruct::VertexStruct>& verticeArray, FbxMesh* mesh);
-	bool loadVertices(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, FbxMesh* mesh);
 
 public:
 	FBXLoader();
@@ -59,7 +58,6 @@ public:
 
 
 	bool loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray, std::string filename);
-	bool loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, std::string filename);
 	
 
 };

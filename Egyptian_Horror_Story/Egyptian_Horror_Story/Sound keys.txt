@@ -1,0 +1,9 @@
+SOUND EFFECTS: 
+monster: 0
+footsteps: 1
+
+SOUND EFFECT INSTANCES:
+footstep loop: 1
+
+SOUND EFFECT EMITTERS:
+footstep: 1

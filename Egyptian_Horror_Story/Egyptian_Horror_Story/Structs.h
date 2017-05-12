@@ -17,14 +17,6 @@ namespace EntityStruct
 		int index;
 		float weight;
 	};
-
-	struct SkinnedVertexStruct
-	{
-		DirectX::SimpleMath::Vector3 pos;
-		DirectX::SimpleMath::Vector3 normal;
-		DirectX::SimpleMath::Vector2 uv;
-		weightAndIndex weightIndex[4];
-	};
 }
 
 namespace animation
@@ -52,14 +44,24 @@ namespace lightStructs {
 
 namespace camera 
 {
-	struct WVP
+	struct VP
 	{
-		DirectX::SimpleMath::Matrix world, view, projection;
+		DirectX::SimpleMath::Matrix view, projection;
 	};
 }
 
 
-
+namespace settings
+{
+	struct GraphicSettings
+	{
+		int width;
+		int height;
+		float fov;
+		float brightness;
+		float farPlane;
+	};
+}
 
 
 #endif

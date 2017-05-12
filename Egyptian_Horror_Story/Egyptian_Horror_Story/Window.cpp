@@ -16,12 +16,12 @@ Window::~Window() {
 	SDL_Quit();
 }
 
-bool Window::setupWindowAndSDL() {
+bool Window::setupWindowAndSDL(int width, int height) {
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO); //to use SDL_Log
 
-	mWindow = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT,
-		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+	mWindow = SDL_CreateWindow(TITLE, 0, 0, width, height,
+		SDL_WINDOW_SHOWN);
 	if (mWindow == NULL) {
 		SDL_Log("Window creation error ", SDL_GetError());
 		return false;
@@ -29,11 +29,12 @@ bool Window::setupWindowAndSDL() {
 		return true;
 }
 
-void Window::startWindowLoop(GraphicsHandler* graphicsHandler) {
+void Window::startWindowLoop(GraphicsHandler* graphicsHandler, OptionsHandler* options) {
 	mRunning = true;
 	SDL_Event event;
 
-	this->mGame = new Game(graphicsHandler, WIDTH, HEIGHT);
+	this->mGame = new Game(graphicsHandler, options);
+	this->mGame->setWindowSize(this->mWindow);
 	SDL_SetRelativeMouseMode(SDL_bool::SDL_TRUE);
 
 	while (mRunning) {

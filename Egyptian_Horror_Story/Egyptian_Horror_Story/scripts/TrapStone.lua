@@ -1,5 +1,6 @@
 -- All traps should follow this template
 position = {x = 0, y = 0, z = 0}
+first = true
 
 function onStart()
 	position.x, position.y, position.z = GetPosition(); -- it is static, so lets just get it
@@ -8,16 +9,23 @@ function onStart()
 end
 
 function getSize() 
-	return 1, 3, 1 -- width, height, depth
+	return 5, 3, 5 -- width, height, depth
+end
+
+function isImpassible()
+	return not first
 end
 
 function update()
 end
 
 function onPlayerCollision()
-	Log("Player Collision!")
+	if (first) then
+		PushbackPlayer(position.x, position.y, position.z, 1)
+		first = false
+	end
 end
 
 function onEnemyCollision()
-	Log("Enemy Collision!")
+	PushbackEnemy(position.x, position.y, position.z, 1)
 end

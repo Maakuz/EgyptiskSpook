@@ -1,18 +1,19 @@
 #include "CameraClass.h"
 
-CameraClass::CameraClass(ID3D11Device* device, GraphicsData* gData, GraphicsData* gData2, float width, float height)
+CameraClass::CameraClass(ID3D11Device* device, GraphicsData* gData, settings::GraphicSettings settings)
 {
-	this->mWVPBuffer = nullptr;
+	this->mVPBuffer = nullptr;
 	this->mGraphicsData = gData;
-	this->mGraphicsData2 = gData2;
-	float fovAngle = static_cast<float> (M_PI) * 0.45f;
-	float aspectRatio = width / height;
+	float fovAngle = static_cast<float>(M_PI) * settings.fov;
+	float aspectRatio = (float)settings.width / (float)settings.height;
 
 	this->mPitch = 0;
 	this->mYaw = 0;
 
+	this->mProjUpdated = true;
+
 	DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(
-		fovAngle, aspectRatio, 0.1f, 10000.f);
+		fovAngle, aspectRatio, 0.1f, settings.farPlane);
 
 	projection = DirectX::XMMatrixTranspose(projection);
 
@@ -27,28 +28,26 @@ CameraClass::CameraClass(ID3D11Device* device, GraphicsData* gData, GraphicsData
 	view = DirectX::XMMatrixTranspose(view);
 
 	this->mMatrices.projection = projection;
-	this->mMatrices.world = DirectX::XMMatrixIdentity();
 	this->mMatrices.view = view;
 
-	this->createVWPBuffer(device);
+	this->createVPBuffer(device);
 
 	D3D11_SUBRESOURCE_DATA data;
 	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
 	data.pSysMem = &this->mPos;
 
 	gData->createConstantBuffer(CAMPOSKEY, sizeof(DirectX::SimpleMath::Vector4), &data, device, true);
-	gData2->createConstantBuffer(CAMPOSKEY, sizeof(DirectX::SimpleMath::Vector4), &data, device, true);
 }
 
 CameraClass::~CameraClass()
 {
-	this->mWVPBuffer->Release();
+	this->mVPBuffer->Release();
 }
 
-void CameraClass::createVWPBuffer(ID3D11Device* device)
+void CameraClass::createVPBuffer(ID3D11Device* device)
 {
 	D3D11_BUFFER_DESC desc;
-	desc.ByteWidth = sizeof(camera::WVP);
+	desc.ByteWidth = sizeof(camera::VP);
 	desc.Usage = D3D11_USAGE_DYNAMIC;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	desc.MiscFlags = 0;
@@ -59,7 +58,7 @@ void CameraClass::createVWPBuffer(ID3D11Device* device)
 
 	data.pSysMem = &this->mMatrices;
 
-	HRESULT hr = device->CreateBuffer(&desc, &data, &this->mWVPBuffer);
+	HRESULT hr = device->CreateBuffer(&desc, &data, &this->mVPBuffer);
 	if (FAILED(hr))
 	{
 		MessageBox(0, L"Matrix buffer creation failed", L"error", MB_OK);
@@ -72,17 +71,18 @@ void CameraClass::update(ID3D11DeviceContext* context)
 	DirectX::SimpleMath::Matrix view =
 		DirectX::XMMatrixLookAtLH(this->mPos, this->mPos + this->mForward, this->mUp);
 	view = view.Transpose();
-	if (mMatrices.view != view) {
+	if (mMatrices.view != view || this->mProjUpdated) {
 		mMatrices.view = view;
+		this->mProjUpdated = false;
 
 		D3D11_MAPPED_SUBRESOURCE data;
 		ZeroMemory(&data, sizeof(D3D11_MAPPED_SUBRESOURCE));
 		//Update cBuffer
-		context->Map(this->mWVPBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+		context->Map(this->mVPBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 
-		memcpy(data.pData, &this->mMatrices, sizeof(camera::WVP));
+		memcpy(data.pData, &this->mMatrices, sizeof(camera::VP));
 
-		context->Unmap(this->mWVPBuffer, 0);
+		context->Unmap(this->mVPBuffer, 0);
 
 
 		context->Map(this->mGraphicsData->getConstantBuffer(CAMPOSKEY), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
@@ -90,14 +90,6 @@ void CameraClass::update(ID3D11DeviceContext* context)
 		memcpy(data.pData, &this->mPos, sizeof(DirectX::SimpleMath::Vector4));
 
 		context->Unmap(this->mGraphicsData->getConstantBuffer(CAMPOSKEY), 0);
-
-
-
-		context->Map(this->mGraphicsData2->getConstantBuffer(CAMPOSKEY), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
-
-		memcpy(data.pData, &this->mPos, sizeof(DirectX::SimpleMath::Vector4));
-
-		context->Unmap(this->mGraphicsData2->getConstantBuffer(CAMPOSKEY), 0);
 	}
 }
 
@@ -117,9 +109,24 @@ void CameraClass::updateRotation(ID3D11DeviceContext* context) {
 	mRight = rotation.Right() * -1; //Right gets inverted, better solution exists nice
 }
 
+void CameraClass::updateProjection(ID3D11DeviceContext* context, settings::GraphicSettings& settings)
+{
+	DirectX::XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(
+		settings.fov * (float)M_PI,
+		(float)settings.width / (float)settings.height, 
+		0.1f, 
+		settings.farPlane);
+
+	projection = DirectX::XMMatrixTranspose(projection);
+
+	this->mMatrices.projection = projection;
+
+	this->mProjUpdated = true;
+}
+
 ID3D11Buffer* CameraClass::getMatrixBuffer()
 {
-	return this->mWVPBuffer;
+	return this->mVPBuffer;
 }
 
 DirectX::SimpleMath::Vector3 CameraClass::getPos() const

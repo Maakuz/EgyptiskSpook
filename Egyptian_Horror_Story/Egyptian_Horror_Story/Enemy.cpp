@@ -46,10 +46,16 @@ std::vector<Vector3> Enemy::getPath() const {
 	return mPath;
 }
 
-void Enemy::updatePosition(GraphicsData* gData, ID3D11DeviceContext* context)
+void Enemy::updatePosition(GraphicsData* gData, ID3D11DeviceContext* context, DirectX::SimpleMath::Vector3 playerPos)
 {
 	DirectX::SimpleMath::Matrix posMat = DirectX::SimpleMath::Matrix::CreateTranslation(this->getPosition());
 	posMat = posMat.Transpose();
+
+	//Very simple solution, can be improved
+	Matrix rot = Matrix::CreateRotationY(atan2(playerPos.x - this->getPosition().x, playerPos.z - this->getPosition().z));
+	rot = rot.Transpose();
+
+	posMat *= rot;
 
 	D3D11_MAPPED_SUBRESOURCE data;
 	ZeroMemory(&data, sizeof(D3D11_MAPPED_SUBRESOURCE));
@@ -81,7 +87,6 @@ Enemy::UPDATE_RETURNS Enemy::update() {
 		setPosition(mWaypoint);
 		
 		if (mFollowPath && ++currentPathNode < mPath.size()) {
-			assert(currentPathNode < mPath.size());
 			setWaypoint(mPath[currentPathNode]);
 			return ON_PATH_WAYPOINT; // on path waypoint
 		}
@@ -126,6 +131,7 @@ int Enemy::updateWaypoint(lua_State *state) {
 }
 
 
+// !!! Deprecated !!!
 int Enemy::seesPlayer(lua_State *state) {
 	Enemy *enemy = static_cast<Enemy*>
 		(lua_touserdata(state, lua_upvalueindex(1)));
@@ -195,7 +201,6 @@ int Enemy::startPathing(lua_State *state) {
 	Enemy *enemy = static_cast<Enemy*>
 		(lua_touserdata(state, lua_upvalueindex(1)));
 
-	assert(enemy->mPath.size() > 0);
 	enemy->mPath[enemy->currentPathNode];
 	enemy->setFollowPath(true);
 	enemy->setWaypoint(enemy->mPath[enemy->currentPathNode]);

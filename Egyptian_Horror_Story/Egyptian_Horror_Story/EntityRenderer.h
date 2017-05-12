@@ -10,6 +10,7 @@ class EntityRenderer : public Renderer
 {
 private:
 	GraphicsData mGraphicsData;
+	bool shadowPass;
 
 public:
 	EntityRenderer(int id);
@@ -18,7 +19,10 @@ public:
 	void setup(ID3D11Device *device, ShaderHandler &shaderHandler);
 	void render(ID3D11DeviceContext *context, ShaderHandler &shaderHandler);
 
-	bool loadObject(ID3D11Device *device, int key, EntityStruct::VertexStruct* vertices, int nrOfVertices, wchar_t* texturePath = L"../Resource/Textures/placeholder.png");
+	//Cbuffersize should for most cases be size of a 4x4 matrix
+	bool loadObject(ID3D11Device *device, int key, EntityStruct::VertexStruct* vertices, int nrOfVertices, UINT cbufferSize, wchar_t* texturePath = L"../Resource/Textures/placeholder.png", bool isDynamic = true);
+	void setShadowPass(bool value);
+
 
 	GraphicsData* getGraphicsData();
 

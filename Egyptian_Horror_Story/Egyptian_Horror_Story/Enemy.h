@@ -40,7 +40,7 @@ public:
 	void setPath(std::vector<DirectX::SimpleMath::Vector3> path);
 	std::vector<DirectX::SimpleMath::Vector3> getPath() const;
 
-	void updatePosition(GraphicsData* gData, ID3D11DeviceContext* context);
+	void updatePosition(GraphicsData* gData, ID3D11DeviceContext* context, DirectX::SimpleMath::Vector3 playerPos);
 
 	// lua
 	static int setHuntingPlayerLua(lua_State *state);

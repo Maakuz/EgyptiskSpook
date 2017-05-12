@@ -178,7 +178,7 @@ int FBXLoader::findJoint(std::string name)
 {
 	int res = -1;
 	
-	for (int i = 0; i < this->mSkeleton.size() && res == -1; i++)
+	for (size_t i = 0; i < this->mSkeleton.size() && res == -1; i++)
 	{
 		if (this->mSkeleton[i].name == name)
 			res = i;
@@ -273,92 +273,6 @@ bool FBXLoader::loadVertices(std::vector<EntityStruct::VertexStruct>& vertexArra
 	return true;
 }
 
-bool FBXLoader::loadVertices(std::vector<EntityStruct::SkinnedVertexStruct>& vertexArray, FbxMesh* mesh)
-{
-	FbxVector4* vertices = mesh->GetControlPoints();
-	FbxGeometryElementNormal* normalElem = mesh->GetElementNormal();
-	FbxGeometryElementUV* uvElem = mesh->GetElementUV();
-
-
-	int indexByPolygonVertex = 0;
-
-	for (int j = 0; j < mesh->GetPolygonCount(); j++)
-	{
-		int nrOfVertices = mesh->GetPolygonSize(j);
-
-		assert(nrOfVertices == 3 || nrOfVertices == 4);
-
-		if (nrOfVertices == 3)
-		{
-			for (int k = 0; k < nrOfVertices; k++)
-			{
-				int controlPointIndex = mesh->GetPolygonVertex(j, k);
-
-				EntityStruct::SkinnedVertexStruct vertex;
-				vertex.pos.x = (float)vertices[controlPointIndex].mData[0];
-				vertex.pos.y = (float)vertices[controlPointIndex].mData[1];
-				vertex.pos.z = (float)vertices[controlPointIndex].mData[2];
-
-
-
-				//Got normals of each polygon-vertex.
-				FbxVector4 norm = this->getNormal(controlPointIndex, indexByPolygonVertex, normalElem);
-
-				vertex.normal.x = (float)norm.mData[0];
-				vertex.normal.y = (float)norm.mData[1];
-				vertex.normal.z = (float)norm.mData[2];
-
-
-
-				//get the uv
-				FbxVector2 uv = this->getUV(controlPointIndex, mesh->GetTextureUVIndex(j, k), uvElem);
-
-				vertex.uv.x = (float)uv.mData[0];
-				vertex.uv.y = 1.f - (float)uv.mData[1];
-
-				vertexArray.push_back(vertex);
-
-				indexByPolygonVertex++;
-			}
-
-		}
-
-		if (nrOfVertices == 4)
-		{
-			for (int k = 0; k < 6; k++)
-			{
-				int controlPointIndex = mesh->GetPolygonVertex(j, SPLIT_ARRAY[k]);
-
-				EntityStruct::SkinnedVertexStruct vertice;
-				vertice.pos.x = (float)vertices[controlPointIndex].mData[0];
-				vertice.pos.y = (float)vertices[controlPointIndex].mData[1];
-				vertice.pos.z = (float)vertices[controlPointIndex].mData[2];
-
-
-				FbxVector4 norm = this->getNormal(controlPointIndex, indexByPolygonVertex + SPLIT_ARRAY[k], normalElem);
-
-				vertice.normal.x = (float)norm.mData[0];
-				vertice.normal.y = (float)norm.mData[1];
-				vertice.normal.z = (float)norm.mData[2];
-
-
-				//get the uv THIS IS PROBABLY WRoNG
-				FbxVector2 uv = this->getUV(controlPointIndex, indexByPolygonVertex + SPLIT_ARRAY[k], uvElem);
-
-				vertice.uv.x = (float)uv.mData[0];
-				vertice.uv.y = 1.f - (float)uv.mData[1];
-
-				vertexArray.push_back(vertice);
-			}
-
-			indexByPolygonVertex += nrOfVertices;
-		}
-
-	}
-
-	return true;
-}
-
 FBXLoader::FBXLoader()
 {
 	this->mFbxManager = nullptr;
@@ -417,85 +331,6 @@ bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray, 
 					this->loadVertices(verticeArray, mesh);
 				}
 			}
-		}
-	}
-
-	return false;
-}
-
-bool FBXLoader::loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, std::string filename)
-{
-	if (this->mFbxManager == nullptr)
-	{
-		this->mFbxManager = FbxManager::Create();
-
-		this->mIOSettings = FbxIOSettings::Create(this->mFbxManager, IOSROOT);
-		this->mFbxManager->SetIOSettings(this->mIOSettings);
-	}
-
-	FbxImporter* importer = FbxImporter::Create(this->mFbxManager, "");
-	this->mScene = FbxScene::Create(this->mFbxManager, "");
-
-	std::string temp = "../Resource/Models/" + filename;
-
-	bool res = importer->Initialize(temp.c_str(), -1, this->mIOSettings);
-
-	if (!res)
-		exit(-88);
-
-	res = importer->Import(mScene);
-
-	if (!res)
-		exit(-89);
-
-	importer->Destroy();
-
-	FbxNode* RootNode = mScene->GetRootNode();
-
-	if (RootNode)
-	{
-		for (int i = 0; i < RootNode->GetChildCount(); i++)
-		{
-			FbxNode* childNode = RootNode->GetChild(i);
-
-
-			if (childNode->GetNodeAttribute() != NULL)
-			{
-				FbxNodeAttribute::EType attributeType = childNode->GetNodeAttribute()->GetAttributeType();
-
-				if (attributeType == FbxNodeAttribute::eMesh)
-				{
-					FbxMesh* mesh = (FbxMesh*)childNode->GetNodeAttribute();
-
-					this->loadVertices(verticeArray, mesh);
-				}
-			}
-		}
-	}
-
-	//Temporary storage
-	this->mVertexWeights.resize(verticeArray.size());
-	
-
-	this->getSkeleton(RootNode);
-	this->setupJoints(RootNode);
-
-	//Initialize
-	for (int i = 0; i < verticeArray.size(); i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			verticeArray[i].weightIndex[j].index = 0;
-			verticeArray[i].weightIndex[j].weight = 0;
-		}
-	}
-
-
-	for (int i = 0; i < verticeArray.size(); i++)
-	{
-		for (int j = 0; j < this->mVertexWeights[i].size() && j < 4; j++)
-		{
-			verticeArray[i].weightIndex[j] = this->mVertexWeights[i][j];
 		}
 	}
 

@@ -16,11 +16,10 @@ class CameraClass
 private:
 	const double DEGTORADIANS = M_PI / 180;
 	
-	camera::WVP mMatrices;
+	camera::VP mMatrices;
 
-	ID3D11Buffer* mWVPBuffer;
+	ID3D11Buffer* mVPBuffer;
 	GraphicsData* mGraphicsData;
-	GraphicsData* mGraphicsData2;
 	static const int CAMPOSKEY = 302;
 
 	DirectX::SimpleMath::Vector3 mPos;
@@ -31,13 +30,16 @@ private:
 	float mPitch;
 	float mYaw;
 
+	bool mProjUpdated;
+
 public:
-	CameraClass(ID3D11Device* device, GraphicsData* gData, GraphicsData* gData2, float width, float height);
+	CameraClass(ID3D11Device* device, GraphicsData* gData, settings::GraphicSettings settings);
 	virtual ~CameraClass();
 
-	void createVWPBuffer(ID3D11Device* device);
+	void createVPBuffer(ID3D11Device* device);
 	void update(ID3D11DeviceContext* context);
 	void updateRotation(ID3D11DeviceContext* context);
+	void updateProjection(ID3D11DeviceContext* context, settings::GraphicSettings& settings);
 
 	ID3D11Buffer* getMatrixBuffer();
 

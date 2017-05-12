@@ -30,7 +30,7 @@ public:
 	//WTF
 	Capsule* col;
 
-	Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int grapchicsKey, GraphicsData* gData, GraphicsData* gData2);
+	Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int grapchicsKey, GraphicsData* gData);
 	virtual ~Player();
 
 	void updatePosition();
@@ -41,11 +41,14 @@ public:
 	void handleMouseMotion(SDL_MouseMotionEvent const &motion);
 	
 	Light* getLight();
+	CameraClass* getCamera();
 	DirectX::SimpleMath::Vector3 getPrevPos() const;
 	DirectX::SimpleMath::Vector3 getVelocity() const;
 
 	void setPosition(DirectX::SimpleMath::Vector3 pos);
 	void setPrevPos(DirectX::SimpleMath::Vector3 pos);
+
+	void damage();
 };
 
 #endif
