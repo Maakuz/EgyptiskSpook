@@ -6,8 +6,8 @@
 
 using namespace DirectX::SimpleMath;
 
-ParticleRenderer::ParticleRenderer(CameraClass *camera, int id) 
-	: mCamera(camera), Renderer(id) {
+ParticleRenderer::ParticleRenderer(CameraClass *camera, GAMESTATE identifier)
+	: mCamera(camera), Renderer(identifier) {
 	this->mGraphicsData = new GraphicsData();
 	frame = 0;
 }
@@ -75,7 +75,9 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 	context->Unmap(this->mGraphicsData->getVertexBuffer(0), 0);
 }
 
-void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders) {
+void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state) {
+	if (state != GAMESTATE::PLAY) return;
+
 	UINT stride = sizeof(ParticleVertex), offset = 0;
 	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(0),
 						   *cam = this->mGraphicsData->getConstantBuffer(1),

@@ -50,7 +50,7 @@ public:
 	//this class will delete the renderers!
 	void addRenderer(Renderer *renderer);
 	void setupRenderers();
-	void renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightVP);
+	void renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightVP, GAMESTATE const &state);
 
 	ID3D11Device* getDevice();
 	ID3D11DeviceContext* getDeviceContext();

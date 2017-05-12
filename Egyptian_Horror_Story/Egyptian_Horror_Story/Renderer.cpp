@@ -1,13 +1,17 @@
 #include "Renderer.h"
 
-Renderer::Renderer(int i) {
-	this->mIdentifier = i;
+Renderer::Renderer(GAMESTATE identifier) {
+	this->mIdentifier = identifier;
 }
 
 Renderer::~Renderer()
 {
 }
 
-void Renderer::setState(int i) {
-	this->mIdentifier = i;
+void Renderer::setIdentifier(GAMESTATE state) {
+	this->mIdentifier = state;
+}
+
+GAMESTATE Renderer::getIdentifier() {
+	return this->mIdentifier;
 }

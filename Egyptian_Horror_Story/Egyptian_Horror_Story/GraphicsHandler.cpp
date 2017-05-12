@@ -213,10 +213,13 @@ void GraphicsHandler::setupDSAndSRViews() {
 	texture->Release();
 }
 
-void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightWVP) {
+void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightWVP, GAMESTATE const &state) {
 
 	//Shadow prepass
 	for (const auto& renderer : mRenderers) {
+		if (renderer->getIdentifier() != state ||
+			renderer->getIdentifier() == GAMESTATE::UNDEFINED) continue; //Do not draw if wrong identifier
+
 		EntityRenderer* ptr = dynamic_cast<EntityRenderer*>(renderer);
 
 		if (ptr)
@@ -231,7 +234,7 @@ void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightWVP)
 			this->mContext->OMSetRenderTargets(0, nullptr, this->mDSVShadow);
 			this->mContext->RSSetViewports(1, &this->mViewportShadow);
 
-			renderer->render(mContext, mShaderHandler);
+			renderer->render(mContext, mShaderHandler, state);
 			
 			ptr->setShadowPass(false);
 		}
@@ -250,7 +253,10 @@ void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightWVP)
 	this->mContext->RSSetViewports(1, &this->mViewport);
 
 	for (const auto& renderer : mRenderers) {
-		renderer->render(mContext, mShaderHandler);
+		if (renderer->getIdentifier() != state &&
+			renderer->getIdentifier() != GAMESTATE::UNDEFINED) continue; //Do not draw if wrong identifier
+
+		renderer->render(mContext, mShaderHandler, state);
 	}
 }
 
