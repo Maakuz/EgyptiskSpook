@@ -3,7 +3,7 @@
 
 using namespace DirectX::SimpleMath;
 
-GUIRenderer::GUIRenderer() {
+GUIRenderer::GUIRenderer(int id) : Renderer(id){
 	this->mSize = 1;
 	this->mParticles = new Vector3[mSize];
 	this->mGraphicsData = new GraphicsData();

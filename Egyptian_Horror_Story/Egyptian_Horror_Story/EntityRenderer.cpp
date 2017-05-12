@@ -1,7 +1,7 @@
 #include "EntityRenderer.h"
 #define ENTITY_SHADER 20
 
-EntityRenderer::EntityRenderer()
+EntityRenderer::EntityRenderer(int id) : Renderer(id)
 {
 	this->shadowPass = false;
 }

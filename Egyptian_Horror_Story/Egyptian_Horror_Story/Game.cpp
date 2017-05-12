@@ -1,8 +1,10 @@
 #include "Game.h"
 #include "ParticleRenderer.h"
 
-Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options)
-{
+Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options) {
+	this->mStateHandler = new StateHandler();
+	this->mStateHandler->setState(GAMESTATE::PLAY);
+
 	this->mGraphics = mGraphicsHandler;
 	this->mOptionHandler = options;
 
@@ -22,10 +24,10 @@ Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options)
 
 	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
 	
-	mGuiRenderer = new GUIRenderer();
+	mGuiRenderer = new GUIRenderer(GAMESTATE::PLAY);
 	this->mGraphics->addRenderer(mGuiRenderer);
 
-	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera));
+	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera, GAMESTATE::PLAY));
 	this->mGraphics->addRenderer(this->mEntityHandler->getEntityRenderer());
 
 	this->mGraphics->setupRenderers();
@@ -37,12 +39,13 @@ Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options)
 
 Game::~Game()
 {
+	delete this->mStateHandler;
 	delete this->mCamera;
 	delete this->mEntityHandler;
 	delete this->mAIHandler;
 }
 
-void Game::update()
+void Game::updateGame()
 {
 	this->mEntityHandler->update(this->mGraphics->getDeviceContext());
 	this->mCamera->update(this->mGraphics->getDeviceContext());
@@ -56,6 +59,10 @@ void Game::update()
 		mGuiRenderer->setNavigationTest(mGraphics->getDevice(), this->mAIHandler->getNavigationTexture(),
 			this->mAIHandler->getNavMeshWidth(), this->mAIHandler->getNavMeshHeight());
 
+}
+
+void Game::update() {
+	this->mStateHandler->update(this);
 }
 
 bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
@@ -104,8 +111,27 @@ void Game::updateLua() {
 	this->mAIHandler->setupAI();
 }
 
-void Game::setWindowSize(SDL_Window* window)
-{
+int Game::StateHandler::getState() {
+	return this->state;
+}
+
+void Game::StateHandler::setState(int i) {
+	this->state = i;
+}
+
+void Game::StateHandler::update(Game* g) {
+	switch (this->state) {
+	case GAMESTATE::DEFAULT:
+		break;
+	case GAMESTATE::MAIN_MENU:
+		break;
+	case GAMESTATE::PLAY:
+		g->updateGame();
+		break;
+	}
+}
+
+void Game::setWindowSize(SDL_Window* window) {
 	SDL_SetWindowSize(window, 
 		this->mOptionHandler->getGraphicSettings().width, 
 		this->mOptionHandler->getGraphicSettings().height);

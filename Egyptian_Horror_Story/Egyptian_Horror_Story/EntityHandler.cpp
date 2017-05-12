@@ -1318,7 +1318,7 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 
 EntityHandler::EntityHandler()
 {
-	this->mEntityRenderer = new EntityRenderer();
+	this->mEntityRenderer = new EntityRenderer(GAMESTATE::PLAY);
 	this->footstepsPlaying = false;
 }
 

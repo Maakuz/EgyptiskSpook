@@ -13,7 +13,7 @@ private:
 	DirectX::SimpleMath::Vector3 *mParticles;
 	ID3D11ShaderResourceView *navTest;
 public:
-	GUIRenderer();
+	GUIRenderer(int identifier);
 	GUIRenderer(GUIRenderer const &renderer) = delete;
 	virtual ~GUIRenderer();
 

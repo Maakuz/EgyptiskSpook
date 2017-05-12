@@ -11,6 +11,16 @@
 class Game
 {
 private:
+
+	class StateHandler {
+	private:
+		int state;
+	public:
+		int getState();
+		void setState(int i);
+		void update(Game* g);
+	}* mStateHandler;
+
 	GraphicsHandler* mGraphics;
 	CameraClass* mCamera;
 	EntityHandler* mEntityHandler;
@@ -22,6 +32,7 @@ public:
 	Game(GraphicsHandler* graphicsHandler, OptionsHandler* options);
 	virtual ~Game();
 
+	void updateGame();
 	void update();
 
 	bool handleMouseKeyPress(SDL_KeyboardEvent const &key);
