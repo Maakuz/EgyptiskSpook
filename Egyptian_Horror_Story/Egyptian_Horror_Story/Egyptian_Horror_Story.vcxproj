@@ -109,6 +109,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ShaderHandler.cpp" />
     <ClCompile Include="Trap.cpp" />
+    <ClCompile Include="Treasure.cpp" />
     <ClCompile Include="Wall.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -137,6 +138,7 @@
     <ClInclude Include="ShaderHandler.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="Structs.h" />
+    <ClInclude Include="Treasure.h" />
     <ClInclude Include="Wall.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
