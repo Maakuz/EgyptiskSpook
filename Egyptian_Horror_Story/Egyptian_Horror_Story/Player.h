@@ -23,7 +23,8 @@ private:
 
 	void updateLightPosition();
 	void computeVelocity();
-	void handleSprinting();
+	void handleSprinting(float dt);
+	float handleSneaking(float dt);
 	void startSprint();
 	void startSneaking();
 	float getMovementMultiplier();

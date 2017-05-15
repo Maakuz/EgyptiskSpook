@@ -10,7 +10,9 @@
 #define MAX_STAMINA 15.f // Max Stamina
 #define SPRINT_MULTIPLIER 2.f // Multiplier for sprinting
 #define TIRED_MULTIPLIER 0.6f // Multiplier after running out of stamina
-#define START_STAMINA 3.f // Stamina start
+#define START_STAMINA 3.f // Bad name, but basicly meaning how much stamina is needed to start sprinting
+#define STAMINA_LOSS -4.5f // Loss per second sprinting
+#define STAMINA_GAIN 0.5f // Gained per second not sprinting
 
 #define SNEAK_MULTIPLIER 0.35f // Multiplier for sneaking
 #define SNEAK_Y -4.f // Camera change while sneaking
@@ -55,23 +57,13 @@ void Player::updatePosition(float dt)
 	this->mPrevPos = this->getPosition();
 	computeVelocity();
 	handleJumping(dt);
-	handleSprinting();
+	handleSprinting(dt);
 
 	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed * getMovementMultiplier() * dt;
 	setPosition(newPos);
-	SDL_Log("m: %f", mSneakTime);
 
-
-	if (this->mSneaking) {
-		mSneakTime += dt / SNEAK_TIME;
-		if (mSneakTime >= 1) mSneakTime = 1;
-	}
-	else if (mSneakTime > 0) {
-		mSneakTime -= dt / SNEAK_TIME;
-		if (mSneakTime <= 0) mSneakTime = 0;
-	}
-
-	newPos.y += SNEAK_Y * (SNEAK_TIME * this->mSneakTime);
+	newPos.y += handleSneaking(dt);
+	
 	this->mCamera->setPos(newPos);
 	updateLightPosition();
 	
@@ -84,7 +76,6 @@ void Player::handleJumping(float dt) {
 	this->mVelocity.Normalize(); // Norm to make speed forward speed same if you look up or down
 	if (this->mJumping) {
 		this->mJumpingVelocity -= GRAVITY * dt;
-		SDL_Log("Hi: %f, DT: %f", mJumpingVelocity, dt);
 		this->mVelocity.y = mJumpingVelocity;
 
 		if (getPosition().y + this->mVelocity.y * mSpeed * dt <= GROUND_Y) {
@@ -232,17 +223,33 @@ void Player::computeVelocity() {
 	this->mVelocity += this->mDirection.y * proj;
 }
 
-void Player::handleSprinting() {
+void Player::handleSprinting(float dt) {
+	SDL_Log("Stamina: %f", mStamina);
 	if (this->mSprinting) {
-		this->mStamina -= 0.01f; //change later
+		this->mStamina += STAMINA_LOSS * dt; //change later
 		if (this->mStamina <= 0) {
 			this->mStamina = 0;
 			this->mSprinting = false;
 		}
 	}
-	else {
-		this->mStamina += 0.003f; //change later
+	else if (mStamina < MAX_STAMINA) {
+		this->mStamina += STAMINA_GAIN * dt; //change later
+		if (this->mStamina > MAX_STAMINA)
+			this->mStamina = MAX_STAMINA;
 	}
+}
+
+float Player::handleSneaking(float dt) {
+	if (this->mSneaking) {
+		this->mSneakTime += dt / SNEAK_TIME;
+		if (this->mSneakTime >= 1) this->mSneakTime = 1;
+	}
+	else if (this->mSneakTime > 0) {
+		this->mSneakTime -= dt / SNEAK_TIME;
+		if (this->mSneakTime <= 0) this->mSneakTime = 0;
+	}
+
+	return SNEAK_Y * (SNEAK_TIME * this->mSneakTime);
 }
 
 void Player::startSprint() {
