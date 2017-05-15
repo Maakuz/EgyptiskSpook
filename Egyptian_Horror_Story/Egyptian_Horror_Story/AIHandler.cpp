@@ -144,11 +144,11 @@ void AIHandler::addLuaFunction(lua_State *state, const char *name,
 	lua_setglobal(state, name);
 }
 
-void AIHandler::update() {
+void AIHandler::update(float dt) {
 	lua_getglobal(mEnemyState, "update");
 	handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
 
-	Enemy::UPDATE_RETURNS ret = mEnemy->update();
+	Enemy::UPDATE_RETURNS ret = mEnemy->update(dt);
 
 	if (ret == Enemy::ON_WAYPOINT) {
 		lua_getglobal(mEnemyState, "onReachingWaypoint");

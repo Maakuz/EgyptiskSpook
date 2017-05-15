@@ -26,7 +26,7 @@ public:
 	Enemy(int graphicsKey);
 	virtual ~Enemy();
 
-	UPDATE_RETURNS update();
+	UPDATE_RETURNS update(float dt);
 
 	void setSpeed(float speed);
 	void setVelocity(DirectX::SimpleMath::Vector3 velocity);

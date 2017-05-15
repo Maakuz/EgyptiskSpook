@@ -62,7 +62,7 @@ void Game::updateGame(float dt)
 	this->mEntityHandler->update(this->mGraphics->getDeviceContext(), dt);
 	this->mCamera->update(this->mGraphics->getDeviceContext());
 
-	this->mAIHandler->update();
+	this->mAIHandler->update(dt);
 	if (this->mAIHandler->getNavigationTexture() != nullptr)
 		mGuiRenderer->setNavigationTest(mGraphics->getDevice(), this->mAIHandler->getNavigationTexture(),
 			this->mAIHandler->getNavMeshWidth(), this->mAIHandler->getNavMeshHeight());
