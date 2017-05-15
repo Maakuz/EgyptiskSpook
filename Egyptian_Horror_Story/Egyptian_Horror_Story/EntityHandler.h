@@ -18,6 +18,7 @@ private:
 	std::vector<Trap*> mTraps;
 	AudioManager* mAudioManager;
 	Entity* mFlashlightModel;
+	Entity* mLevel;
 	Player* mPlayer;
 	Enemy* mEnemy;
 	
@@ -37,6 +38,8 @@ private:
 public:
 	EntityHandler();
 	virtual ~EntityHandler();
+
+	void loadMap(ID3D11Device* device);
 
 	void setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context);
 	void setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera);

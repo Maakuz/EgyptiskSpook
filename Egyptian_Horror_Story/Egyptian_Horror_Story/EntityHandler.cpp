@@ -1425,6 +1425,7 @@ EntityHandler::~EntityHandler()
 	delete this->mPlayer;
 	delete this->mEnemy;
 	delete this->mFlashlightModel;
+	delete this->mLevel;
 
 	for (size_t i = 0; i < this->mEntities.size(); i++)
 		delete this->mEntities[i];
@@ -1433,9 +1434,17 @@ EntityHandler::~EntityHandler()
 		delete this->mTraps[i];
 }
 
+void EntityHandler::loadMap(ID3D11Device* device)
+{
+	this->mLevel = new Entity(401);
+
+	this->loadEntityModel("LevelDesignTestTest.fbx", WALLTEXTURE, this->mLevel, device);
+}
+
 void EntityHandler::setupEntities(ID3D11Device* device)
 {
 	this->hardcodedMap(device);
+	//this->loadMap(device);
 
 	this->mFlashlightModel = new Entity(this->mPlayer->getLight()->getGraphicsKey());
 

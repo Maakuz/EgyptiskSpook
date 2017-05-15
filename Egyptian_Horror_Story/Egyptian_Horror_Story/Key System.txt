@@ -24,6 +24,7 @@ Light Pos & Dir Buffer: 300 only buffer
 Light Matrix Buffer: 301 only buffer
 Camera pos:302
 Enemy: 400
+Level:401
 Traps: 10xx
 
 SOUND EFFECTS: 
