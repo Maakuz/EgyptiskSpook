@@ -13,6 +13,7 @@ private:
 	CameraClass* mCamera;
 	DirectX::SimpleMath::Vector2 mDirection;
 	DirectX::SimpleMath::Vector3 mPrevPos;
+	float mSneakTime;
 
 	float mSpeed, mJumpingVelocity, mStamina, mMaxStamina;
 	bool mJumping, mSprinting, mSneaking;
@@ -34,7 +35,7 @@ public:
 	virtual ~Player();
 
 	void updatePosition(float dt);
-	void handleJumping();
+	void handleJumping(float dt);
 
 	bool handleMouseKeyPress(SDL_KeyboardEvent const &key);
 	bool handleMouseKeyRelease(SDL_KeyboardEvent const &key);
