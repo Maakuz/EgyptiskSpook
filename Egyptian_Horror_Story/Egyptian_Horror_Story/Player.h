@@ -34,7 +34,7 @@ public:
 	virtual ~Player();
 
 	void updatePosition(float dt);
-	void handleJumping();
+	void handleJumping(float dt);
 
 	bool handleMouseKeyPress(SDL_KeyboardEvent const &key);
 	bool handleMouseKeyRelease(SDL_KeyboardEvent const &key);

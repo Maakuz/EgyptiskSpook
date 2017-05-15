@@ -1,8 +1,8 @@
 #include "Player.h"
 #include <SDL.h>
-#define GRAVITY 0.025f //change later ok
+#define GRAVITY 0.9f //change later ok
 #define GROUND_Y 0.f
-#define JUMP_START_VELOCITY 1.1f //change later ok FOR TESTING PURPOSES JUMPING BY LW
+#define JUMP_START_VELOCITY 0.65f //change later ok FOR TESTING PURPOSES JUMPING BY LW
 
 #define MAX_STAMINA 15.f // temp change later ok
 #define SPRINT_MULTIPLIER 2.f // temp change later ok
@@ -48,7 +48,7 @@ void Player::updatePosition(float dt)
 {
 	this->mPrevPos = this->getPosition();
 	computeVelocity();
-	handleJumping();
+	handleJumping(dt);
 	handleSprinting();
 
 	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed * getMovementMultiplier() * dt;
@@ -62,15 +62,15 @@ void Player::updatePosition(float dt)
 	this->col->mPoint = this->mCamera->getPos();
 }
 
-void Player::handleJumping() {
+void Player::handleJumping(float dt) {
 	this->mVelocity.y = 0;
 	this->mVelocity.Normalize(); // Norm to make speed forward speed same if you look up or down
-
 	if (this->mJumping) {
-		this->mJumpingVelocity -= GRAVITY; // delta time should be used
+		this->mJumpingVelocity -= GRAVITY * dt;
+		SDL_Log("Hi: %f, DT: %f", mJumpingVelocity, dt);
 		this->mVelocity.y = mJumpingVelocity;
 
-		if (getPosition().y + this->mVelocity.y * mSpeed <= GROUND_Y) {
+		if (getPosition().y + this->mVelocity.y * mSpeed * dt <= GROUND_Y) {
 			// set position to ground y
 			DirectX::SimpleMath::Vector3 newPos = getPosition();
 			newPos.y = GROUND_Y;
