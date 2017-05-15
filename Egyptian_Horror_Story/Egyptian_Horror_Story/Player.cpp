@@ -1,15 +1,20 @@
 #include "Player.h"
 #include <SDL.h>
-#define GRAVITY 0.9f //change later ok
-#define GROUND_Y 0.f
-#define JUMP_START_VELOCITY 0.65f //change later ok FOR TESTING PURPOSES JUMPING BY LW
 
-#define MAX_STAMINA 15.f // temp change later ok
-#define SPRINT_MULTIPLIER 2.f // temp change later ok
-#define TIRED_MULTIPLIER 0.6f // temp change later ok
-#define START_STAMINA 3.f // temp change later ok
-#define SNEAK_MULTIPLIER 0.35f;
-#define SNEAK_Y -0.5f; // Camera change while sneaking
+#define SPEED 15.f;
+
+#define GRAVITY 0.9f // Gravity per second
+#define GROUND_Y 0.f // Ground position
+#define JUMP_START_VELOCITY 0.65f // Start velocity after jumping, reduced by GRAVITY after a second (lerping)
+
+#define MAX_STAMINA 15.f // Max Stamina
+#define SPRINT_MULTIPLIER 2.f // Multiplier for sprinting
+#define TIRED_MULTIPLIER 0.6f // Multiplier after running out of stamina
+#define START_STAMINA 3.f // Stamina start
+
+#define SNEAK_MULTIPLIER 0.35f // Multiplier for sneaking
+#define SNEAK_Y -3.f // Camera change while sneaking
+#define SNEAK_TIME 0.2f //Time to go from standing to sneaking and vice versa
 
 using namespace DirectX::SimpleMath;
 
@@ -21,9 +26,10 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 	// movement
 	this->mSneaking = false;
 	this->mSprinting = false;
+	this->mSneakTime = 0;
 
-	this->mMaxStamina = 15.f;
-	this->mSpeed = 15.f; //magic numbers
+	this->mMaxStamina = MAX_STAMINA;
+	this->mSpeed = SPEED;
 	this->mStamina = this->mMaxStamina;
 
 	//REMOVE
@@ -52,9 +58,20 @@ void Player::updatePosition(float dt)
 	handleSprinting();
 
 	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed * getMovementMultiplier() * dt;
+	setPosition(newPos);
+	SDL_Log("m: %f", mSneakTime);
 
-	this->setPosition(newPos);
-	if (this->mSneaking) newPos.y += SNEAK_Y;
+
+	if (this->mSneaking) {
+		mSneakTime += dt / SNEAK_TIME;
+		if (mSneakTime >= 1) mSneakTime = 1;
+	}
+	else if (mSneakTime > 0) {
+		mSneakTime -= dt / SNEAK_TIME;
+		if (mSneakTime <= 0) mSneakTime = 0;
+	}
+
+	newPos.y += SNEAK_Y * (SNEAK_TIME * this->mSneakTime);
 	this->mCamera->setPos(newPos);
 	updateLightPosition();
 	

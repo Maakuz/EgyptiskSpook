@@ -13,6 +13,7 @@ private:
 	CameraClass* mCamera;
 	DirectX::SimpleMath::Vector2 mDirection;
 	DirectX::SimpleMath::Vector3 mPrevPos;
+	float mSneakTime;
 
 	float mSpeed, mJumpingVelocity, mStamina, mMaxStamina;
 	bool mJumping, mSprinting, mSneaking;
