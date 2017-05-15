@@ -5,9 +5,9 @@ onPlayerPath = false
 onPointPath = false
 sawPlayerLastFrame = false
 
--- Speeds
-walkSpeed = 0.04
-runSpeed = 0.10
+-- Speeds movement per second
+walkSpeed = 10
+runSpeed = 14
 
 -- Waypoint System
 prevWaypoint = 0

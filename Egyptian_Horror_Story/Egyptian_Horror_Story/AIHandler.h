@@ -45,7 +45,7 @@ class AIHandler {
 		~AIHandler();
 		AIHandler(AIHandler const &aiHandler) = delete;
 
-		void update();
+		void update(float dt);
 		void setupAI();
 
 		void addTrap(char const *scriptPath, Trap *trap);

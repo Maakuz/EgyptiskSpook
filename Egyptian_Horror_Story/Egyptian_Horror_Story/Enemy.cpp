@@ -80,10 +80,11 @@ bool Enemy::onPath() const {
 	return mFollowPath;
 }
 
-Enemy::UPDATE_RETURNS Enemy::update() {
-	move(mVelocity * mSpeed);
+Enemy::UPDATE_RETURNS Enemy::update(float dt) {
+	SDL_Log("Hi: %f,%f", dt, mSpeed);
+	move(mVelocity * mSpeed * dt);
 	mCapsule->mPoint = getPosition();
-	if ((mWaypoint - getPosition()).Length() <= mSpeed) {
+	if ((mWaypoint - getPosition()).Length() <= mSpeed * dt) {
 		setPosition(mWaypoint);
 		
 		if (mFollowPath && ++currentPathNode < mPath.size()) {
