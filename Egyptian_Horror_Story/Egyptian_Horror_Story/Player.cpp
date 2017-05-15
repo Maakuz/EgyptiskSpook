@@ -3,9 +3,9 @@
 
 #define SPEED 15.f;
 
-#define GRAVITY 0.9f // Gravity per second
+#define GRAVITY 2.5f // Gravity per second
 #define GROUND_Y 0.f // Ground position
-#define JUMP_START_VELOCITY 0.65f // Start velocity after jumping, reduced by GRAVITY after a second (lerping)
+#define JUMP_START_VELOCITY 0.95f // Start velocity after jumping, reduced by GRAVITY after a second (lerping)
 
 #define MAX_STAMINA 15.f // Max Stamina
 #define SPRINT_MULTIPLIER 2.f // Multiplier for sprinting
