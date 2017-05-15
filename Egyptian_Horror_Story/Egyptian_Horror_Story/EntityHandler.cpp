@@ -1471,7 +1471,7 @@ void EntityHandler::loadMap(ID3D11Device* device)
 {
 	this->mLevel = new Entity(401);
 
-	this->loadEntityModel("LevelDesignTestTest.fbx", WALLTEXTURE, this->mLevel, device);
+	this->loadEntityModel("LevelDesignTest.fbx", WALLTEXTURE, this->mLevel, device);
 }
 
 void EntityHandler::setupEntities(ID3D11Device* device)
