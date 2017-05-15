@@ -58,14 +58,17 @@ private:
 
 
 	bool loadVertices(std::vector<EntityStruct::VertexStruct>& verticeArray, FbxMesh* mesh);
-	bool loadVertices(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, FbxMesh* mesh);
 
 public:
 	FBXLoader();
 	virtual ~FBXLoader();
 
+
 	bool loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray, std::string filename);
+<<<<<<< HEAD
 	bool loadSkinnedMesh(std::vector<EntityStruct::SkinnedVertexStruct>& verticeArray, std::string filename, GraphicsData* gData, int key, ID3D11Device* device);
+=======
+>>>>>>> 0e47606002d43c19540251978d1fb829f6447b7a
 	
 
 };

@@ -9,8 +9,8 @@ void GraphicsHandler::createDepthStencil()
 	descTex.ArraySize = descTex.MipLevels = 1;
 	descTex.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	descTex.Format = DXGI_FORMAT_D32_FLOAT;
-	descTex.Height = HEIGHT;
-	descTex.Width = WIDTH;
+	descTex.Height = this->mOptions->getGraphicSettings().height;
+	descTex.Width = this->mOptions->getGraphicSettings().width;
 	descTex.SampleDesc.Count = 4;
 	
 	HRESULT hr = this->mDevice->CreateTexture2D(&descTex, NULL, &texture);
@@ -49,8 +49,9 @@ void GraphicsHandler::createDepthStencil()
 
 }
 
-GraphicsHandler::GraphicsHandler()
+GraphicsHandler::GraphicsHandler(OptionsHandler* options)
 {
+	this->mOptions = options;
 	mSwapChain = nullptr;
 	mBackBufferRTV = nullptr;
 	mDSS = nullptr;
@@ -78,10 +79,15 @@ GraphicsHandler::~GraphicsHandler() {
 	if (mDSV)
 		mDSV->Release();
 
+	if (this->mDSVShadow)
+		this->mDSVShadow->Release();
+
+	if (this->mSRVShadow)
+		this->mSRVShadow->Release();
+
 	if (mSamplerState)
 		mSamplerState->Release();
 
-	//Oklart om denna faktiskt tar bort renderer
 	for (auto *renderer : mRenderers) {
 			delete renderer;
 	}
@@ -89,6 +95,7 @@ GraphicsHandler::~GraphicsHandler() {
 	//this->mDebugDevice->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 	this->mDebugDevice->Release();
 }
+
 
 HRESULT GraphicsHandler::setupSwapChain() {
 	DXGI_SWAP_CHAIN_DESC mSwapChainDesc;
@@ -142,7 +149,7 @@ void GraphicsHandler::setupSamplerState() {
 	D3D11_SAMPLER_DESC desc;
 	ZeroMemory(&desc, sizeof(desc));
 	desc.AddressU = desc.AddressV =
-		desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
 	desc.Filter = D3D11_FILTER_ANISOTROPIC;
 	desc.MaxLOD = D3D11_FLOAT32_MAX;
 	desc.MaxAnisotropy = 16; //max
@@ -162,13 +169,81 @@ void GraphicsHandler::setupRenderers() {
 	}
 }
 
-void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP) {
-	for (const auto& renderer : mRenderers) {
+void GraphicsHandler::setupDSAndSRViews() {
+	ID3D11Texture2D* texture;
 
-		this->mContext->VSSetConstantBuffers(0, 1, &WVP);
-		this->mContext->OMSetRenderTargets(1, &this->mBackBufferRTV, this->mDSV);
-		this->mContext->RSSetViewports(1, &this->mViewport);
-		renderer->render(mContext, mShaderHandler);
+	D3D11_TEXTURE2D_DESC descTex;
+	ZeroMemory(&descTex, sizeof(D3D11_TEXTURE2D_DESC));
+	descTex.ArraySize = 1;
+	descTex.MipLevels = 1;
+	descTex.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+	descTex.Format = DXGI_FORMAT_R32_TYPELESS;
+	descTex.Height = this->mOptions->getGraphicSettings().height;
+	descTex.Width = this->mOptions->getGraphicSettings().width;
+	descTex.SampleDesc.Count = 1;
+
+	if (FAILED(this->mDevice->CreateTexture2D(&descTex, NULL, &texture)))
+		exit(-2);//MSG(L"Shadow texture creation failed");
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC descStenV;
+	ZeroMemory(&descStenV, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+	descStenV.Format = DXGI_FORMAT_D32_FLOAT;
+	descStenV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+
+	if (FAILED(this->mDevice->CreateDepthStencilView(texture, &descStenV, &this->mDSVShadow)))
+		exit(-2);//MSG(L"Shadow stencil view creation failed");
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	ZeroMemory(&srvDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+	srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = descTex.MipLevels;
+
+	if (FAILED(this->mDevice->CreateShaderResourceView(texture, &srvDesc, &this->mSRVShadow)))
+		exit(-2); //MSG(L"Shadow srv view creation failed");
+	texture->Release();
+}
+
+void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightWVP, GAMESTATE const &state) {
+
+	//Shadow prepass
+	for (const auto& renderer : mRenderers) {
+		if (renderer->getIdentifier() != state ||
+			renderer->getIdentifier() == GAMESTATE::UNDEFINED) continue; //Do not draw if wrong identifier
+
+		EntityRenderer* ptr = dynamic_cast<EntityRenderer*>(renderer);
+
+		if (ptr)
+		{
+			ptr->setShadowPass(true);
+
+			//Needs to be null in order to be used as depthmap
+			ID3D11ShaderResourceView* srvNull = nullptr;
+			this->mContext->PSSetShaderResources(1, 1, &srvNull);
+
+			this->mContext->VSSetConstantBuffers(0, 1, &lightWVP);
+			this->mContext->OMSetRenderTargets(0, nullptr, this->mDSVShadow);
+
+			renderer->render(mContext, mShaderHandler, state);
+			
+			ptr->setShadowPass(false);
+		}
+	
+	}
+
+	this->mContext->VSSetConstantBuffers(0, 1, &WVP);
+	this->mContext->OMSetRenderTargets(1, &this->mBackBufferRTV, this->mDSV);
+	this->mContext->PSSetShaderResources(1, 1, &this->mSRVShadow);
+	this->mContext->PSSetConstantBuffers(2, 1, &lightWVP);
+
+	ID3D11Buffer* temp = mOptions->getBrightnessBuffer();
+	this->mContext->PSSetConstantBuffers(3, 1, &temp);
+
+	for (const auto& renderer : mRenderers) {
+		if (renderer->getIdentifier() != state &&
+			renderer->getIdentifier() != GAMESTATE::UNDEFINED) continue; //Do not draw if wrong identifier
+
+		renderer->render(mContext, mShaderHandler, state);
 	}
 }
 
@@ -187,6 +262,7 @@ void GraphicsHandler::clear()
 	float clear[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	mContext->ClearRenderTargetView(mBackBufferRTV, clear);
 	mContext->ClearDepthStencilView(this->mDSV, D3D11_CLEAR_DEPTH, 1.f, 0);
+	this->mContext->ClearDepthStencilView(this->mDSVShadow, D3D11_CLEAR_DEPTH, 1, 0);
 }
 
 void GraphicsHandler::present() {

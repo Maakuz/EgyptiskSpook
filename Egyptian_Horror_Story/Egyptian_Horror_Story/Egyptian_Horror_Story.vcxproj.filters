@@ -52,11 +52,14 @@
     <Filter Include="Resource Files\GUI Shaders">
       <UniqueIdentifier>{5a7eefb3-0545-4e89-b644-d0b27c230f07}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Animation">
-      <UniqueIdentifier>{aaedb866-428b-42b2-9102-c682dd55546d}</UniqueIdentifier>
+    <Filter Include="Resource Files\Scripts">
+      <UniqueIdentifier>{3ccea0b1-1572-4a85-80a7-b2a677ba6048}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Animation">
-      <UniqueIdentifier>{81ca7a10-5159-4562-b9dd-cc9236133d78}</UniqueIdentifier>
+    <Filter Include="Header Files\AI">
+      <UniqueIdentifier>{7fcf8b16-0c1c-49a7-b618-d0192dd104b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\AI">
+      <UniqueIdentifier>{e7e587e0-1a0e-4f76-8f37-ef478723e4ed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -87,9 +90,6 @@
     <FxCompile Include="GUIGS.hlsl">
       <Filter>Resource Files\GUI Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="SkinnedEntityVS.hlsl">
-      <Filter>Resource Files\Entity Shaders</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -99,9 +99,6 @@
       <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
-      <Filter>Source Files\Game Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="OBB.cpp">
       <Filter>Source Files\Game Classes</Filter>
     </ClCompile>
     <ClCompile Include="CameraClass.cpp">
@@ -117,9 +114,6 @@
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files\Renderers</Filter>
-    </ClCompile>
-    <ClCompile Include="ShadowRenderer.cpp">
       <Filter>Source Files\Renderers</Filter>
     </ClCompile>
     <ClCompile Include="ShaderHandler.cpp">
@@ -146,14 +140,32 @@
     <ClCompile Include="GUIRenderer.cpp">
       <Filter>Source Files\Renderers</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Colliders.cpp">
+      <Filter>Source Files\Game Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Trap.cpp">
+      <Filter>Source Files\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="NavMesh.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AIHandler.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Source Files\Game Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="AICFunctions.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionsHandler.cpp">
+      <Filter>Source Files\Game Classes</Filter>
+    </ClCompile>
     <ClCompile Include="FBXLoader.cpp">
-      <Filter>Source Files\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimationHandler.cpp">
-      <Filter>Source Files\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="RiggedEntityRenderer.cpp">
-      <Filter>Source Files\Renderers</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="AnimatedEntity.cpp">
       <Filter>Source Files\Entities</Filter>
@@ -161,9 +173,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
-      <Filter>Header Files\Renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="ShadowRenderer.h">
       <Filter>Header Files\Renderers</Filter>
     </ClInclude>
     <ClInclude Include="EntityRenderer.h">
@@ -190,9 +199,6 @@
     <ClInclude Include="ShaderHandler.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="OBB.h">
-      <Filter>Header Files\Game classes</Filter>
-    </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
@@ -214,27 +220,54 @@
     <ClInclude Include="GUIRenderer.h">
       <Filter>Header Files\Renderers</Filter>
     </ClInclude>
-    <ClInclude Include="FBXLoader.h">
-      <Filter>Header Files\Animation</Filter>
+    <ClInclude Include="Enemy.h">
+      <Filter>Header Files\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationHandler.h">
-      <Filter>Header Files\Animation</Filter>
+    <ClInclude Include="Colliders.h">
+      <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Trap.h">
+      <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Structs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RiggedEntityRenderer.h">
-      <Filter>Header Files\Renderers</Filter>
+    <ClInclude Include="AIHandler.h">
+      <Filter>Header Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="NavMesh.h">
+      <Filter>Header Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
+    <ClInclude Include="AICFunctions.h">
+      <Filter>Header Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="OptionsHandler.h">
+      <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="AnimatedEntity.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="scripts\EnemyAI.lua">
+      <Filter>Resource Files\Scripts</Filter>
+    </None>
+    <None Include="scripts\TrapStone.lua">
+      <Filter>Resource Files\Scripts</Filter>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Key System.txt">
+      <Filter>Resource Files\Information</Filter>
+    </Text>
+    <Text Include="Sound keys.txt">
       <Filter>Resource Files\Information</Filter>
     </Text>
   </ItemGroup>

@@ -1,19 +1,25 @@
 #include "Window.h"
 #include "GraphicsHandler.h"
+#include "OptionsHandler.h"
 
-GraphicsHandler gGraphicsHandler;
+OptionsHandler gOptionsHandler;
+GraphicsHandler gGraphicsHandler(&gOptionsHandler);
 Window gWindow;
 
 int main(int argc, char *args[]) {
 
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	gWindow.setupWindowAndSDL();
+	gWindow.setupWindowAndSDL(
+		gOptionsHandler.getGraphicSettings().width,
+		gOptionsHandler.getGraphicSettings().height);
 
 	gGraphicsHandler.setupSwapChain();
-	gGraphicsHandler.setupViewport(WIDTH, HEIGHT);
+	gGraphicsHandler.setupViewport(
+		gOptionsHandler.getGraphicSettings().width,
+		gOptionsHandler.getGraphicSettings().height);
 	gGraphicsHandler.setupSamplerState();
 
-	gWindow.startWindowLoop(&gGraphicsHandler);
+	gWindow.startWindowLoop(&gGraphicsHandler, &gOptionsHandler);
 
 	return 0;
 }

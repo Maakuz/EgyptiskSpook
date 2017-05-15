@@ -9,7 +9,6 @@ class Window {
 private:
 	SDL_Window *mWindow;
 	bool mRunning;
-
 	Game* mGame;
 	SDL_bool mLockCursor;
 public:
@@ -18,8 +17,8 @@ public:
 	~Window();
 
 	// returns false for fail
-	bool setupWindowAndSDL();
-	void startWindowLoop(GraphicsHandler* graphicsHandler);
+	bool setupWindowAndSDL(int width, int height);
+	void startWindowLoop(GraphicsHandler* graphicsHandler, OptionsHandler* options);
 	// returns false for quit event
 	bool handleEvent(SDL_Event const &event);
 	bool handleKeyPress(SDL_KeyboardEvent const &key);

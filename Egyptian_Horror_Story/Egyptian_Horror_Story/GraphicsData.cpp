@@ -11,6 +11,11 @@ GraphicsData::~GraphicsData()
 			key.second->Release();
 	}
 
+	for (auto const &key : this->mCBuffers) {
+		if (key.second)
+			key.second->Release();
+	}
+
 	for (auto const &key : this->mSrvs) {
 		if (key.second)
 			key.second->Release();
@@ -28,12 +33,13 @@ bool GraphicsData::loadTexture(int key, wchar_t* fileName, ID3D11Device* device)
 
 	path += fileName;
 
+	if (mSrvs[key])
+		mSrvs[key]->Release();
 	HRESULT hr = DirectX::CreateWICTextureFromFile(device, path.c_str(), nullptr, &mSrvs[key]);
 
 
 	if (SUCCEEDED(hr))
 		return true;
-
 	else
 		hr = DirectX::CreateWICTextureFromFile(device, L"../Resource/Textures/placeholder.png", nullptr, &mSrvs[key]);
 
@@ -56,7 +62,7 @@ HRESULT GraphicsData::createConstantBuffer(int key, UINT size, D3D11_SUBRESOURCE
 		desc.Usage = D3D11_USAGE_DYNAMIC;
 	}
 
-	HRESULT hr = device->CreateBuffer(&desc, data, &this->mBuffers[key]);
+	HRESULT hr = device->CreateBuffer(&desc, data, &this->mCBuffers[key]);
 	return hr;
 }
 
@@ -85,7 +91,7 @@ void GraphicsData::createVerticeArray(int key, EntityStruct::VertexStruct* verti
 	this->mNrOfVertices[key] = nrOfVertices;
 	this->mVertices[key] = new EntityStruct::VertexStruct[nrOfVertices];
 
-	for (size_t i = 0; i < nrOfVertices; i++)
+	for (int i = 0; i < nrOfVertices; i++)
 	{
 		this->mVertices.at(key)[i] = vertices[i];
 	}
@@ -96,14 +102,14 @@ void GraphicsData::setNrOfVertices(int key, int nrOfVertices)
 	this->mNrOfVertices[key] = nrOfVertices;
 }
 
-void GraphicsData::addConstantBuffer(int key, ID3D11Buffer* buffer)
-{
-	this->mBuffers[key] = buffer;
-}
-
-ID3D11Buffer* GraphicsData::getBuffer(int key)
+ID3D11Buffer* GraphicsData::getVertexBuffer(int key)
 {
 	return this->mBuffers.at(key);
+}
+
+ID3D11Buffer* GraphicsData::getConstantBuffer(int key)
+{
+	return this->mCBuffers.at(key);
 }
 
 ID3D11ShaderResourceView* GraphicsData::getSRV(int key)
@@ -121,9 +127,14 @@ int GraphicsData::getNrOfVertices(int key)
 	return this->mNrOfVertices.at(key);
 }
 
-std::map<int, ID3D11Buffer*>* GraphicsData::getBufferMap()
+std::map<int, ID3D11Buffer*>* GraphicsData::getVertexBufferMap()
 {
 	return &this->mBuffers;
+}
+
+std::map<int, ID3D11Buffer*>* GraphicsData::getConstantBufferMap()
+{
+	return &this->mCBuffers;
 }
 
 std::map<int, ID3D11ShaderResourceView*>* GraphicsData::getSrvMap()

@@ -2,38 +2,60 @@
 #define ENTITYHANDLER_H
 #include <vector>
 #include "EntityRenderer.h"
-#include "RiggedEntityRenderer.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Wall.h"
 #include "AnimatedEntity.h"
 #include "FBXLoader.h"
+#include "AudioManager.h"
+#include "AIHandler.h"
+
+#define WALLTEXTURE L"pyramidStone.png"
 
 class EntityHandler
 {
 private:
 	std::vector<Entity*> mEntities;
+<<<<<<< HEAD
 	AnimatedEntity* mRiggedTest;
+=======
+	std::vector<Trap*> mTraps;
+	AudioManager* mAudioManager;
+	Entity* mFlashlightModel;
+	Entity* mLevel;
+>>>>>>> 0e47606002d43c19540251978d1fb829f6447b7a
 	Player* mPlayer;
+	Enemy* mEnemy;
+	
 	FBXLoader mLoader;
 
 	//Will be removed in GraphicsHandler
 	EntityRenderer* mEntityRenderer;
-	RiggedEntityRenderer* mRiggedEntityRenderer;
 
+	bool footstepsPlaying;
 	int mNrOfKeys;
+
+	void hardcodedMap(ID3D11Device* device);
+	void loadEntityModel(std::string modelName, wchar_t* textureName, Entity* entity, ID3D11Device* device);
+	void updateAudio();
+	void updateCollision();
 
 public:
 	EntityHandler();
 	virtual ~EntityHandler();
 
+	void loadMap(ID3D11Device* device);
+
+	void setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context);
 	void setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera);
 	void setupEntities(ID3D11Device* device);
+	void setupAudioManager(AudioManager* manager);
 
-	void update();
+	void update(ID3D11DeviceContext* context, float dt);
 
 	EntityRenderer* getEntityRenderer();
-	RiggedEntityRenderer* getRiggedEntityRenderer();
 	Player* getPlayer();
+	Enemy* getEnemy();
 };
 
 

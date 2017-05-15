@@ -16,12 +16,12 @@ Window::~Window() {
 	SDL_Quit();
 }
 
-bool Window::setupWindowAndSDL() {
+bool Window::setupWindowAndSDL(int width, int height) {
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO); //to use SDL_Log
 
-	mWindow = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT,
-		SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+	mWindow = SDL_CreateWindow(TITLE, 0, 0, width, height,
+		SDL_WINDOW_SHOWN);
 	if (mWindow == NULL) {
 		SDL_Log("Window creation error ", SDL_GetError());
 		return false;
@@ -29,11 +29,16 @@ bool Window::setupWindowAndSDL() {
 		return true;
 }
 
-void Window::startWindowLoop(GraphicsHandler* graphicsHandler) {
+void Window::startWindowLoop(GraphicsHandler* graphicsHandler, OptionsHandler* options) {
 	mRunning = true;
 	SDL_Event event;
+	
+	INT64 currentTime = SDL_GetPerformanceCounter();
+	INT64 prevTime = 0;
+	float deltaTime = 0;
 
-	this->mGame = new Game(graphicsHandler, WIDTH, HEIGHT);
+	this->mGame = new Game(graphicsHandler, options);
+	this->mGame->setWindowSize(this->mWindow);
 	SDL_SetRelativeMouseMode(SDL_bool::SDL_TRUE);
 
 	while (mRunning) {
@@ -42,10 +47,19 @@ void Window::startWindowLoop(GraphicsHandler* graphicsHandler) {
 				mRunning = false;
 		}
 
-		//do stuff
-		this->mGame->update();
+		prevTime = currentTime;
+		currentTime = SDL_GetPerformanceCounter();
 
-		SDL_Delay(5); // 5 ms delay per frame
+		deltaTime = (float)(currentTime - prevTime) / SDL_GetPerformanceFrequency();
+		
+		//Säkert jätteprestandatagande
+		//SDL_Log("Time: %f\n", deltaTime);
+
+		//do stuff
+		this->mGame->update(deltaTime);
+		this->mGame->draw();
+
+		SDL_Delay(1); // 5 ms delay per frame
 	}
 }
 
@@ -70,6 +84,9 @@ bool Window::handleEvent(SDL_Event const &event) {
 
 bool Window::handleKeyPress(SDL_KeyboardEvent const &key) {
 	switch (key.keysym.scancode) {
+		case SDL_SCANCODE_L:
+			this->mGame->updateLua();
+			break;
 		case SDL_SCANCODE_ESCAPE:
 			return false;
 		case SDL_SCANCODE_RSHIFT:
