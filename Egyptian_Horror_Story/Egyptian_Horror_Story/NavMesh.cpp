@@ -36,9 +36,14 @@ void NavMesh::deleteMemory() {
 		SDL_FreeSurface(mSurface);
 	if (mCopy)
 		SDL_FreeSurface(mCopy);
+	if (mCurrentThread) {
+		mCurrentThread->join();
+		delete mCurrentThread;
+	}
 }
 
 NavMesh::NavMesh() {
+	mCurrentThread = nullptr;
 	mSurface = nullptr;
 	indexArray = nullptr;
 }
@@ -57,6 +62,12 @@ NavMesh* NavMesh::operator=(NavMesh const &navMesh) {
 }
 
 void NavMesh::loadGrid(const char *gridName) {
+	if (mCurrentThread) {
+		mCurrentThread->join();
+		delete mCurrentThread;
+		mCurrentThread = nullptr;
+	}
+
 	std::string str(PATH);
 	str += gridName;
 
@@ -114,8 +125,11 @@ bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
 	}
 }
 
-std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int toZ) {
+void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
+	int toX, int toZ) {
 	//A Star algorithm ! THIS IS CURRENTLY VERY UNOPTIMIZED !
+	enemy->setPaused(true);
+
 	Vector2 toPos = toPixelCoord(toX, toZ);
 	std::vector<Vector3> path;
 	std::vector<Node> openList;
@@ -125,18 +139,21 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 
 	if (toPos == openList[0].node) { // if at same node
 		path.push_back(Vector3(toX, 0, toZ));
-		return path;
+		enemy->setPath(path);
+		enemy->setFollowPath(true);
+		enemy->setPaused(false);
+		return;
 	}
 
 	Vector2 node;
 	Node parent;
 	bool pathFound = false;
 	int nodes = 0;
-	
+
 	while (!openList.empty() && !pathFound) {
 		parent = getShortestNode(openList);
 		if (contains(closedList, parent.node, getWidth()) != -1) continue; //in closed list just go
-		
+
 		closedList.insert({ hashMethod(parent.node, getWidth()), parent }); //add current node to closed list
 		nodes++;
 
@@ -152,7 +169,8 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 
 					if (toPos == node) { // adding target node = Done
 						pathFound = true;
-					} else if (isWalkable(node) && contains(closedList, node, getWidth()) == -1) {
+					}
+					else if (isWalkable(node) && contains(closedList, node, getWidth()) == -1) {
 						openListInsert(node, openList, hashMethod(parent.node, getWidth()), cost, parent);
 					}
 				}
@@ -161,7 +179,7 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 	}
 
 	// path.push_back(Vector3(toX, 0, toZ)); Dont need to go to player exact pixel,
-											// enemy can attack, wrestling is not needed
+	// enemy can attack, wrestling is not needed
 	while (true) {
 		path.push_back(getPosition(parent.node));
 		if (parent.parentIndex == 0) break;
@@ -174,7 +192,19 @@ std::vector<Vector3> NavMesh::getPathToCoord(int fromX, int fromZ, int toX, int 
 
 	savePathTest(path);
 
-	return path;
+	enemy->setPath(path);
+	enemy->setFollowPath(true);
+	enemy->setPaused(false);
+}
+
+void NavMesh::loadPathToCoord(Enemy *enemy, int fromX, int fromZ, int toX, int toZ) {
+	if (mCurrentThread) {
+		mCurrentThread->join();
+		delete mCurrentThread;
+	}
+	mCurrentThread = new std::thread(
+		&NavMesh::loadPathToCoordThread, this, enemy,
+		fromX, fromZ, toX, toZ);
 }
 
 // Save image so the path taken is visible

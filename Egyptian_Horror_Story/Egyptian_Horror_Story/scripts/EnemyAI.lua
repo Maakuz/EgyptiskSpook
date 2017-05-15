@@ -87,8 +87,7 @@ end
 function pathToPlayer()
 	SetEnemySpeed(runSpeed)
 	SetCurrentPathNode(0)
-	LoadPathToPlayer()
-	StartPathing()
+	--LoadPathToPlayer()
 	
 	onPlayerPath = true
 	onPointPath = false
@@ -97,7 +96,6 @@ end
 function pathToWaypoint()
 	SetCurrentPathNode(0)
 	LoadPathToPoint(waypoints[currentWaypoint].x, waypoints[currentWaypoint].z)
-	StartPathing()
 	
 	onPointPath = true
 	onPlayerPath = false

@@ -4,9 +4,6 @@
 #include <SDL.h>
 
 #include "Trap.h"
-#include "Enemy.h"
-#include "Player.h"
-#include "NavMesh.h"
 #include "SimpleMath.h"
 
 using namespace DirectX::SimpleMath;
@@ -138,17 +135,22 @@ int AICFunctions::loadPathToEntity(lua_State *state) {
 	NavMesh *navMesh = static_cast<NavMesh*>
 		(lua_touserdata(state, lua_upvalueindex(3)));
 
+	loadPath(enemy, entity, navMesh);
+
+	return 0;
+}
+
+void AICFunctions::loadPath(Enemy *enemy, Entity *entity, NavMesh *navMesh) {
 	Vector3 enemyPos = enemy->getPosition();
 	Vector3 entityPos = entity->getPosition();
 
-	enemy->setPath(navMesh->getPathToCoord(
+	navMesh->loadPathToCoord(
+		enemy,
 		enemyPos.x,
 		enemyPos.z,
 		entityPos.x,
 		entityPos.z
-	));
-
-	return 0;
+	);
 }
 
 int AICFunctions::loadPathToPoint(lua_State *state) {
@@ -161,10 +163,11 @@ int AICFunctions::loadPathToPoint(lua_State *state) {
 
 	if (lua_isinteger(state, -1) && lua_isinteger(state, -2)) {
 		int x = lua_tonumber(state, -2), z = lua_tonumber(state, -1);
-		enemy->setPath(navMesh->getPathToCoord(
+		navMesh->loadPathToCoord(
+			enemy,
 			enemyPos.x, enemyPos.z,
 			x, z
-		));
+		);
 	}
 
 	return 0;
