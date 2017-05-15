@@ -157,6 +157,7 @@ void AIHandler::update(float dt) {
 		lua_getglobal(mEnemyState, "onReachingPathEnd");
 		handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
 	}
+
 	Vector3 pPos = mPlayer->getPosition();
 	Vector2 pixelPos = navMesh.toPixelCoord(pPos.x, pPos.z);
 	//SDL_Log("Pixel coords: %f/%f, Real coords: %f/%f",

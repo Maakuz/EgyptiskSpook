@@ -3,6 +3,10 @@
 
 #include <lua.hpp>
 
+#include "Enemy.h"
+#include "Player.h"
+#include "NavMesh.h"
+
 class AICFunctions {
 public:
 	// Enemy & Player specifik functions
@@ -28,6 +32,9 @@ public:
 
 	// Debugging
 	static int log(lua_State *state);
+
+	// other
+	static void loadPath(Enemy *enemy, Entity *entity, NavMesh *navMesh);
 };
 
 #endif

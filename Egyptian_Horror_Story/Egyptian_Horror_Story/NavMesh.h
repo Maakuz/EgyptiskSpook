@@ -5,8 +5,11 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <thread>
+
 #include "Direct3DHeader.h"
 #include "SimpleMath.h"
+#include "Enemy.h"
 
 class NavMesh {
 private:
@@ -22,6 +25,7 @@ private:
 
 	SDL_Surface *mSurface, *mCopy;
 	UINT8 *indexArray;
+	std::thread *mCurrentThread;
 
 	void copy(NavMesh const &navMesh);
 	void deleteMemory();
@@ -41,6 +45,8 @@ private:
 	int hashMethod(DirectX::SimpleMath::Vector2 const &pos, int w) const;
 	// also removes the node from the list!!!!
 	Node getShortestNode(std::vector<Node> &openList) const;
+
+	void loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ, int toX, int toZ);
 public:
 	NavMesh();
 	virtual ~NavMesh();
@@ -52,7 +58,7 @@ public:
 	DirectX::SimpleMath::Vector2 toPixelCoord(int x, int z) const;
 	bool canSeeFrom(int fromX, int fromZ, int toX, int toZ) const;
 
-	std::vector<DirectX::SimpleMath::Vector3> getPathToCoord(int fromX, int fromZ, int x, int z);
+	void loadPathToCoord(Enemy *enemy, int fromX, int fromZ, int x, int z);
 	DirectX::SimpleMath::Vector3 getPosition(DirectX::SimpleMath::Vector2 pixel) const;
 
 	int getWidth() const;

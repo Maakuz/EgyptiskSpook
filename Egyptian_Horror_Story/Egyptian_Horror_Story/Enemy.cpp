@@ -13,6 +13,7 @@ Enemy::Enemy(int graphicsKey) : Entity(graphicsKey) {
 	// simple pathing
 	currentPathNode = 0;
 	mFollowPath = false;
+	mPaused = false;
 }
 
 Enemy::~Enemy() {
@@ -30,6 +31,10 @@ void Enemy::setVelocity(DirectX::SimpleMath::Vector3 velocity) {
 
 void Enemy::setFollowPath(bool followPath) {
 	mFollowPath = followPath;
+}
+
+void Enemy::setPaused(bool paused) {
+	mPaused = paused;
 }
 
 void Enemy::setWaypoint(Vector3 waypoint) {
@@ -81,6 +86,8 @@ bool Enemy::onPath() const {
 }
 
 Enemy::UPDATE_RETURNS Enemy::update(float dt) {
+	if (mPaused) return NOTHING;
+
 	move(mVelocity * mSpeed * dt);
 	mCapsule->mPoint = getPosition();
 	if ((mWaypoint - getPosition()).Length() <= mSpeed * dt) {

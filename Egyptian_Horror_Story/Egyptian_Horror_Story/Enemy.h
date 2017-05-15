@@ -15,7 +15,7 @@ public:
 private:
 	DirectX::SimpleMath::Vector3 mVelocity, mWaypoint;
 	float mSpeed;
-	bool mFollowPath;
+	bool mFollowPath, mPaused;
 
 	int currentPathNode;
 	std::vector<DirectX::SimpleMath::Vector3> mPath;
@@ -31,6 +31,7 @@ public:
 	void setSpeed(float speed);
 	void setVelocity(DirectX::SimpleMath::Vector3 velocity);
 	void setFollowPath(bool followPath);
+	void setPaused(bool pause);
 	void setWaypoint(DirectX::SimpleMath::Vector3 waypoint);
 
 	DirectX::SimpleMath::Vector3 getVelocity() const;

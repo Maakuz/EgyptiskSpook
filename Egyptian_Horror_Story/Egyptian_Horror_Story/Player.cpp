@@ -266,7 +266,6 @@ void Player::computeVelocity() {
 }
 
 void Player::handleSprinting(float dt) {
-	//SDL_Log("Stamina: %f", mStamina);
 	if (this->mSprinting) {
 		this->mStamina += STAMINA_LOSS * dt; //change later
 		if (this->mStamina <= 0) {
