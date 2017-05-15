@@ -13,7 +13,7 @@
 #define START_STAMINA 3.f // Stamina start
 
 #define SNEAK_MULTIPLIER 0.35f // Multiplier for sneaking
-#define SNEAK_Y -3.f // Camera change while sneaking
+#define SNEAK_Y -4.f // Camera change while sneaking
 #define SNEAK_TIME 0.2f //Time to go from standing to sneaking and vice versa
 
 using namespace DirectX::SimpleMath;
