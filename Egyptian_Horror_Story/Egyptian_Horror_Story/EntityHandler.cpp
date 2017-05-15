@@ -1477,7 +1477,7 @@ void EntityHandler::loadMap(ID3D11Device* device)
 void EntityHandler::setupEntities(ID3D11Device* device)
 {
 	//this->hardcodedMap(device);
-	//this->loadMap(device);
+	this->loadMap(device);
 
 	this->mFlashlightModel = new Entity(this->mPlayer->getLight()->getGraphicsKey());
 
