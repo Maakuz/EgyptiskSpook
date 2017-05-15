@@ -81,9 +81,9 @@ void Game::update(float dt) {
 	this->mStateHandler->update(this, dt);
 }
 
-bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
+bool Game::handleKeyboardPress(SDL_KeyboardEvent const& key)
 {
-	this->mEntityHandler->getPlayer()->handleMouseKeyPress(key);
+	this->mEntityHandler->getPlayer()->handleKeyboardPress(key);
 	this->mOptionHandler->handleButtonPress(key, this->mGraphics->getDeviceContext());
 
 	switch (key.keysym.scancode)
@@ -99,9 +99,9 @@ bool Game::handleMouseKeyPress(SDL_KeyboardEvent const& key)
 	return true;
 }
 
-bool Game::handleMouseKeyRelease(SDL_KeyboardEvent const& key)
+bool Game::handleKeyboardRelease(SDL_KeyboardEvent const& key)
 {
-	this->mEntityHandler->getPlayer()->handleMouseKeyRelease(key);
+	this->mEntityHandler->getPlayer()->handleKeyboardRelease(key);
 	this->mOptionHandler->handleButtonRelease(key, this->mGraphics->getDeviceContext());
 
 	return true;

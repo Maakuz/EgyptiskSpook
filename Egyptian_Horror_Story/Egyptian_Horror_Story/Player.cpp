@@ -92,7 +92,7 @@ void Player::handleJumping(float dt) {
 	}
 }
 
-bool Player::handleMouseKeyPress(SDL_KeyboardEvent const &key)
+bool Player::handleKeyboardPress(SDL_KeyboardEvent const &key)
 {
 	switch (key.keysym.scancode) {
 		case SDL_SCANCODE_A:
@@ -125,7 +125,7 @@ bool Player::handleMouseKeyPress(SDL_KeyboardEvent const &key)
 	return true;
 }
 
-bool Player::handleMouseKeyRelease(SDL_KeyboardEvent const &key)
+bool Player::handleKeyboardRelease(SDL_KeyboardEvent const &key)
 {
 	switch (key.keysym.scancode) {
 		case SDL_SCANCODE_Q:

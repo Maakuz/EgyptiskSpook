@@ -1432,6 +1432,9 @@ EntityHandler::~EntityHandler()
 
 	for (size_t i = 0; i < this->mTraps.size(); i++)
 		delete this->mTraps[i];
+
+	for (size_t i = 0; i < this->mTreasures.size(); i++)
+		delete this->mTreasures[i];
 }
 
 void EntityHandler::loadMap(ID3D11Device* device)

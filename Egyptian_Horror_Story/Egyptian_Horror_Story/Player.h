@@ -38,8 +38,8 @@ public:
 	void updatePosition(float dt);
 	void handleJumping(float dt);
 
-	bool handleMouseKeyPress(SDL_KeyboardEvent const &key);
-	bool handleMouseKeyRelease(SDL_KeyboardEvent const &key);
+	bool handleKeyboardPress(SDL_KeyboardEvent const &key);
+	bool handleKeyboardRelease(SDL_KeyboardEvent const &key);
 	void handleMouseMotion(SDL_MouseMotionEvent const &motion);
 	
 	Light* getLight();

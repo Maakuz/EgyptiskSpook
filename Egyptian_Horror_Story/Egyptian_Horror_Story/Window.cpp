@@ -93,7 +93,7 @@ bool Window::handleKeyPress(SDL_KeyboardEvent const &key) {
 			//change from fullscreen and back
 			SDL_SetWindowFullscreen(mWindow, SDL_GetWindowFlags(mWindow) ^ SDL_WINDOW_FULLSCREEN);
 		default:
-			this->mGame->handleMouseKeyPress(key);
+			this->mGame->handleKeyboardPress(key);
 	}
 
 	return true;
@@ -101,7 +101,7 @@ bool Window::handleKeyPress(SDL_KeyboardEvent const &key) {
 
 bool Window::handleKeyRelease(SDL_KeyboardEvent const &key)
 {
-	this->mGame->handleMouseKeyRelease(key);
+	this->mGame->handleKeyboardRelease(key);
 
 
 	switch (key.keysym.scancode) {

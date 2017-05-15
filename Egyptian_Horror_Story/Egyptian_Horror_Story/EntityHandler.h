@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Wall.h"
+#include "Treasure.h"
 #include "FBXLoader.h"
 #include "AudioManager.h"
 #include "AIHandler.h"
@@ -16,6 +17,7 @@ class EntityHandler
 private:
 	std::vector<Entity*> mEntities;
 	std::vector<Trap*> mTraps;
+	std::vector<Treasure*> mTreasures;
 	AudioManager* mAudioManager;
 	Entity* mFlashlightModel;
 	Entity* mLevel;
