@@ -81,7 +81,6 @@ bool Enemy::onPath() const {
 }
 
 Enemy::UPDATE_RETURNS Enemy::update(float dt) {
-	SDL_Log("Hi: %f,%f", dt, mSpeed);
 	move(mVelocity * mSpeed * dt);
 	mCapsule->mPoint = getPosition();
 	if ((mWaypoint - getPosition()).Length() <= mSpeed * dt) {

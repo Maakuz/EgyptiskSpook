@@ -1389,6 +1389,33 @@ void EntityHandler::updateCollision()
 
 }
 
+void EntityHandler::detectCloseTreasures()
+{
+	bool exit = false;
+
+	for (int i = 0; i < this->mTreasures.size() && !exit; i++)
+	{
+		this->mPlayer->setPickuppableTreasure(nullptr);
+
+		if (this->mTreasures[i]->getPickedUp())
+		{
+			this->mEntityRenderer->getGraphicsData()->removeData(this->mTreasures[i]->getKey());
+			
+			delete this->mTreasures[i];
+			this->mTreasures.erase(this->mTreasures.begin() + i);
+			exit = true;
+		}
+
+		//Change to squared for performance
+		
+		else if ((this->mPlayer->getPosition() - this->mTreasures[i]->getPosition()).Length() < 1.f)
+		{
+			this->mPlayer->setPickuppableTreasure(this->mTreasures[i]);
+			exit = true;
+		}
+	}
+}
+
 void EntityHandler::setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	Trap* test = new Trap(1000, 25, 0, -74);
@@ -1434,7 +1461,10 @@ EntityHandler::~EntityHandler()
 		delete this->mTraps[i];
 
 	for (size_t i = 0; i < this->mTreasures.size(); i++)
-		delete this->mTreasures[i];
+	{
+		if (this->mTreasures[i])
+			delete this->mTreasures[i];
+	}
 }
 
 void EntityHandler::loadMap(ID3D11Device* device)
@@ -1446,13 +1476,19 @@ void EntityHandler::loadMap(ID3D11Device* device)
 
 void EntityHandler::setupEntities(ID3D11Device* device)
 {
-	this->hardcodedMap(device);
+	//this->hardcodedMap(device);
 	//this->loadMap(device);
 
 	this->mFlashlightModel = new Entity(this->mPlayer->getLight()->getGraphicsKey());
 
 	this->loadEntityModel("flashLight.fbx", L"dargon_bump.jpg", mFlashlightModel, device);
 
+
+	Treasure* tres = new Treasure(500, 20.f);
+
+	this->loadEntityModel("treasure1.fbx", L"sand.bmp", tres, device);
+
+	this->mTreasures.push_back(tres);
 }
 
 void EntityHandler::setupAudioManager(AudioManager* manager)
@@ -1471,6 +1507,8 @@ void EntityHandler::update(ID3D11DeviceContext* context, float dt)
 
 	this->mPlayer->updatePosition(dt);
 	this->mEnemy->updatePosition(this->mEntityRenderer->getGraphicsData(), context, this->mPlayer->getPosition());
+
+	this->detectCloseTreasures();
 
 	this->updateCollision();
 

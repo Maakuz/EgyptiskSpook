@@ -33,6 +33,8 @@ public:
 	void createVerticeArray(int key, EntityStruct::VertexStruct* vertices, int nrOfVertices);
 	void setNrOfVertices(int key, int nrOfVertices);
 
+	void removeData(int key);
+
 	ID3D11Buffer* getVertexBuffer(int key);
 	ID3D11Buffer* getConstantBuffer(int key);
 	ID3D11ShaderResourceView* getSRV(int key);

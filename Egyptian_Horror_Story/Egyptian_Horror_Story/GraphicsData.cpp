@@ -102,6 +102,33 @@ void GraphicsData::setNrOfVertices(int key, int nrOfVertices)
 	this->mNrOfVertices[key] = nrOfVertices;
 }
 
+void GraphicsData::removeData(int key)
+{
+	if (this->mBuffers[key])
+	{
+		this->mBuffers[key]->Release();
+		this->mBuffers.erase(key);
+	}
+
+	if (this->mCBuffers[key])
+	{
+		this->mCBuffers[key]->Release();
+		this->mCBuffers.erase(key);
+	}
+
+	if (this->mSrvs[key])
+	{
+		this->mSrvs[key]->Release();
+		this->mSrvs.erase(key);
+	}
+
+	if (this->mVertices[key])
+	{
+		delete[] this->mVertices[key];
+		this->mVertices.erase(key);
+	}
+}
+
 ID3D11Buffer* GraphicsData::getVertexBuffer(int key)
 {
 	return this->mBuffers.at(key);

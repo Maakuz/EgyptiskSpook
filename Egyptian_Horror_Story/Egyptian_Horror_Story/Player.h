@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "CameraClass.h"
 #include "Light.h"
+#include "Treasure.h"
 
 #include <SDL.h>
 
@@ -19,6 +20,10 @@ private:
 	bool mJumping, mSprinting, mSneaking;
 	DirectX::SimpleMath::Vector3 mVelocity;
 
+	Treasure* mPickupableTres;
+	bool mIsPickingTres;
+	int mScore;
+
 	Light* mLight;
 
 	void updateLightPosition();
@@ -28,6 +33,8 @@ private:
 	void startSprint();
 	void startSneaking();
 	float getMovementMultiplier();
+
+	void updateTreasureGrabbing(float dt);
 public:
 	//WTF
 	Capsule* col;
@@ -41,6 +48,8 @@ public:
 	bool handleKeyboardPress(SDL_KeyboardEvent const &key);
 	bool handleKeyboardRelease(SDL_KeyboardEvent const &key);
 	void handleMouseMotion(SDL_MouseMotionEvent const &motion);
+
+	void setPickuppableTreasure(Treasure* tres);
 	
 	Light* getLight();
 	CameraClass* getCamera();

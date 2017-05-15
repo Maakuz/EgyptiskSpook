@@ -67,6 +67,7 @@ void Game::updateGame(float dt)
 		mGuiRenderer->setNavigationTest(mGraphics->getDevice(), this->mAIHandler->getNavigationTexture(),
 			this->mAIHandler->getNavMeshWidth(), this->mAIHandler->getNavMeshHeight());
 
+	this->mCamera->updateRotation(this->mGraphics->getDeviceContext());
 }
 
 void Game::draw() {
@@ -110,7 +111,6 @@ bool Game::handleKeyboardRelease(SDL_KeyboardEvent const& key)
 void Game::handleMouseMotion(SDL_MouseMotionEvent const &motion)
 {
 	this->mEntityHandler->getPlayer()->handleMouseMotion(motion);
-	this->mCamera->updateRotation(this->mGraphics->getDeviceContext());
 }
 
 void Game::updateLua() {

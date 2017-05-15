@@ -36,6 +36,7 @@ private:
 	void loadEntityModel(std::string modelName, wchar_t* textureName, Entity* entity, ID3D11Device* device);
 	void updateAudio();
 	void updateCollision();
+	void detectCloseTreasures();
 
 public:
 	EntityHandler();

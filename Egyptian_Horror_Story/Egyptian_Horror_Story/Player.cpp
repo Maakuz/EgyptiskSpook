@@ -18,17 +18,23 @@
 #define SNEAK_Y -4.f // Camera change while sneaking
 #define SNEAK_TIME 0.2f //Time to go from standing to sneaking and vice versa
 
+#define PICKUP_SPEED 1
+#define CAMERA_SNAP_SPEED 150
+
 using namespace DirectX::SimpleMath;
 
 Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int key, GraphicsData* gData)
 	:Entity(key)
 {
 	this->mCamera = camera;
+	this->mPickupableTres = nullptr;
+	this->mIsPickingTres = false;
 
 	// movement
 	this->mSneaking = false;
 	this->mSprinting = false;
 	this->mSneakTime = 0;
+	this->mScore = 0;
 
 	this->mMaxStamina = MAX_STAMINA;
 	this->mSpeed = SPEED;
@@ -54,21 +60,41 @@ Player::~Player()
 
 void Player::updatePosition(float dt)
 {
-	this->mPrevPos = this->getPosition();
-	computeVelocity();
-	handleJumping(dt);
-	handleSprinting(dt);
+	if (!this->mIsPickingTres)
+	{
+		this->mPrevPos = this->getPosition();
+		computeVelocity();
+		handleJumping(dt);
+		handleSprinting(dt);
 
-	DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed * getMovementMultiplier() * dt;
-	setPosition(newPos);
+		DirectX::SimpleMath::Vector3 newPos = this->getPosition() + this->mVelocity * mSpeed * getMovementMultiplier() * dt;
+		setPosition(newPos);
 
-	newPos.y += handleSneaking(dt);
-	
-	this->mCamera->setPos(newPos);
+		newPos.y += handleSneaking(dt);
+
+		this->mCamera->setPos(newPos);
+
+		//ASDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		this->col->mPoint = this->mCamera->getPos();
+	}
+
+	else
+	{
+		DirectX::SimpleMath::Vector3 newForward = this->mPickupableTres->getPosition() - this->getPosition();
+		newForward.Normalize();
+
+		if (newForward.y > this->mCamera->getForward().y)
+			this->mCamera->setPitch(this->mCamera->getPitch() + (dt * CAMERA_SNAP_SPEED));
+
+		else if (newForward.y < this->mCamera->getForward().y)
+			this->mCamera->setPitch(this->mCamera->getPitch() - (dt * CAMERA_SNAP_SPEED));
+
+		//TODO: XLED MED AAAH
+
+	}
+
 	updateLightPosition();
-	
-	//ASDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-	this->col->mPoint = this->mCamera->getPos();
+
 }
 
 void Player::handleJumping(float dt) {
@@ -120,6 +146,10 @@ bool Player::handleKeyboardPress(SDL_KeyboardEvent const &key)
 		case SDL_SCANCODE_LCTRL:
 			startSneaking();
 			break;
+
+		case SDL_SCANCODE_F:
+			this->updateTreasureGrabbing(1.f);
+			break;
 	}
 
 	return true;
@@ -153,6 +183,13 @@ bool Player::handleKeyboardRelease(SDL_KeyboardEvent const &key)
 		case SDL_SCANCODE_LCTRL:
 			this->mSneaking = false;
 			break;
+
+		case SDL_SCANCODE_F:
+			if (this->mPickupableTres)
+				this->mPickupableTres->resetCounter();
+
+			this->mIsPickingTres = false;
+			break;
 	}
 
 	return true;
@@ -160,15 +197,20 @@ bool Player::handleKeyboardRelease(SDL_KeyboardEvent const &key)
 
 void Player::handleMouseMotion(SDL_MouseMotionEvent const &motion)
 {
-	if (motion.xrel != 0)
+	if (motion.xrel != 0 && !this->mIsPickingTres)
 	{
 		this->mCamera->setYaw(this->mCamera->getYaw() + motion.xrel);
 	}
 
-	if (motion.yrel != 0)
+	if (motion.yrel != 0 && !this->mIsPickingTres)
 	{
 		this->mCamera->setPitch(this->mCamera->getPitch() - motion.yrel);
 	}
+}
+
+void Player::setPickuppableTreasure(Treasure* tres)
+{
+	this->mPickupableTres = tres;
 }
 
 Light* Player::getLight()
@@ -224,7 +266,7 @@ void Player::computeVelocity() {
 }
 
 void Player::handleSprinting(float dt) {
-	SDL_Log("Stamina: %f", mStamina);
+	//SDL_Log("Stamina: %f", mStamina);
 	if (this->mSprinting) {
 		this->mStamina += STAMINA_LOSS * dt; //change later
 		if (this->mStamina <= 0) {
@@ -275,6 +317,23 @@ float inline Player::getMovementMultiplier() {
 	}
 	
 	return 1.f;
+}
+
+void Player::updateTreasureGrabbing(float dt)
+{
+	if (this->mPickupableTres)
+	{
+		this->mIsPickingTres = true;
+		this->mPickupableTres->increaseCounter(dt * PICKUP_SPEED);
+
+		if (this->mPickupableTres->getPickupCounter() >= this->mPickupableTres->getPickupTime())
+		{
+			this->mScore += this->mPickupableTres->getValue();
+			this->mPickupableTres->setPickedUp(true);
+			this->mIsPickingTres = false;
+			this->mPickupableTres = nullptr;
+		}
+	}
 }
 
 void Player::damage() {
