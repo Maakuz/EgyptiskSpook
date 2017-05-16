@@ -543,3 +543,8 @@ bool AABB::aabbVSPoint(DirectX::SimpleMath::Vector3 point)
 	}
 	return false;
 }
+
+void AABB::setPosition(DirectX::SimpleMath::Vector3 point)
+{
+	this->mPoint = point;
+}

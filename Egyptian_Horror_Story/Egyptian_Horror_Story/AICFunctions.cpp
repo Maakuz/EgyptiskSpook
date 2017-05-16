@@ -39,6 +39,34 @@ int AICFunctions::setEntityPosition(lua_State *state) {
 	return 0;
 }
 
+int AICFunctions::setEntityRotation(lua_State *state) {
+	Entity *entity = static_cast<Entity*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+
+	if (lua_isnumber(state, -1) && lua_isnumber(state, -2)
+		&& lua_isnumber(state, -3))
+		entity->setRotation(Vector3(static_cast<float> (lua_tonumber(state, -3)),
+									static_cast<float> (lua_tonumber(state, -2)),
+									static_cast<float> (lua_tonumber(state, -1))));
+
+	return 0;
+}
+
+int AICFunctions::setEntityOffsetRotation(lua_State *state) {
+	Entity *entity = static_cast<Entity*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+
+	if (lua_isnumber(state, -1) && lua_isnumber(state, -2)
+		&& lua_isnumber(state, -3))
+		entity->setOffsetRotation(
+			Vector3(static_cast<float> (lua_tonumber(state, -3)),
+			static_cast<float> (lua_tonumber(state, -2)),
+			static_cast<float> (lua_tonumber(state, -1)))
+		);
+
+	return 0;
+}
+
 int AICFunctions::getEntityPosition(lua_State *state) {
 	Entity *entity = static_cast<Entity*>
 		(lua_touserdata(state, lua_upvalueindex(1)));

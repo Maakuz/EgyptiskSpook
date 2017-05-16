@@ -79,7 +79,7 @@ void NavMesh::loadGrid(const char *gridName) {
 SDL_Color NavMesh::getPixel(int x, int y) const {
 	assert(mSurface);
 	return mSurface->format->palette->colors
-		[indexArray[x + y * getWidth()]];
+		[indexArray[x + y * getWidth()]]; // 2d to 1d
 }
 
 SDL_Color NavMesh::getPixelAtCoord(int x, int z) const {

@@ -114,6 +114,9 @@ void AIHandler::addLuaFunctionsTrap(lua_State *state, Trap *trap) {
 	// TRAP FUNCTIONS
 	void *userData[] = { trap };
 	addLuaFunction(state, "GetPosition", AICFunctions::getEntityPosition, userData, ARRAYSIZE(userData));
+	addLuaFunction(state, "SetPosition", AICFunctions::setEntityPosition, userData, ARRAYSIZE(userData));
+	addLuaFunction(state, "RotateTrap", AICFunctions::setEntityRotation, userData, ARRAYSIZE(userData));
+	addLuaFunction(state, "SetTrapRotOffset", AICFunctions::setEntityOffsetRotation, userData, ARRAYSIZE(userData));
 
 	// PLAYER FUNCTIONS
 	void *userData2[] = { mPlayer };
@@ -169,12 +172,12 @@ void AIHandler::update(float dt) {
 		handleError(state, lua_pcall(state, 0, 0, 0));
 
 		// should not be checked every frame, change later
-		if (script.trap->getAABB().aabbVSCapsule(*mPlayer->col)) {
+		if (script.trap->getAABB()->aabbVSCapsule(*mPlayer->col)) {
 			lua_getglobal(state, "onPlayerCollision");
 			handleError(state, lua_pcall(state, 0, 0, 0));
 		}
 
-		if (script.trap->getAABB().aabbVSCapsule(*mEnemy->mCapsule)) {
+		if (script.trap->getAABB()->aabbVSCapsule(*mEnemy->mCapsule)) {
 			lua_getglobal(state, "onEnemyCollision");
 			handleError(state, lua_pcall(state, 0, 0, 0));
 		}

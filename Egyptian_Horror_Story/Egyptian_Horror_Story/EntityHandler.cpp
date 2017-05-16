@@ -1346,7 +1346,7 @@ void EntityHandler::updateCollision()
 	{
 		Wall* ptr = dynamic_cast<Wall*>(wall);
 
-		if (ptr && ptr->getAABB().aabbVSCapsule(*this->getPlayer()->col)) {
+		if (ptr && ptr->getAABB() && ptr->getAABB()->aabbVSCapsule(*this->getPlayer()->col)) {
 			DirectX::SimpleMath::Vector3 ptop = this->mPlayer->getPrevPos() - this->mPlayer->getPosition();
 
 
@@ -1423,7 +1423,6 @@ void EntityHandler::setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11Device
 
 	this->loadEntityModel("testCube.fbx", L"", test, device);
 	this->mTraps.push_back(test);
-	
 	
 	ai->setupAI();
 }
@@ -1508,6 +1507,11 @@ void EntityHandler::update(ID3D11DeviceContext* context, float dt)
 
 	this->mPlayer->updatePosition(dt);
 	this->mEnemy->updatePosition(this->mEntityRenderer->getGraphicsData(), context, this->mPlayer->getPosition());
+
+	for (auto& trap : this->mTraps) {
+		trap->updateAABB();
+		trap->updateTransformBuffer(context, this->mEntityRenderer->getGraphicsData());
+	}
 
 	this->detectCloseTreasures();
 

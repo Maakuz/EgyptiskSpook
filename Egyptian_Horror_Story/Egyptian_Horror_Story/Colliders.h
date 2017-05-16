@@ -16,6 +16,7 @@ public:
 	DirectX::SimpleMath::Vector3 calculateNormal(Capsule& other);
 	bool aabbVSCapsule(Capsule& other);
 	bool aabbVSPoint(DirectX::SimpleMath::Vector3 point);
+	void setPosition(DirectX::SimpleMath::Vector3 point);
 };
 
 class OBB {
