@@ -1,4 +1,5 @@
 #include "AudioManager.h"
+#include <SDL.h>
 
 #define AUDIOPATH L"../Resource/Sfx/"
 
@@ -6,14 +7,14 @@ AudioManager::AudioManager()
 {
 	CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
-	DirectX::AUDIO_ENGINE_FLAGS eflags = DirectX::AudioEngine_ReverbUseFilters;
+	DirectX::AUDIO_ENGINE_FLAGS eflags = DirectX::AudioEngine_EnvironmentalReverb | DirectX::AudioEngine_ReverbUseFilters;
 
-#ifdef _DEBUG
-	eflags = eflags | DirectX::AudioEngine_Debug;
-#endif
+//#ifdef _DEBUG
+	//eflags = eflags | DirectX::AudioEngine_Debug;
+//#endif
 
 	this->mAudioEngine = std::make_unique<DirectX::AudioEngine>(eflags);
-	this->mAudioEngine->SetReverb(DirectX::Reverb_ConcertHall);
+	this->mAudioEngine->SetReverb(DirectX::Reverb_Alley);
 
 	this->mListener.SetPosition(DirectX::XMFLOAT3(0, 0, 0));
 }
@@ -49,15 +50,20 @@ void AudioManager::addSfx(int key, wchar_t* filename)
 void AudioManager::createInstance(int instanceKey, int sfxKey)
 {
 	if (this->mSoundEffects[sfxKey])
+	{
 		this->mInstances[instanceKey] = this->mSoundEffects[sfxKey].get()->CreateInstance(
 			DirectX::SoundEffectInstance_Use3D | DirectX::SoundEffectInstance_ReverbUseFilters);
+	
+		if (this->mInstances[instanceKey] == nullptr)
+			SDL_Log("DEN ÄR NULLPTR");
+	}
 }
 
 void AudioManager::createEmitter(int key, DirectX::SimpleMath::Vector3 position)
 {
 	this->mEmitters[key] = std::unique_ptr<DirectX::AudioEmitter>(new DirectX::AudioEmitter());
 	this->mEmitters[key].get()->SetPosition(position);
-
+	this->mEmitters[key].get()->OrientFront.z *= -1;
 }
 
 void AudioManager::updateEmitter(int key, DirectX::SimpleMath::Vector3 position)
@@ -66,18 +72,14 @@ void AudioManager::updateEmitter(int key, DirectX::SimpleMath::Vector3 position)
 		this->mEmitters[key].get()->SetPosition(position);
 }
 
-void AudioManager::playInstance(int key, bool isLooped, float pitch, int emitterKey)
+void AudioManager::playInstance(int key, bool isLooped, float pitch)
 {
 	if (this->mInstances[key])
 	{
 		this->mInstances[key].get()->Stop();
+
 		this->mInstances[key].get()->SetPitch(pitch);
 		this->mInstances[key].get()->Play(isLooped);
-		
-		if (emitterKey != -1 && this->mEmitters[key])
-			this->mInstances[key].get()->Apply3D(this->mListener, *this->mEmitters[key], false);
-
-
 	}
 }
 
@@ -90,6 +92,12 @@ void AudioManager::stopInstance(int key, bool immediately)
 		this->mInstances[key].get()->Stop(immediately);
 	}
 	
+}
+
+void AudioManager::apply3DToInstance(int emitterKey, int instanceKey)
+{
+	if (emitterKey != -1 && this->mEmitters[emitterKey])
+		this->mInstances[instanceKey].get()->Apply3D(this->mListener, *this->mEmitters[emitterKey], false);
 }
 
 int AudioManager::getInstanceState(int key)

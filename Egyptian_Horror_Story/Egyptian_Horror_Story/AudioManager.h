@@ -36,8 +36,9 @@ public:
 	void updateEmitter(int key, DirectX::SimpleMath::Vector3 position);
 
 	//Pitch ranges from -1 to 1 and 3D does not work right now
-	void playInstance(int key, bool isLooped = false, float pitch = 0, int emitterKey = -1);
+	void playInstance(int key, bool isLooped = false, float pitch = 0);
 	void stopInstance(int key, bool immediately = true);
+	void apply3DToInstance(int emitterKey, int instanceKey);
 
 	//Will return -1 if sound not found
 	int getInstanceState(int key);

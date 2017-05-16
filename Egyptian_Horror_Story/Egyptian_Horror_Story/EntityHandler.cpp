@@ -1310,9 +1310,9 @@ void EntityHandler::updateAudio()
 {
 	//Updating emitters
 	DirectX::SimpleMath::Vector3 feet = this->mPlayer->getPosition();
-	feet.x -= 0.5f;
+	feet.x -= 465.5f;
 
-	this->mAudioManager->updateEmitter(1, feet);
+	//this->mAudioManager->updateEmitter(1, feet);
 	this->mAudioManager->updateListener(this->mPlayer->getPosition(),
 		this->mPlayer->getCamera()->getForward(),
 		this->mPlayer->getCamera()->getUp());
@@ -1325,7 +1325,7 @@ void EntityHandler::updateAudio()
 		&& this->mPlayer->getVelocity().y == 0)
 	{
 		//Pitch should wary to make it less repetetive
-		this->mAudioManager->playInstance(1, true, -0.6f);
+		this->mAudioManager->playInstance(1, true, -0.5f);
 		this->footstepsPlaying = true;
 	}
 
@@ -1477,7 +1477,7 @@ void EntityHandler::loadMap(ID3D11Device* device)
 void EntityHandler::setupEntities(ID3D11Device* device)
 {
 	//this->hardcodedMap(device);
-	this->loadMap(device);
+	//this->loadMap(device);
 
 	this->mFlashlightModel = new Entity(this->mPlayer->getLight()->getGraphicsKey());
 
@@ -1498,6 +1498,7 @@ void EntityHandler::setupAudioManager(AudioManager* manager)
 	this->mAudioManager->addSfx(1, L"footStepLouder.wav");
 	this->mAudioManager->createInstance(1, 1);
 	this->mAudioManager->createEmitter(1);
+	this->mAudioManager->apply3DToInstance(1, 1);
 	this->mAudioManager->playSfx(0);
 }
 
