@@ -128,6 +128,7 @@
     <ClInclude Include="GraphicsData.h" />
     <ClInclude Include="GraphicsHandler.h" />
     <ClInclude Include="GUIRenderer.h" />
+    <ClInclude Include="MenuHandler.h" />
     <ClInclude Include="OptionsHandler.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Colliders.h" />

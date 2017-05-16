@@ -253,6 +253,9 @@
     <ClInclude Include="Treasure.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="MenuHandler.h">
+      <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="scripts\EnemyAI.lua">

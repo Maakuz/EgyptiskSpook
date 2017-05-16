@@ -18,8 +18,8 @@
 #define SNEAK_Y -4.f // Camera change while sneaking
 #define SNEAK_TIME 0.2f //Time to go from standing to sneaking and vice versa
 
-#define PICKUP_SPEED 1
-#define CAMERA_SNAP_SPEED 150
+#define PICKUP_SPEED 1.f
+#define CAMERA_SNAP_SPEED 150.f
 
 using namespace DirectX::SimpleMath;
 
@@ -27,6 +27,8 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 	:Entity(key)
 {
 	this->mCamera = camera;
+
+	// Treasure
 	this->mPickupableTres = nullptr;
 	this->mIsPickingTres = false;
 
@@ -78,6 +80,7 @@ void Player::updatePosition(float dt)
 		this->col->mPoint = this->mCamera->getPos();
 	}
 
+	//TODO: GÖRA DET FINARE
 	else
 	{
 		DirectX::SimpleMath::Vector3 newForward = this->mPickupableTres->getPosition() - this->getPosition();
@@ -89,7 +92,14 @@ void Player::updatePosition(float dt)
 		else if (newForward.y < this->mCamera->getForward().y)
 			this->mCamera->setPitch(this->mCamera->getPitch() - (dt * CAMERA_SNAP_SPEED));
 
-		//TODO: XLED MED AAAH
+		
+		float test = atan2(this->getPosition().x - this->mPickupableTres->getPosition().x, this->getPosition().z - this->mPickupableTres->getPosition().z);
+
+		if (test > this->mCamera->getYaw())
+			this->mCamera->setYaw(this->mCamera->getYaw() + (dt * CAMERA_SNAP_SPEED));
+
+		else if (test < this->mCamera->getYaw())
+			this->mCamera->setYaw(this->mCamera->getYaw() - (dt * CAMERA_SNAP_SPEED));
 
 	}
 
