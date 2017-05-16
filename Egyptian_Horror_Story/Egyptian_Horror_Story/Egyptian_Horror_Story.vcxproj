@@ -102,6 +102,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Colliders.cpp" />
+    <ClCompile Include="MenuHandler.cpp" />
     <ClCompile Include="NavMesh.cpp" />
     <ClCompile Include="OptionsHandler.cpp" />
     <ClCompile Include="ParticleRenderer.cpp" />
