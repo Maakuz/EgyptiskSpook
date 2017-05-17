@@ -13,7 +13,7 @@ function getSize()
 end
 
 function isImpassible()
-	return collision
+	return false
 end
 
 function update()

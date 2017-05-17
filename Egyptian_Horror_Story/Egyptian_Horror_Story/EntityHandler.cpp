@@ -1423,6 +1423,12 @@ void EntityHandler::setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11Device
 
 	this->loadEntityModel("fallingRock.fbx", L"", test, device);
 	this->mTraps.push_back(test);
+
+	test = new Trap(1001, 5, 12, -5);
+	ai->addTrap("scripts/TrapStone.lua", test);
+
+	this->loadEntityModel("fallingRock.fbx", L"", test, device);
+	this->mTraps.push_back(test);
 	
 	ai->setupAI();
 }
