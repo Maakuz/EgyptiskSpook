@@ -16,7 +16,7 @@ function isImpassible()
 	return false
 end
 
-function update()
+function update(deltaTime)
 	temp = temp + 0.008
 	
 	local rot = math.sin(temp) * 1.4

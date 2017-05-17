@@ -44,7 +44,7 @@ function onReachingWaypoint()
 	SetEnemyWaypoint(waypoints[currentWaypoint])
 end
 
-function update()
+function update(deltaTime)
 	frame = frame + 1
 	if frame % 10 == 0 then
 		seesPlayer = SeesPlayer()

@@ -150,7 +150,8 @@ void AIHandler::addLuaFunction(lua_State *state, const char *name,
 
 void AIHandler::update(float dt) {
 	lua_getglobal(mEnemyState, "update");
-	handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
+	lua_pushnumber(mEnemyState, dt);
+	handleError(mEnemyState, lua_pcall(mEnemyState, 1, 0, 0));
 
 	Enemy::UPDATE_RETURNS ret = mEnemy->update(dt);
 
@@ -170,7 +171,8 @@ void AIHandler::update(float dt) {
 	for (TrapScript &script : mTraps) {
 		lua_State *state = script.state;
 		lua_getglobal(state, "update");
-		handleError(state, lua_pcall(state, 0, 0, 0));
+		lua_pushnumber(state, dt);
+		handleError(state, lua_pcall(state, 1, 0, 0));
 
 		// should not be checked every frame, change later
 		if (script.trap->getAABB()->aabbVSCapsule(*mPlayer->col)) {

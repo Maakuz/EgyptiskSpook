@@ -1,9 +1,10 @@
 -- All traps should follow this template
 position = {x = 0, y = 0, z = 0}
+
 fallenDown = false
 falling = false
 fallY = 12
-timeToFall = 1
+timeToFall = 0.5
 temp = 0
 
 function onStart()
@@ -19,9 +20,9 @@ function isImpassible()
 	return fallenDown
 end
 
-function update()
+function update(deltaTime)
 	if falling then
-		temp = temp + 0.01 / timeToFall
+		temp = temp + deltaTime / timeToFall
 		SetPosition(position.x, position.y - (fallY * temp), position.z);
 		
 		if temp >= 1 then
