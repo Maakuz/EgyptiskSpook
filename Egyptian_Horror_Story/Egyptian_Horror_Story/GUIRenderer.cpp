@@ -28,15 +28,18 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	shaders.setupGeometryShader(device, SHADERS, L"GUIGS.hlsl", "main");
 
 	Vector2 dimension = { 0.4f, 0.2f };
+	// Add new GUI elements here
 	this->mElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, 0.2f, 0), dimension });
 	this->mElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, -0.2f, 0), dimension });
+
+	// Add the texture here, texture ID = index of element in mElements, this class got own graphicsdata, so infinite ids is availabe (not inf)
+	mGraphicsData->loadTexture(0, L"play.png", device);
+	mGraphicsData->loadTexture(1, L"options.png", device);
 
 	D3D11_SUBRESOURCE_DATA data;
 	data.pSysMem = &this->mElements[0];
 
 	mGraphicsData->createVertexBuffer(0, sizeof(GUI_ELEMENT) * this->mElements.size(), &data, device);
-	mGraphicsData->loadTexture(0, L"play.png", device);
-	mGraphicsData->loadTexture(1, L"options.png", device);
 }
 
 void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state) {
@@ -57,6 +60,7 @@ void GUIRenderer::renderStartMenu(ID3D11DeviceContext *context, ShaderHandler &s
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
 
+	// Loop through and draw buttons, optimize plz
 	for (size_t i = 0; i < mElements.size(); i++) {
 		srv = this->mGraphicsData->getSRV(static_cast<int> (i));
 		context->PSSetShaderResources(0, 1, &srv);
