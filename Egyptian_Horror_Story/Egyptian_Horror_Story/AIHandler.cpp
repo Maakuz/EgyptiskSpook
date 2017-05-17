@@ -91,10 +91,11 @@ void AIHandler::addLuaFunctionsEnemy() {
 	addLuaFunction(mEnemyState, "StartPathing", Enemy::startPathing, userData, ARRAYSIZE(userData));
 	addLuaFunction(mEnemyState, "StopPathing", Enemy::stopPathing, userData, ARRAYSIZE(userData));
 
-	// PLAYER POSITION
+	// PLAYER FUNCTIONS
 	void *userData2[] = { mPlayer };
 	addLuaFunction(mEnemyState, "GetPlayerPosition", AICFunctions::getEntityPosition, userData2, ARRAYSIZE(userData2));
-	
+	addLuaFunction(mEnemyState, "DamagePlayer", AICFunctions::damagePlayer, userData2, ARRAYSIZE(userData2));
+
 	// GET DISTANCE BEETWEN
 	void *userData3[] = { mEnemy, mPlayer };
 	addLuaFunction(mEnemyState, "GetDistanceBetween", AICFunctions::getDistanceBetween, userData3, ARRAYSIZE(userData3));

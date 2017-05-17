@@ -8,18 +8,21 @@
 #define JUMP_START_VELOCITY 0.95f // Start velocity after jumping, reduced by GRAVITY after a second (lerping)
 
 #define MAX_STAMINA 15.f // Max Stamina
-#define SPRINT_MULTIPLIER 2.f // Multiplier for sprinting
-#define TIRED_MULTIPLIER 0.6f // Multiplier after running out of stamina
 #define START_STAMINA 3.f // Bad name, but basicly meaning how much stamina is needed to start sprinting
 #define STAMINA_LOSS -4.5f // Loss per second sprinting
 #define STAMINA_GAIN 0.5f // Gained per second not sprinting
 
-#define SNEAK_MULTIPLIER 0.35f // Multiplier for sneaking
 #define SNEAK_Y -4.f // Camera change while sneaking
 #define SNEAK_TIME 0.2f //Time to go from standing to sneaking and vice versa
 
 #define PICKUP_SPEED 1.f
 #define CAMERA_SNAP_SPEED 150.f
+
+// Multipliers
+#define TIRED_MULTIPLIER 0.6f // Multiplier after running out of stamina
+#define SPRINT_MULTIPLIER 2.f // Multiplier for sprinting
+#define SNEAK_MULTIPLIER 0.35f // Multiplier for sneaking
+#define DAMAGED_MULTIPLIER 0.8f // Multiplier if damaged
 
 using namespace DirectX::SimpleMath;
 
@@ -323,6 +326,8 @@ float inline Player::getMovementMultiplier() {
 		return SPRINT_MULTIPLIER;
 	} else if (this->mStamina < START_STAMINA) {
 		return TIRED_MULTIPLIER;
+	} else if (isDamaged()) {
+		return DAMAGED_MULTIPLIER;
 	}
 	
 	return 1.f;
@@ -346,5 +351,9 @@ void Player::updateTreasureGrabbing(float dt)
 }
 
 void Player::damage() {
-	// todo
+	damaged = true;
+}
+
+bool Player::isDamaged() const {
+	return damaged;
 }

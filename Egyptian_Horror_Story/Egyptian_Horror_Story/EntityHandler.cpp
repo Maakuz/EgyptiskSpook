@@ -1419,9 +1419,9 @@ void EntityHandler::detectCloseTreasures()
 void EntityHandler::setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	Trap* test = new Trap(1000, 25, 0, -74);
-	ai->addTrap("scripts/TrapStone.lua", test);
+	ai->addTrap("scripts/TrapHanger.lua", test);
 
-	this->loadEntityModel("testCube.fbx", L"", test, device);
+	this->loadEntityModel("fallingRock.fbx", L"", test, device);
 	this->mTraps.push_back(test);
 	
 	ai->setupAI();

@@ -11,20 +11,27 @@
 class Player : public Entity
 {
 private:
+	// Camera and Position var
 	CameraClass* mCamera;
 	DirectX::SimpleMath::Vector2 mDirection;
 	DirectX::SimpleMath::Vector3 mPrevPos;
-	float mSneakTime;
 
+	// Movement Var
 	float mSpeed, mJumpingVelocity, mStamina, mMaxStamina;
 	bool mJumping, mSprinting, mSneaking;
 	DirectX::SimpleMath::Vector3 mVelocity;
+	float mSneakTime;
 
+	// Treasure Var
 	Treasure* mPickupableTres;
 	bool mIsPickingTres;
 	int mScore;
 
+	// Light Var
 	Light* mLight;
+
+	// Health var
+	bool damaged;
 
 	void updateLightPosition();
 	void computeVelocity();
@@ -60,6 +67,7 @@ public:
 	void setPrevPos(DirectX::SimpleMath::Vector3 pos);
 
 	void damage();
+	bool isDamaged() const;
 };
 
 #endif
