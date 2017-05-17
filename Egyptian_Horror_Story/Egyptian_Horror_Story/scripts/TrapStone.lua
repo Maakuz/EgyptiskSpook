@@ -1,7 +1,10 @@
 -- All traps should follow this template
 position = {x = 0, y = 0, z = 0}
 fallenDown = false
+falling = false
 fallY = 12
+timeToFall = 1
+temp = 0
 
 function onStart()
 	position.x, position.y, position.z = GetPosition(); -- it is static, so lets just get it
@@ -17,25 +20,38 @@ function isImpassible()
 end
 
 function update()
-	
+	if falling then
+		temp = temp + 0.01 / timeToFall
+		SetPosition(position.x, position.y - (fallY * temp), position.z);
+		
+		if temp >= 1 then
+			fallDown()
+		end
+	end
 end
 
 function onPlayerCollision()
-	PushbackPlayer(position.x, position.y, position.z, 1)
-	DamagePlayer()
-	
-	fallDown()
+	if fallenDown then
+		DamagePlayer()
+		PushbackPlayer(position.x, position.y, position.z, 1)
+	else
+		falling = true
+	end
 end
 
 function onEnemyCollision()
-	PushbackEnemy(position.x, position.y, position.z, 1)
-	
-	fallDown()
+	if fallenDown then
+		DamagePlayer()
+		PushbackEnemy(position.x, position.y, position.z, 1)
+	else
+		falling = true
+	end
 end
 
 function fallDown()
 	if not fallenDown then
 		fallenDown = true
+		falling = false
 		SetPosition(position.x, position.y - fallY, position.z);
 	end
 end
