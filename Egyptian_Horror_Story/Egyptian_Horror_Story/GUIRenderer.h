@@ -4,13 +4,17 @@
 #include "Renderer.h"
 #include "GraphicsData.h"
 #include <SimpleMath.h>
+#include <vector>
 
 class GUIRenderer : public Renderer {
 private:
+	struct GUI_ELEMENT {
+		DirectX::SimpleMath::Vector3 pos;
+		DirectX::SimpleMath::Vector2 dimensions;
+	};
 	GraphicsData *mGraphicsData;
 
-	UINT mSize;
-	DirectX::SimpleMath::Vector3 *mElements;
+	std::vector<GUI_ELEMENT> mElements;
 	ID3D11ShaderResourceView *navTest, *menu;
 public:
 	GUIRenderer();

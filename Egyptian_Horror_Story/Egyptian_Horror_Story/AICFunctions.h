@@ -1,6 +1,8 @@
 #ifndef AICFUNCTIONS_H
 #define AICFUNCTIONS_H
 
+#define LTF(x) static_cast<float> (x)
+
 #include <lua.hpp>
 
 #include "Enemy.h"

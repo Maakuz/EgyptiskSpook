@@ -1,3 +1,8 @@
+struct GS_IN {
+	float4 pos : SV_POSITION;
+	float2 dimensions : DIMENSIONS;
+};
+
 struct GS_OUT
 {
 	float4 pos : SV_POSITION;
@@ -6,13 +11,13 @@ struct GS_OUT
 
 [maxvertexcount(4)]
 void main(
-	point float4 input[1] : SV_POSITION,
+	point GS_IN input[1] : SV_POSITION,
 	inout TriangleStream<GS_OUT> output
 )
 {
-	float w = 0.2f, h = 0.3f;
+	float w = input[0].dimensions[0], h = input[0].dimensions[1];
 	GS_OUT element = (GS_OUT)0;
-	element.pos = input[0];
+	element.pos = input[0].pos;
 	element.uv = float2(0, 1);
 	output.Append(element);
 	element.pos.y += h;

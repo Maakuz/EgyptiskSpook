@@ -4,8 +4,6 @@
 using namespace DirectX::SimpleMath;
 
 GUIRenderer::GUIRenderer() : Renderer(){
-	this->mSize = 1;
-	this->mElements = new Vector3[mSize];
 	this->mGraphicsData = new GraphicsData();
 
 	// for testing
@@ -14,7 +12,6 @@ GUIRenderer::GUIRenderer() : Renderer(){
 
 GUIRenderer::~GUIRenderer() {
 	delete this->mGraphicsData;
-	delete[] this->mElements;
 
 	if (navTest)
 		navTest->Release();
@@ -22,20 +19,24 @@ GUIRenderer::~GUIRenderer() {
 
 void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	D3D11_INPUT_ELEMENT_DESC desc[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "DIMENSIONS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 3 * sizeof(float), D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	shaders.setupVertexShader(device, SHADERS, L"GUIVS.hlsl", "main", desc, ARRAYSIZE(desc));
 	shaders.setupPixelShader(device, SHADERS, L"GUIPS.hlsl", "main");
 	shaders.setupGeometryShader(device, SHADERS, L"GUIGS.hlsl", "main");
 
-	this->mElements[0] = Vector3(-0.95f, 0.55f, 0);
+	Vector2 dimension = { 0.4f, 0.2f };
+	this->mElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, 0.2f, 0), dimension });
+	this->mElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, -0.2f, 0), dimension });
 
 	D3D11_SUBRESOURCE_DATA data;
 	data.pSysMem = &this->mElements[0];
 
-	mGraphicsData->createVertexBuffer(0, this->mSize * sizeof(Vector3), &data, device);
-	mGraphicsData->loadTexture(0, L"menutest.png", device);
+	mGraphicsData->createVertexBuffer(0, sizeof(GUI_ELEMENT) * this->mElements.size(), &data, device);
+	mGraphicsData->loadTexture(0, L"play.png", device);
+	mGraphicsData->loadTexture(1, L"options.png", device);
 }
 
 void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state) {
@@ -49,16 +50,18 @@ void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, G
 }
 
 void GUIRenderer::renderStartMenu(ID3D11DeviceContext *context, ShaderHandler &shaders) {
-	UINT stride = sizeof(Vector3), offset = 0;
+	UINT stride = sizeof(GUI_ELEMENT), offset = 0;
 	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(0);
-	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
-
+	ID3D11ShaderResourceView *srv;
 
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
-	context->PSSetShaderResources(0, 1, &srv);
 
-	context->Draw(this->mSize, 0);
+	for (size_t i = 0; i < mElements.size(); i++) {
+		srv = this->mGraphicsData->getSRV(static_cast<int> (i));
+		context->PSSetShaderResources(0, 1, &srv);
+		context->Draw(1, static_cast<int> (i));
+	}
 }
 
 void GUIRenderer::renderHud(ID3D11DeviceContext *context, ShaderHandler &shaders) {
@@ -74,7 +77,7 @@ void GUIRenderer::renderHud(ID3D11DeviceContext *context, ShaderHandler &shaders
 	if (navTest)
 		context->PSSetShaderResources(0, 1, &navTest);
 
-	context->Draw(this->mSize, 0);
+	// context->Draw(this->mSize, 0); // not used right now
 }
 
 void GUIRenderer::setNavigationTest(ID3D11Device *device, void* pixels, int w, int h) {

@@ -13,7 +13,7 @@ int AICFunctions::setEnemySpeed(lua_State *state) {
 		(lua_touserdata(state, lua_upvalueindex(1)));
 
 	if (lua_isnumber(state, -1))
-		enemy->setSpeed(static_cast<float> (lua_tonumber(state, -1)));
+		enemy->setSpeed(LTF((lua_tonumber(state, -1))));
 
 	return 0;
 }
@@ -33,8 +33,8 @@ int AICFunctions::setEntityPosition(lua_State *state) {
 
 	if (lua_isnumber(state, -1) && lua_isnumber(state, -2)
 		&& lua_isnumber(state, -3))
-		entity->setPosition(Vector3(lua_tonumber(state, -3),
-			lua_tonumber(state, -2), lua_tonumber(state, -1)));
+		entity->setPosition(Vector3(LTF(lua_tonumber(state, -3)),
+			LTF(lua_tonumber(state, -2)), LTF(lua_tonumber(state, -1))));
 
 	return 0;
 }
@@ -45,9 +45,9 @@ int AICFunctions::setEntityRotation(lua_State *state) {
 
 	if (lua_isnumber(state, -1) && lua_isnumber(state, -2)
 		&& lua_isnumber(state, -3))
-		entity->setRotation(Vector3(static_cast<float> (lua_tonumber(state, -3)),
-									static_cast<float> (lua_tonumber(state, -2)),
-									static_cast<float> (lua_tonumber(state, -1))));
+		entity->setRotation(Vector3(LTF(lua_tonumber(state, -3)),
+									LTF(lua_tonumber(state, -2)),
+									LTF(lua_tonumber(state, -1))));
 
 	return 0;
 }
@@ -59,9 +59,9 @@ int AICFunctions::setEntityOffsetRotation(lua_State *state) {
 	if (lua_isnumber(state, -1) && lua_isnumber(state, -2)
 		&& lua_isnumber(state, -3))
 		entity->setOffsetRotation(
-			Vector3(static_cast<float> (lua_tonumber(state, -3)),
-			static_cast<float> (lua_tonumber(state, -2)),
-			static_cast<float> (lua_tonumber(state, -1)))
+			Vector3(LTF(lua_tonumber(state, -3)),
+			LTF(lua_tonumber(state, -2)),
+			LTF(lua_tonumber(state, -1)))
 		);
 
 	return 0;
@@ -84,7 +84,7 @@ int AICFunctions::slowEntity(lua_State *state) {
 	// ! this is bad design, extends Entity class or maybe make moveable Entity class !
 	if (lua_isnumber(state, -1)) {
 		if (Enemy *enemy = dynamic_cast<Enemy*> (entity)) {
-			enemy->setSpeed(enemy->getVelocity().Length() * lua_tonumber(state, -1));
+			enemy->setSpeed(enemy->getVelocity().Length() * LTF(lua_tonumber(state, -1)));
 		}
 		else if (Player *player = dynamic_cast<Player*> (entity)) {
 			// TODO
@@ -109,11 +109,11 @@ int AICFunctions::pushbackEntity(lua_State *state) {
 
 	if (lua_isnumber(state, -4) && lua_isnumber(state, -3)
 		&& lua_isnumber(state, -2) && lua_isnumber(state, -1)) {
-		Vector3 coord(lua_tonumber(state, -4),
-			lua_tonumber(state, -3),
-			lua_tonumber(state, -2));
+		Vector3 coord(LTF(lua_tonumber(state, -4)),
+			LTF(lua_tonumber(state, -3)),
+			LTF(lua_tonumber(state, -2)));
 
-		float length = lua_tonumber(state, -1);
+		float length = LTF(lua_tonumber(state, -1));
 
 		Vector3 newPos = (entity->getPosition() - coord) ;
 		newPos.y = 0; //Just to make sure y is the same
@@ -150,7 +150,10 @@ int AICFunctions::entitySeesEntity(lua_State *state) {
 	Vector3 e1Pos = entity1->getPosition();
 	Vector3 e2Pos = entity2->getPosition();
 
-	lua_pushboolean(state, navMesh->canSeeFrom(e1Pos.x, e1Pos.z, e2Pos.x, e2Pos.z));
+	lua_pushboolean(state, navMesh->canSeeFrom(static_cast<int> (e1Pos.x), 
+		static_cast<int> (e1Pos.z), 
+		static_cast<int> (e2Pos.x), 
+		static_cast<int> (e2Pos.z)));
 
 	return 1;
 }
@@ -174,10 +177,10 @@ void AICFunctions::loadPath(Enemy *enemy, Entity *entity, NavMesh *navMesh) {
 
 	navMesh->loadPathToCoord(
 		enemy,
-		enemyPos.x,
-		enemyPos.z,
-		entityPos.x,
-		entityPos.z
+		static_cast<int> (enemyPos.x),
+		static_cast<int> (enemyPos.z),
+		static_cast<int> (entityPos.x),
+		static_cast<int> (entityPos.z)
 	);
 }
 
@@ -190,10 +193,10 @@ int AICFunctions::loadPathToPoint(lua_State *state) {
 	Vector3 enemyPos = enemy->getPosition();
 
 	if (lua_isinteger(state, -1) && lua_isinteger(state, -2)) {
-		int x = lua_tonumber(state, -2), z = lua_tonumber(state, -1);
+		int x = static_cast<int> (lua_tonumber(state, -2)), z = static_cast<int> (lua_tonumber(state, -1));
 		navMesh->loadPathToCoord(
 			enemy,
-			enemyPos.x, enemyPos.z,
+			static_cast<int> (enemyPos.x), static_cast<int> (enemyPos.z),
 			x, z
 		);
 	}
