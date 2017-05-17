@@ -1,8 +1,7 @@
 -- All traps should follow this template
 position = {x = 0, y = 0, z = 0}
-first = true
+collision = true
 temp = 0
-dir = 0
 
 function onStart()
 	position.x, position.y, position.z = GetPosition(); -- it is static, so lets just get it
@@ -16,28 +15,29 @@ function getSize()
 end
 
 function isImpassible()
-	return not first
+	return collision
 end
 
 function update()
-	if dir == 0 then
-		temp = temp + 0.01;
-		if temp > 1.8 then dir = 1 end
-	else
-		temp = temp - 0.01;
-		if temp < -1.8 then dir = 0 end
-	end
+	temp = temp + 0.008
+	
+	local rot = math.sin(temp) * 1.4
+	
 	SetPosition(position.x, position.y, position.z)
-	RotateTrap(temp, 0, 0)
+	RotateTrap(rot, 0, 0)
+	
+	collision = math.abs(rot) < 0.3
 end
 
 function onPlayerCollision()
-	--if (first) then
-		PushbackPlayer(position.x, position.y, position.z, 1)
+	if collision then
+		PushbackPlayer(position.x, position.y, position.z, 3)
 		first = false
-	--end
+	end
 end
 
 function onEnemyCollision()
-	PushbackEnemy(position.x, position.y, position.z, 1)
+	if collision then
+		PushbackEnemy(position.x, position.y, position.z, 3)
+	end
 end
