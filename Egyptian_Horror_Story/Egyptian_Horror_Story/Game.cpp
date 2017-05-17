@@ -33,7 +33,7 @@ Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options) {
 	this->mStateHandler = new StateHandler();
 	this->mEntityHandler = new EntityHandler();
 
-	this->mStateHandler->setState(GAMESTATE::MAIN_MENU);
+	this->mStateHandler->setState(GAMESTATE::PLAY);
 
 	this->mGraphics = mGraphicsHandler;
 	this->mOptionHandler = options;
