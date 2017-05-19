@@ -5,7 +5,7 @@ Window::Window() {
 	mWindow = nullptr;
 
 	this->mGame = nullptr;
-	this->mLockCursor = SDL_bool::SDL_TRUE;
+	this->mLockCursor = SDL_bool::SDL_FALSE;
 }
 
 Window::~Window() {
@@ -39,7 +39,7 @@ void Window::startWindowLoop(GraphicsHandler* graphicsHandler, OptionsHandler* o
 
 	this->mGame = new Game(graphicsHandler, options);
 	this->mGame->setWindowSize(this->mWindow);
-	SDL_SetRelativeMouseMode(SDL_bool::SDL_TRUE);
+	SDL_SetRelativeMouseMode(mLockCursor);
 
 	while (mRunning) {
 		while (SDL_PollEvent(&event)) {
@@ -69,15 +69,17 @@ bool Window::handleEvent(SDL_Event const &event) {
 		return false; //quit
 	case SDL_KEYDOWN:
 		return handleKeyPress(event.key);
-
 	case SDL_KEYUP:
 		return handleKeyRelease(event.key);
-
 	case SDL_MOUSEMOTION:
 		this->handleMouseMotion(event.motion);
+		break;
+	case SDL_MOUSEBUTTONDOWN:
+		mLockCursor = this->mGame->handleMousePress(event.button) ?
+			SDL_bool::SDL_TRUE : SDL_bool::SDL_FALSE;
+		SDL_SetRelativeMouseMode(mLockCursor);
+		break;
 	}
-
-
 
 	return true;
 }
@@ -108,7 +110,6 @@ bool Window::handleKeyRelease(SDL_KeyboardEvent const &key)
 	case SDL_SCANCODE_RETURN:
 		if (this->mLockCursor == SDL_bool::SDL_TRUE)
 			this->mLockCursor = SDL_bool::SDL_FALSE;
-
 		else
 			this->mLockCursor = SDL_bool::SDL_TRUE;
 

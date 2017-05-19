@@ -11,6 +11,8 @@ void Game::setupRenderers()
 
 	this->mGraphics->setupRenderers();
 	this->mGraphics->setupDSAndSRViews();
+
+	mGuiRenderer->loadButtons(this->mMenuHandler); // Find better place to load buttons
 }
 
 void Game::setupEntityHandler()
@@ -33,7 +35,7 @@ Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options) {
 	this->mStateHandler = new StateHandler();
 	this->mEntityHandler = new EntityHandler();
 
-	this->mStateHandler->setState(GAMESTATE::PLAY);
+	this->mStateHandler->setState(GAMESTATE::MAIN_MENU);
 
 	this->mGraphics = mGraphicsHandler;
 	this->mOptionHandler = options;
@@ -111,6 +113,18 @@ bool Game::handleKeyboardRelease(SDL_KeyboardEvent const& key)
 void Game::handleMouseMotion(SDL_MouseMotionEvent const &motion)
 {
 	this->mEntityHandler->getPlayer()->handleMouseMotion(motion);
+	this->mMenuHandler.mouseMotion(motion);
+}
+
+bool Game::handleMousePress(SDL_MouseButtonEvent const &button) {
+	this->mStateHandler->setState(
+		this->mMenuHandler.mousePress(button, this->mStateHandler->getState())
+	);
+
+	if (this->mStateHandler->getState() == PLAY)
+		return true;
+	else
+		return false;
 }
 
 void Game::updateLua() {
@@ -138,7 +152,8 @@ void Game::StateHandler::update(Game* g, float dt) {
 }
 
 void Game::setWindowSize(SDL_Window* window) {
-	SDL_SetWindowSize(window, 
-		this->mOptionHandler->getGraphicSettings().width, 
-		this->mOptionHandler->getGraphicSettings().height);
+	int width = this->mOptionHandler->getGraphicSettings().width;
+	int height = this->mOptionHandler->getGraphicSettings().height;
+	SDL_SetWindowSize(window, width, height);
+	this->mMenuHandler.setWindowResolution(width, height);
 }

@@ -1,8 +1,10 @@
 #ifndef GAME_H
 #define GAME_H
+
 #include "GraphicsHandler.h"
 #include "EntityHandler.h"
 #include "GUIRenderer.h"
+#include "MenuHandler.h"
 
 class Game
 {
@@ -24,6 +26,7 @@ private:
 	GUIRenderer *mGuiRenderer; //temp
 	AudioManager mAudioManager;
 	OptionsHandler* mOptionHandler;
+	MenuHandler mMenuHandler;
 
 	void setupRenderers();
 	void setupEntityHandler();
@@ -38,6 +41,8 @@ public:
 	bool handleKeyboardPress(SDL_KeyboardEvent const &key);
 	bool handleKeyboardRelease(SDL_KeyboardEvent const &key);
 	void handleMouseMotion(SDL_MouseMotionEvent const &motion);
+	// returns true/false if cursor should be locked / unlocked. not good code but works
+	bool handleMousePress(SDL_MouseButtonEvent const &button);
 	void updateLua();
 	void setWindowSize(SDL_Window* window);
 };

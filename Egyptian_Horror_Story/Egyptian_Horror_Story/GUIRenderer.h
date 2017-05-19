@@ -3,6 +3,8 @@
 
 #include "Renderer.h"
 #include "GraphicsData.h"
+#include "MenuHandler.h"
+
 #include <SimpleMath.h>
 #include <vector>
 
@@ -23,6 +25,7 @@ public:
 
 	void setup(ID3D11Device *device, ShaderHandler &shaders);
 	void render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state);
+	void loadButtons(MenuHandler &menuHandler);
 
 	void renderStartMenu(ID3D11DeviceContext *context, ShaderHandler &shaders);
 	void renderHud(ID3D11DeviceContext *context, ShaderHandler &shaders);

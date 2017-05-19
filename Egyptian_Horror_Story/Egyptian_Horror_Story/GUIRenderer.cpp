@@ -42,6 +42,12 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	mGraphicsData->createVertexBuffer(0, sizeof(GUI_ELEMENT) * this->mElements.size(), &data, device);
 }
 
+void GUIRenderer::loadButtons(MenuHandler &menuHandler) {
+	for (size_t i = 0; i < this->mElements.size(); i++)
+		menuHandler.addButton(static_cast<int> (i),
+			Vector2(this->mElements[i].pos), this->mElements[i].dimensions); //i is pretty hardcoded, change later, change elements to use vector2
+}
+
 void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state) {
 	context->IASetInputLayout(shaders.getInputLayout(SHADERS));
 	shaders.setShaders(context, SHADERS, SHADERS, SHADERS);
