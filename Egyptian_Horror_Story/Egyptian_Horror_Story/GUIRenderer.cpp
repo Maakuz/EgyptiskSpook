@@ -33,7 +33,8 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	this->mMenuElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, 0.2f, 0), dimension });
 	this->mMenuElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, -0.2f, 0), dimension });
 
-	this->mGameOverElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, 0.2f, 0), dimension });
+	this->mGameOverElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, -0.2f, 0), dimension });
+	this->mGameOverElements.push_back(GUI_ELEMENT{ Vector3(-0.4f, 0.2f, 0), Vector2(0.8f, 0.2f) });
 
 	// Add the texture here, texture ID = index of element in element arrays,
 	//this class got own graphicsdata, so infinite ids is availabe (not inf)
@@ -41,6 +42,7 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	mGraphicsData->loadTexture(1, L"options.png", device);
 
 	mGraphicsData->loadTexture(GAMEOVERSTARTINDEX, L"Confirm.png", device);
+	mGraphicsData->loadTexture(GAMEOVERSTARTINDEX + 1, L"gameOver.png", device);
 
 	D3D11_SUBRESOURCE_DATA data;
 	data.pSysMem = &this->mMenuElements[0];
@@ -54,9 +56,13 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 }
 
 void GUIRenderer::loadButtons(MenuHandler &menuHandler) {
-	for (size_t i = 0; i < this->mMenuElements.size(); i++)
-		menuHandler.addButton(static_cast<int> (i),
-			Vector2(this->mMenuElements[i].pos), this->mMenuElements[i].dimensions); //i is pretty hardcoded, change later, change elements to use vector2
+	for (int i = 0; i < this->mMenuElements.size(); i++)
+		menuHandler.addButton(i,
+			Vector2(this->mMenuElements[i].pos), this->mMenuElements[i].dimensions);//i is pretty hardcoded, change later, change elements to use vector2
+
+	for (int i = 0; i < this->mGameOverElements.size(); i++)
+		menuHandler.addButton(i + this->mMenuElements.size(),
+			Vector2(this->mGameOverElements[i].pos), this->mGameOverElements[i].dimensions);
 }
 
 void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state) {
