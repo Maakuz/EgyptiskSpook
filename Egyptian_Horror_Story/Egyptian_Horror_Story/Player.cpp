@@ -31,6 +31,27 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 {
 	this->mCamera = camera;
 
+	this->initializePlayer();
+	
+	//REMOVE
+	this->col = new Capsule(this->mCamera->getPos(), 2, 1);
+
+	this->mLight = new Light(this->mCamera->getPos(), this->mCamera->getForward(), device, context, gData);
+}
+
+Player::~Player()
+{
+	if (this->mLight)
+	delete this->mLight;
+
+	delete this->col;
+}
+
+void Player::initializePlayer()
+{
+	this->dead = false;
+	this->damaged = false;
+
 	// Treasure
 	this->mPickupableTres = nullptr;
 	this->mIsPickingTres = false;
@@ -45,22 +66,9 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 	this->mSpeed = SPEED;
 	this->mStamina = this->mMaxStamina;
 
-	//REMOVE
-	this->col = new Capsule(this->mCamera->getPos(), 2, 1);
-
 	// jumping stuff
 	this->mJumping = false;
 	this->mJumpingVelocity = 0;
-
-	this->mLight = new Light(this->mCamera->getPos(), this->mCamera->getForward(), device, context, gData);
-}
-
-Player::~Player()
-{
-	if (this->mLight)
-	delete this->mLight;
-
-	delete this->col;
 }
 
 void Player::updatePosition(float dt)
@@ -351,9 +359,22 @@ void Player::updateTreasureGrabbing(float dt)
 }
 
 void Player::damage() {
-	damaged = true;
+	if (damaged)
+		dead = true;
+
+	else
+		damaged = true;
 }
 
 bool Player::isDamaged() const {
 	return damaged;
+}
+
+bool Player::isDead() const {
+	return dead;
+}
+
+int Player::getScore() const
+{
+	return this->mScore;
 }

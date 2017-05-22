@@ -31,7 +31,7 @@ private:
 	Light* mLight;
 
 	// Health var
-	bool damaged;
+	bool damaged, dead;
 
 	void updateLightPosition();
 	void computeVelocity();
@@ -48,6 +48,8 @@ public:
 
 	Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int grapchicsKey, GraphicsData* gData);
 	virtual ~Player();
+
+	void initializePlayer();
 
 	void updatePosition(float dt);
 	void handleJumping(float dt);
@@ -68,6 +70,8 @@ public:
 
 	void damage();
 	bool isDamaged() const;
+	bool isDead() const;
+	int getScore() const;
 };
 
 #endif

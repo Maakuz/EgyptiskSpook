@@ -19,6 +19,7 @@ public:
 	void createAABB(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 U, DirectX::SimpleMath::Vector3 V, DirectX::SimpleMath::Vector3 W);
 
 	virtual void setPosition(DirectX::SimpleMath::Vector3 pos); //Idk why these are virtual
+	virtual void setPosition(float x, float y, float z);
 	virtual void setRotation(DirectX::SimpleMath::Vector3 rot);
 	virtual void setOffsetRotation(DirectX::SimpleMath::Vector3 offRot); // Used to transform before rotation
 	DirectX::SimpleMath::Vector3 getPosition() const;

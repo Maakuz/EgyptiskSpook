@@ -75,5 +75,13 @@ GAMESTATE MenuHandler::onPressButton(int id, GAMESTATE currentState) {
 				return MAIN_MENU;
 		}
 	}
+
+	else if (currentState == GAME_OVER)
+		switch (id)
+		{
+		case 0:
+			return MAIN_MENU;
+			break;
+		}
 	return currentState;
 }

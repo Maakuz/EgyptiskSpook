@@ -1436,7 +1436,6 @@ void EntityHandler::setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11Device
 void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera)
 {
 	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData());
-	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, 4));
 
 	this->mEnemy = new Enemy(ENEMY_KEY);
 
@@ -1505,6 +1504,15 @@ void EntityHandler::setupAudioManager(AudioManager* manager)
 	this->mAudioManager->createEmitter(1);
 	this->mAudioManager->apply3DToInstance(1, 1);
 	this->mAudioManager->playSfx(0);
+}
+
+void EntityHandler::initialize()
+{
+	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, 4));
+	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
+	
+	this->mTraps[0]->setPosition(25, 0, -74);
+	this->mTraps[1]->setPosition(5, 12, -5);
 }
 
 void EntityHandler::update(ID3D11DeviceContext* context, float dt)

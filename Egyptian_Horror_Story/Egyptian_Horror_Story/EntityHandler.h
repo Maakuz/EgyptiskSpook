@@ -49,6 +49,8 @@ public:
 	void setupEntities(ID3D11Device* device);
 	void setupAudioManager(AudioManager* manager);
 
+	void initialize();
+
 	void update(ID3D11DeviceContext* context, float dt);
 
 	EntityRenderer* getEntityRenderer();
