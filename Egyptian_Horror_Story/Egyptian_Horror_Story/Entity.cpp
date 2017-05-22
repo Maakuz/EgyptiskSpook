@@ -33,6 +33,11 @@ void Entity::setPosition(DirectX::SimpleMath::Vector3 pos)
 	this->mPos = pos;
 }
 
+void Entity::setPosition(float x, float y, float z)
+{
+	this->setPosition(DirectX::SimpleMath::Vector3(x, y, z));
+}
+
 void Entity::setRotation(DirectX::SimpleMath::Vector3 rot) {
 	this->mRot = rot;
 }

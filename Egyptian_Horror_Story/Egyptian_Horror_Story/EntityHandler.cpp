@@ -1510,6 +1510,9 @@ void EntityHandler::initialize()
 {
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, 4));
 	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
+	
+	this->mTraps[0]->setPosition(25, 0, -74);
+	this->mTraps[1]->setPosition(5, 12, -5);
 }
 
 void EntityHandler::update(ID3D11DeviceContext* context, float dt)

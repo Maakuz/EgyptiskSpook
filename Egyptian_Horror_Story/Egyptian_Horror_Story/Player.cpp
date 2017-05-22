@@ -373,3 +373,8 @@ bool Player::isDamaged() const {
 bool Player::isDead() const {
 	return dead;
 }
+
+int Player::getScore() const
+{
+	return this->mScore;
+}

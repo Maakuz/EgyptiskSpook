@@ -71,6 +71,7 @@ public:
 	void damage();
 	bool isDamaged() const;
 	bool isDead() const;
+	int getScore() const;
 };
 
 #endif
