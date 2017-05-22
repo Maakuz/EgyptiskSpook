@@ -1441,8 +1441,7 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 
 	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
 
-	this->loadEntityModel("ModelTestTri.fbx", L"dargon_bump.jpg", this->mEnemy, device);
-			
+	this->loadEntityModel("ModelTest2.fbx", L"dargon_bump.jpg", this->mEnemy, device);
 }
 
 EntityHandler::EntityHandler()

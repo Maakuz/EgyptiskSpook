@@ -41,7 +41,10 @@ GAMESTATE MenuHandler::mousePress(SDL_MouseButtonEvent const &event, GAMESTATE c
 
 	for (auto const &button : this->mButtons) {
 		if (buttonVsMouse(button, mousePos)) {
-			return onPressButton(button.buttonId, currentState);
+			GAMESTATE state = onPressButton(button.buttonId, currentState);
+
+			if (state != currentState)
+				return state;
 		}
 	}
 
@@ -79,7 +82,7 @@ GAMESTATE MenuHandler::onPressButton(int id, GAMESTATE currentState) {
 	else if (currentState == GAME_OVER)
 		switch (id)
 		{
-		case 0:
+		case 3: //GO BACK TO MENU BUTTON
 			return MAIN_MENU;
 			break;
 		}

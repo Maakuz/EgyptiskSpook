@@ -130,8 +130,10 @@ bool Game::handleMousePress(SDL_MouseButtonEvent const &button) {
 		this->mMenuHandler.mousePress(button, this->mStateHandler->getState())
 	);
 
-	if (this->mStateHandler->getState() == PLAY)
+	if (this->mStateHandler->needsInitialize)
 	{
+		this->mStateHandler->needsInitialize = false;
+
 		SDL_SetRelativeMouseMode(SDL_bool::SDL_TRUE);
 		this->mEntityHandler->initialize();
 		this->mAIHandler->setupAI();
@@ -151,6 +153,11 @@ GAMESTATE Game::StateHandler::getState() {
 }
 
 void Game::StateHandler::setState(GAMESTATE state) {
+
+	//TODO: IF THERE EVER IS A STATE THAT DOES NOT RESTART THIS NEEDS TO BE CHANGED
+	if (state == GAMESTATE::PLAY && this->state != GAMESTATE::PLAY)
+		this->needsInitialize = true;
+
 	this->state = state;
 }
 

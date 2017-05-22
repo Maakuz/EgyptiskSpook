@@ -14,6 +14,7 @@ private:
 	private:
 		GAMESTATE state;
 	public:
+		bool needsInitialize;
 		GAMESTATE getState();
 		void setState(GAMESTATE state);
 		void update(Game* g, float dt);
