@@ -27,11 +27,12 @@ private:
 	AudioManager mAudioManager;
 	OptionsHandler* mOptionHandler;
 	MenuHandler mMenuHandler;
+	SDL_Window* mWindow;
 
 	void setupRenderers();
 	void setupEntityHandler();
 public:
-	Game(GraphicsHandler* graphicsHandler, OptionsHandler* options);
+	Game(GraphicsHandler* graphicsHandler, OptionsHandler* options, SDL_Window* window);
 	virtual ~Game();
 
 	void updateGame(float dt);

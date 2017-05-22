@@ -37,7 +37,7 @@ void Window::startWindowLoop(GraphicsHandler* graphicsHandler, OptionsHandler* o
 	INT64 prevTime = 0;
 	float deltaTime = 0;
 
-	this->mGame = new Game(graphicsHandler, options);
+	this->mGame = new Game(graphicsHandler, options, this->mWindow);
 	this->mGame->setWindowSize(this->mWindow);
 	SDL_SetRelativeMouseMode(mLockCursor);
 
@@ -75,9 +75,7 @@ bool Window::handleEvent(SDL_Event const &event) {
 		this->handleMouseMotion(event.motion);
 		break;
 	case SDL_MOUSEBUTTONDOWN:
-		mLockCursor = this->mGame->handleMousePress(event.button) ?
-			SDL_bool::SDL_TRUE : SDL_bool::SDL_FALSE;
-		SDL_SetRelativeMouseMode(mLockCursor);
+		this->mGame->handleMousePress(event.button);
 		break;
 	}
 

@@ -16,7 +16,8 @@ private:
 	};
 	GraphicsData *mGraphicsData;
 
-	std::vector<GUI_ELEMENT> mElements;
+	std::vector<GUI_ELEMENT> mMenuElements;
+	std::vector<GUI_ELEMENT> mGameOverElements;
 	ID3D11ShaderResourceView *navTest, *menu;
 public:
 	GUIRenderer();
@@ -27,7 +28,7 @@ public:
 	void render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state);
 	void loadButtons(MenuHandler &menuHandler);
 
-	void renderStartMenu(ID3D11DeviceContext *context, ShaderHandler &shaders);
+	void renderMenu(ID3D11DeviceContext *context, ShaderHandler &shaders, int vertexBufferKey, int nrOfElements, int srvOffset);
 	void renderHud(ID3D11DeviceContext *context, ShaderHandler &shaders);
 
 	void setNavigationTest(ID3D11Device *device, void* pixels, int w, int h); //for testing

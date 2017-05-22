@@ -1,5 +1,6 @@
 #include "GUIRenderer.h"
 #define SHADERS 40
+#define GAMEOVERSTARTINDEX 20
 
 using namespace DirectX::SimpleMath;
 
@@ -29,23 +30,33 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 
 	Vector2 dimension = { 0.4f, 0.2f };
 	// Add new GUI elements here
-	this->mElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, 0.2f, 0), dimension });
-	this->mElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, -0.2f, 0), dimension });
+	this->mMenuElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, 0.2f, 0), dimension });
+	this->mMenuElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, -0.2f, 0), dimension });
 
-	// Add the texture here, texture ID = index of element in mElements, this class got own graphicsdata, so infinite ids is availabe (not inf)
+	this->mGameOverElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, 0.2f, 0), dimension });
+
+	// Add the texture here, texture ID = index of element in element arrays,
+	//this class got own graphicsdata, so infinite ids is availabe (not inf)
 	mGraphicsData->loadTexture(0, L"play.png", device);
 	mGraphicsData->loadTexture(1, L"options.png", device);
 
-	D3D11_SUBRESOURCE_DATA data;
-	data.pSysMem = &this->mElements[0];
+	mGraphicsData->loadTexture(GAMEOVERSTARTINDEX, L"Confirm.png", device);
 
-	mGraphicsData->createVertexBuffer(0, sizeof(GUI_ELEMENT) * this->mElements.size(), &data, device);
+	D3D11_SUBRESOURCE_DATA data;
+	data.pSysMem = &this->mMenuElements[0];
+
+	mGraphicsData->createVertexBuffer(0, sizeof(GUI_ELEMENT) * this->mMenuElements.size(), &data, device);
+
+
+	data.pSysMem = &this->mGameOverElements[0];
+
+	this->mGraphicsData->createVertexBuffer(1, sizeof(GUI_ELEMENT) * this->mGameOverElements.size(), &data, device);
 }
 
 void GUIRenderer::loadButtons(MenuHandler &menuHandler) {
-	for (size_t i = 0; i < this->mElements.size(); i++)
+	for (size_t i = 0; i < this->mMenuElements.size(); i++)
 		menuHandler.addButton(static_cast<int> (i),
-			Vector2(this->mElements[i].pos), this->mElements[i].dimensions); //i is pretty hardcoded, change later, change elements to use vector2
+			Vector2(this->mMenuElements[i].pos), this->mMenuElements[i].dimensions); //i is pretty hardcoded, change later, change elements to use vector2
 }
 
 void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state) {
@@ -55,22 +66,25 @@ void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, G
 	if (state == GAMESTATE::PLAY)
 		renderHud(context, shaders);
 	else if (state == GAMESTATE::MAIN_MENU)
-		renderStartMenu(context, shaders);
+		renderMenu(context, shaders, 0, this->mMenuElements.size(), 0);
+
+	else if (state == GAMESTATE::GAME_OVER)
+		renderMenu(context, shaders, 1, this->mGameOverElements.size(), GAMEOVERSTARTINDEX);
 }
 
-void GUIRenderer::renderStartMenu(ID3D11DeviceContext *context, ShaderHandler &shaders) {
+void GUIRenderer::renderMenu(ID3D11DeviceContext *context, ShaderHandler &shaders, int vertexBufferKey, int nrOfElements, int srvOffset) {
 	UINT stride = sizeof(GUI_ELEMENT), offset = 0;
-	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(0);
+	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(vertexBufferKey);
 	ID3D11ShaderResourceView *srv;
 
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
 
 	// Loop through and draw buttons, optimize plz
-	for (size_t i = 0; i < mElements.size(); i++) {
-		srv = this->mGraphicsData->getSRV(static_cast<int> (i));
+	for (int i = 0; i < nrOfElements; i++) {
+		srv = this->mGraphicsData->getSRV(i + srvOffset);
 		context->PSSetShaderResources(0, 1, &srv);
-		context->Draw(1, static_cast<int> (i));
+		context->Draw(1, i);
 	}
 }
 

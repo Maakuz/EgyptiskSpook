@@ -29,9 +29,11 @@ void Game::setupEntityHandler()
 	this->mAIHandler = new AIHandler(mEntityHandler->getEnemy(), mEntityHandler->getPlayer());
 
 	this->mEntityHandler->setupTraps(this->mAIHandler, this->mGraphics->getDevice(), this->mGraphics->getDeviceContext());
+
+	this->mEntityHandler->initialize();
 }
 
-Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options) {
+Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options, SDL_Window* window) {
 	this->mStateHandler = new StateHandler();
 	this->mEntityHandler = new EntityHandler();
 
@@ -39,6 +41,7 @@ Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options) {
 
 	this->mGraphics = mGraphicsHandler;
 	this->mOptionHandler = options;
+	this->mWindow = window;
 
 	this->mOptionHandler->setup(this->mGraphics->getDevice());
 	
@@ -70,6 +73,12 @@ void Game::updateGame(float dt)
 			this->mAIHandler->getNavMeshWidth(), this->mAIHandler->getNavMeshHeight());
 
 	this->mCamera->updateRotation(this->mGraphics->getDeviceContext());
+
+	if (this->mEntityHandler->getPlayer()->isDead())
+	{
+		this->mStateHandler->setState(GAMESTATE::GAME_OVER);
+		SDL_SetRelativeMouseMode(SDL_bool::SDL_FALSE);
+	}
 }
 
 void Game::draw() {
@@ -122,9 +131,15 @@ bool Game::handleMousePress(SDL_MouseButtonEvent const &button) {
 	);
 
 	if (this->mStateHandler->getState() == PLAY)
-		return true;
-	else
-		return false;
+	{
+		SDL_SetRelativeMouseMode(SDL_bool::SDL_TRUE);
+		this->mEntityHandler->initialize();
+		this->mAIHandler->setupAI();
+		this->mEntityHandler->getPlayer()->initializePlayer();
+	}
+
+
+	return true;
 }
 
 void Game::updateLua() {
