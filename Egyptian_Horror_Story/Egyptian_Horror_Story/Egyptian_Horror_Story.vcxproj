@@ -110,6 +110,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ShaderHandler.cpp" />
+    <ClCompile Include="SkyRenderer.cpp" />
     <ClCompile Include="Trap.cpp" />
     <ClCompile Include="Treasure.cpp" />
     <ClCompile Include="Wall.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ShaderHandler.h" />
+    <ClInclude Include="SkyRenderer.h" />
     <ClInclude Include="Trap.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="Treasure.h" />
