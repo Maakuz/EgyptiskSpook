@@ -7,6 +7,7 @@
 
 #include <SimpleMath.h>
 #include <vector>
+#include "FontHandler.h"
 
 class GUIRenderer : public Renderer {
 private:
@@ -15,6 +16,7 @@ private:
 		DirectX::SimpleMath::Vector2 dimensions;
 	};
 	GraphicsData *mGraphicsData;
+	FontHandler fontHandler;
 
 	std::vector<GUI_ELEMENT> mMenuElements;
 	std::vector<GUI_ELEMENT> mGameOverElements;

@@ -173,6 +173,9 @@
     <ClCompile Include="MenuHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FontHandler.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -258,6 +261,9 @@
     </ClInclude>
     <ClInclude Include="MenuHandler.h">
       <Filter>Header Files\Game classes</Filter>
+    </ClInclude>
+    <ClInclude Include="FontHandler.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

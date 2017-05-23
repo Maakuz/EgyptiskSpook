@@ -46,13 +46,12 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 
 	D3D11_SUBRESOURCE_DATA data;
 	data.pSysMem = &this->mMenuElements[0];
-
 	mGraphicsData->createVertexBuffer(0, sizeof(GUI_ELEMENT) * this->mMenuElements.size(), &data, device);
 
-
 	data.pSysMem = &this->mGameOverElements[0];
-
 	this->mGraphicsData->createVertexBuffer(1, sizeof(GUI_ELEMENT) * this->mGameOverElements.size(), &data, device);
+
+//	fontHandler.loadFont(device);
 }
 
 void GUIRenderer::loadButtons(MenuHandler &menuHandler) {
@@ -66,6 +65,8 @@ void GUIRenderer::loadButtons(MenuHandler &menuHandler) {
 }
 
 void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state) {
+//	fontHandler.drawFont(context, L"Wazzup 0101001", Vector2(200.f, 200.f));
+	
 	context->IASetInputLayout(shaders.getInputLayout(SHADERS));
 	shaders.setShaders(context, SHADERS, SHADERS, SHADERS);
 
