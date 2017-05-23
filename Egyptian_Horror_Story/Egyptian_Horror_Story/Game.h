@@ -5,6 +5,7 @@
 #include "EntityHandler.h"
 #include "GUIRenderer.h"
 #include "MenuHandler.h"
+#include "SkyRenderer.h"
 
 class Game
 {

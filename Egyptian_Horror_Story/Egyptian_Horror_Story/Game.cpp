@@ -8,11 +8,12 @@ void Game::setupRenderers()
 
 	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera, mStateHandler->getState()));
 	this->mGraphics->addRenderer(this->mEntityHandler->getEntityRenderer());
+	this->mGraphics->addRenderer(new SkyRenderer());
 
 	this->mGraphics->setupRenderers();
 	this->mGraphics->setupDSAndSRViews();
 
-	mGuiRenderer->loadButtons(this->mMenuHandler); // Find better place to load buttons
+	mGuiRenderer->loadButtons(this->mMenuHandler);
 }
 
 void Game::setupEntityHandler()
@@ -52,6 +53,7 @@ Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options, SDL_Windo
 	this->setupEntityHandler();
 
 	this->setupRenderers();
+
 }
 
 Game::~Game()
