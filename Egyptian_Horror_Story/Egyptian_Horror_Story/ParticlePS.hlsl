@@ -14,6 +14,7 @@ cbuffer lightBuffer : register(b0)
 {
     float4 lightPos;
     float4 lightDir;
+    bool lightOn;
 };
 
 cbuffer cameraPos : register(b1)
@@ -49,8 +50,7 @@ float4 main(VS_OUT input) : SV_TARGET
     //Kanske ska vara negativ
     float cosAngle = dot(normalize(lightToPos.xyz), normalize(lightDir.xyz));
 
-    float falloff = saturate((cosAngle - outerCone) / innerMinusOuter);
-
+    float falloff = lightOn ? saturate((cosAngle - outerCone) / innerMinusOuter) : 0;
 
     float lambert = max(dot(input.normal, normalize(-lightToPos.xyz)), 0.f);
 

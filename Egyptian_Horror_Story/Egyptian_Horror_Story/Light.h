@@ -16,7 +16,7 @@ private:
 	float mLightFOV;
 
 	lightStructs::VP mMatrices;
-	lightStructs::lightPosDir mPosDir;
+	lightStructs::lightInfo mLightInfo;
 
 	GraphicsData* mGData;
 	ID3D11DeviceContext* mContext;
@@ -24,6 +24,8 @@ private:
 	int mMatrixBufferKey;
 	int mLightBufferKey;
 	int mLightGraphicsKey;
+
+	bool lightOn;
 
 public:
 	Light(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 direction, ID3D11Device* device, ID3D11DeviceContext* context, GraphicsData* gData);
@@ -34,6 +36,8 @@ public:
 	void operator=(const Light& other) = delete;
 
 	int getGraphicsKey() const;
+	void toggleFlashLight(bool onOrOff);
+	bool getLightOn() const;
 
 };
 

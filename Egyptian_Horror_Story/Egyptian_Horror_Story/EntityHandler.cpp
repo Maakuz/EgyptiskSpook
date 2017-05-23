@@ -1444,6 +1444,23 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 	this->loadEntityModel("ModelTest2.fbx", L"dargon_bump.jpg", this->mEnemy, device);
 }
 
+void EntityHandler::initializeTreasure(ID3D11Device* device)
+{
+	for (int i = 0; i < this->mTreasures.size(); i++)
+	{
+		this->mEntityRenderer->getGraphicsData()->removeData(this->mTreasures[i]->getKey());
+		delete this->mTreasures[i];
+	}
+
+	this->mTreasures.clear();
+
+	Treasure* tres = new Treasure(500, 20.f);
+
+	this->loadEntityModel("treasure1.fbx", L"sand.bmp", tres, device);
+
+	this->mTreasures.push_back(tres);
+}
+
 EntityHandler::EntityHandler()
 {
 	this->mEntityRenderer = new EntityRenderer(GAMESTATE::PLAY);
@@ -1487,11 +1504,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 	this->loadEntityModel("flashLight.fbx", L"dargon_bump.jpg", mFlashlightModel, device);
 
 
-	Treasure* tres = new Treasure(500, 20.f);
-
-	this->loadEntityModel("treasure1.fbx", L"sand.bmp", tres, device);
-
-	this->mTreasures.push_back(tres);
+	this->initializeTreasure(device);
 }
 
 void EntityHandler::setupAudioManager(AudioManager* manager)
@@ -1512,6 +1525,8 @@ void EntityHandler::initialize()
 	
 	this->mTraps[0]->setPosition(25, 0, -74);
 	this->mTraps[1]->setPosition(5, 12, -5);
+
+	this->mPlayer->initialize();
 }
 
 void EntityHandler::update(ID3D11DeviceContext* context, float dt)

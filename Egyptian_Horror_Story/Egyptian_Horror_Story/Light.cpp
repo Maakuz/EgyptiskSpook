@@ -2,8 +2,9 @@
 
 Light::Light(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 direction, ID3D11Device* device, ID3D11DeviceContext* context, GraphicsData* gData)
 {
-	this->mPosDir.pos = DirectX::SimpleMath::Vector4(pos.x, pos.y, pos.z, 1);
-	this->mPosDir.dir = DirectX::SimpleMath::Vector4(direction.x, direction.y, direction.z, 1);
+	this->mLightInfo.pos = DirectX::SimpleMath::Vector4(pos.x, pos.y, pos.z, 1);
+	this->mLightInfo.dir = DirectX::SimpleMath::Vector4(direction.x, direction.y, direction.z, 1);
+	this->mLightInfo.flashlightOn = false;
 
 	this->mLightFOV = M_PI * 0.5f;
 
@@ -26,8 +27,8 @@ Light::Light(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 dire
 	gData->createConstantBuffer(this->mMatrixBufferKey, sizeof(lightStructs::VP), &data, device, true);
 
 
-	data.pSysMem = &this->mPosDir;
-	gData->createConstantBuffer(this->mLightBufferKey, sizeof(lightStructs::lightPosDir), &data, device, true);
+	data.pSysMem = &this->mLightInfo;
+	gData->createConstantBuffer(this->mLightBufferKey, sizeof(lightStructs::lightInfo), &data, device, true);
 }
 
 Light::~Light()
@@ -41,10 +42,10 @@ void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector
 	//Needs to be a little in front of the model
 	Vector3 newPos(pos + offset + (dir * 1.25f));
 
-	this->mPosDir.pos = Vector4(newPos.x, newPos.y, newPos.z, 1);
-	this->mPosDir.dir = Vector4(dir.x, dir.y, dir.z, 1);
+	this->mLightInfo.pos = Vector4(newPos.x, newPos.y, newPos.z, 1);
+	this->mLightInfo.dir = Vector4(dir.x, dir.y, dir.z, 1);
 
-	this->mMatrices.view = DirectX::XMMatrixLookToLH(this->mPosDir.pos, this->mPosDir.dir, Vector3(0, 1, 0));
+	this->mMatrices.view = DirectX::XMMatrixLookToLH(this->mLightInfo.pos, this->mLightInfo.dir, Vector3(0, 1, 0));
 	this->mMatrices.view = this->mMatrices.view.Transpose();
 
 	D3D11_MAPPED_SUBRESOURCE data;
@@ -52,7 +53,7 @@ void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector
 	this->mContext->Map(this->mGData->getConstantBuffer(this->mLightBufferKey), 
 		0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 
-	memcpy(data.pData, &this->mPosDir, sizeof(lightStructs::lightPosDir));
+	memcpy(data.pData, &this->mLightInfo, sizeof(lightStructs::lightInfo));
 
 	this->mContext->Unmap(this->mGData->getConstantBuffer(this->mLightBufferKey), 0);
 
@@ -94,4 +95,14 @@ void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector
 int Light::getGraphicsKey() const
 {
 	return this->mLightGraphicsKey;
+}
+
+void Light::toggleFlashLight(bool onOrOff)
+{
+	this->mLightInfo.flashlightOn = onOrOff;
+}
+
+bool Light::getLightOn() const
+{
+	return this->mLightInfo.flashlightOn;
 }

@@ -49,7 +49,7 @@ public:
 	Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* context, int grapchicsKey, GraphicsData* gData);
 	virtual ~Player();
 
-	void initializePlayer();
+	void initialize();
 
 	void updatePosition(float dt);
 	void handleJumping(float dt);

@@ -40,6 +40,8 @@ public:
 	void update(float dt);
 	void draw();
 
+	void initialize();
+
 	bool handleKeyboardPress(SDL_KeyboardEvent const &key);
 	bool handleKeyboardRelease(SDL_KeyboardEvent const &key);
 	void handleMouseMotion(SDL_MouseMotionEvent const &motion);

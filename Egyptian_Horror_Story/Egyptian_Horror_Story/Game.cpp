@@ -89,6 +89,13 @@ void Game::draw() {
 	this->mGraphics->present();
 }
 
+void Game::initialize()
+{
+	this->mEntityHandler->initialize();
+	this->mAIHandler->setupAI();
+	this->mEntityHandler->initializeTreasure(this->mGraphics->getDevice());
+}
+
 void Game::update(float dt) {
 	this->mStateHandler->update(this, dt);
 }
@@ -135,9 +142,7 @@ bool Game::handleMousePress(SDL_MouseButtonEvent const &button) {
 		this->mStateHandler->needsInitialize = false;
 
 		SDL_SetRelativeMouseMode(SDL_bool::SDL_TRUE);
-		this->mEntityHandler->initialize();
-		this->mAIHandler->setupAI();
-		this->mEntityHandler->getPlayer()->initializePlayer();
+		this->initialize();
 	}
 
 

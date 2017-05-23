@@ -35,10 +35,12 @@ namespace lightStructs {
 		DirectX::SimpleMath::Matrix projection;
 	};
 
-	struct lightPosDir
+	struct lightInfo
 	{
 		DirectX::SimpleMath::Vector4 pos;
 		DirectX::SimpleMath::Vector4 dir;
+		bool flashlightOn;
+		DirectX::SimpleMath::Vector3 padding;
 	};
 }
 

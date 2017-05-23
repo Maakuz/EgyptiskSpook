@@ -46,6 +46,7 @@ public:
 
 	void setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context);
 	void setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera);
+	void initializeTreasure(ID3D11Device* device);
 	void setupEntities(ID3D11Device* device);
 	void setupAudioManager(AudioManager* manager);
 

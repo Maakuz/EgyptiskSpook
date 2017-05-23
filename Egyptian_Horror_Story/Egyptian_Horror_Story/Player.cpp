@@ -31,7 +31,7 @@ Player::Player(CameraClass* camera, ID3D11Device* device, ID3D11DeviceContext* c
 {
 	this->mCamera = camera;
 
-	this->initializePlayer();
+	this->initialize();
 	
 	//REMOVE
 	this->col = new Capsule(this->mCamera->getPos(), 2, 1);
@@ -47,7 +47,7 @@ Player::~Player()
 	delete this->col;
 }
 
-void Player::initializePlayer()
+void Player::initialize()
 {
 	this->dead = false;
 	this->damaged = false;
@@ -168,7 +168,7 @@ bool Player::handleKeyboardPress(SDL_KeyboardEvent const &key)
 			startSneaking();
 			break;
 
-		case SDL_SCANCODE_F:
+		case SDL_SCANCODE_E:
 			this->updateTreasureGrabbing(1.f);
 			break;
 	}
@@ -205,11 +205,15 @@ bool Player::handleKeyboardRelease(SDL_KeyboardEvent const &key)
 			this->mSneaking = false;
 			break;
 
-		case SDL_SCANCODE_F:
+		case SDL_SCANCODE_E:
 			if (this->mPickupableTres)
 				this->mPickupableTres->resetCounter();
 
 			this->mIsPickingTres = false;
+			break;
+
+		case SDL_SCANCODE_F:
+			this->mLight->toggleFlashLight(!this->mLight->getLightOn());
 			break;
 	}
 
