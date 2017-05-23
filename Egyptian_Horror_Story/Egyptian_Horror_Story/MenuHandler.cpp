@@ -82,7 +82,7 @@ GAMESTATE MenuHandler::onPressButton(int id, GAMESTATE currentState) {
 	else if (currentState == GAME_OVER)
 		switch (id)
 		{
-		case 3: //GO BACK TO MENU BUTTON
+		case 2: //GO BACK TO MENU BUTTON
 			return MAIN_MENU;
 			break;
 		}
