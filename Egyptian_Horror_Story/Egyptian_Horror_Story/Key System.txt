@@ -13,6 +13,7 @@ ShadowRenderer: 1
 EntityRenderer: 2
 ParticleRenderer: 3
 GUI: 4
+Skybox renderer: 6
 
 Same goes for booking space in the GraphicsData!
 
