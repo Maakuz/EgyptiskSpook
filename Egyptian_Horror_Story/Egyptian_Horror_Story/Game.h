@@ -26,6 +26,7 @@ private:
 	EntityHandler* mEntityHandler;
 	AIHandler* mAIHandler;
 	GUIRenderer *mGuiRenderer; //temp
+	SkyRenderer *mSkyRenderer;
 	AudioManager mAudioManager;
 	OptionsHandler* mOptionHandler;
 	MenuHandler mMenuHandler;

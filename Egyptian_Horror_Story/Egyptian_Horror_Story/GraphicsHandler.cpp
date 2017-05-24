@@ -108,9 +108,14 @@ HRESULT GraphicsHandler::setupSwapChain() {
 
 	mSwapChainDesc.SampleDesc.Count = 4;
 
+	D3D_FEATURE_LEVEL test[2];
+
+	test[0] = D3D_FEATURE_LEVEL_11_1;
+	test[1] = D3D_FEATURE_LEVEL_11_0;
+
 	HRESULT hr = D3D11CreateDeviceAndSwapChain(
 		nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_DEBUG,
-		nullptr, NULL, D3D11_SDK_VERSION, &mSwapChainDesc, &mSwapChain, &mDevice,
+		test, 2, D3D11_SDK_VERSION, &mSwapChainDesc, &mSwapChain, &mDevice,
 		nullptr, &mContext
 	);
 
