@@ -4,15 +4,17 @@
 void Game::setupRenderers()
 {
 	mGuiRenderer = new GUIRenderer();
+	this->mSkyRenderer = new SkyRenderer();
 	this->mGraphics->addRenderer(mGuiRenderer);
 
 	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera, mStateHandler->getState()));
 	this->mGraphics->addRenderer(this->mEntityHandler->getEntityRenderer());
+	this->mGraphics->addRenderer(this->mSkyRenderer);
 
 	this->mGraphics->setupRenderers();
 	this->mGraphics->setupDSAndSRViews();
 
-	mGuiRenderer->loadButtons(this->mMenuHandler); // Find better place to load buttons
+	mGuiRenderer->loadButtons(this->mMenuHandler);
 }
 
 void Game::setupEntityHandler()
@@ -52,6 +54,7 @@ Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options, SDL_Windo
 	this->setupEntityHandler();
 
 	this->setupRenderers();
+
 }
 
 Game::~Game()
@@ -73,6 +76,9 @@ void Game::updateGame(float dt)
 			this->mAIHandler->getNavMeshWidth(), this->mAIHandler->getNavMeshHeight());
 
 	this->mCamera->updateRotation(this->mGraphics->getDeviceContext());
+	this->mSkyRenderer->updateTransform(this->mEntityHandler->getPlayer()->getPosition(), this->mGraphics->getDeviceContext());
+
+
 
 	if (this->mEntityHandler->getPlayer()->isDead())
 	{

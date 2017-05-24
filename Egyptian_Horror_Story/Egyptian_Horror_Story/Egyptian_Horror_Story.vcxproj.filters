@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Resource Files\Shadow Shaders">
-      <UniqueIdentifier>{771b215f-0ab8-4055-bffe-f59e4f57cd7e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Renderers">
       <UniqueIdentifier>{3609dcd0-e75f-419b-86a9-8315630ccd60}</UniqueIdentifier>
     </Filter>
@@ -34,9 +31,6 @@
     <Filter Include="Source Files\Renderers">
       <UniqueIdentifier>{a0fa83d8-ad20-41f3-8d32-694b1b1549f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Entity Shaders">
-      <UniqueIdentifier>{657f8896-2323-4eb4-a57e-e039f949acf5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\Information">
       <UniqueIdentifier>{87499f51-b842-4ff1-95b6-a4de730398fb}</UniqueIdentifier>
     </Filter>
@@ -45,12 +39,6 @@
     </Filter>
     <Filter Include="Header Files\Entities">
       <UniqueIdentifier>{4881abb3-0dc9-41e7-b83e-6bd97f8c57e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Particle Shaders">
-      <UniqueIdentifier>{d8484192-a330-49e8-91a1-e2a0a37660a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\GUI Shaders">
-      <UniqueIdentifier>{5a7eefb3-0545-4e89-b644-d0b27c230f07}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource Files\Scripts">
       <UniqueIdentifier>{3ccea0b1-1572-4a85-80a7-b2a677ba6048}</UniqueIdentifier>
@@ -61,34 +49,58 @@
     <Filter Include="Source Files\AI">
       <UniqueIdentifier>{e7e587e0-1a0e-4f76-8f37-ef478723e4ed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{2a20dfb5-5d22-4545-a68f-848adc5a939a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Skymap Shaders">
+      <UniqueIdentifier>{8ba0ed33-ee2a-4f36-aa34-1cd06f565ac3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Particle Shaders">
+      <UniqueIdentifier>{d8484192-a330-49e8-91a1-e2a0a37660a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Entity Shaders">
+      <UniqueIdentifier>{657f8896-2323-4eb4-a57e-e039f949acf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\GUI Shaders">
+      <UniqueIdentifier>{5a7eefb3-0545-4e89-b644-d0b27c230f07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders\Shadow Shaders">
+      <UniqueIdentifier>{771b215f-0ab8-4055-bffe-f59e4f57cd7e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ShadowVS.hlsl">
-      <Filter>Resource Files\Shadow Shaders</Filter>
+      <Filter>Resource Files\Shaders\Shadow Shaders</Filter>
     </FxCompile>
     <FxCompile Include="EntityVS.hlsl">
-      <Filter>Resource Files\Entity Shaders</Filter>
+      <Filter>Resource Files\Shaders\Entity Shaders</Filter>
     </FxCompile>
     <FxCompile Include="EntityPS.hlsl">
-      <Filter>Resource Files\Entity Shaders</Filter>
+      <Filter>Resource Files\Shaders\Entity Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ParticleVS.hlsl">
-      <Filter>Resource Files\Particle Shaders</Filter>
+      <Filter>Resource Files\Shaders\Particle Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ParticlePS.hlsl">
-      <Filter>Resource Files\Particle Shaders</Filter>
+      <Filter>Resource Files\Shaders\Particle Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ParticleGS.hlsl">
-      <Filter>Resource Files\Particle Shaders</Filter>
+      <Filter>Resource Files\Shaders\Particle Shaders</Filter>
     </FxCompile>
     <FxCompile Include="GUIVS.hlsl">
-      <Filter>Resource Files\GUI Shaders</Filter>
+      <Filter>Resource Files\Shaders\GUI Shaders</Filter>
     </FxCompile>
     <FxCompile Include="GUIPS.hlsl">
-      <Filter>Resource Files\GUI Shaders</Filter>
+      <Filter>Resource Files\Shaders\GUI Shaders</Filter>
     </FxCompile>
     <FxCompile Include="GUIGS.hlsl">
-      <Filter>Resource Files\GUI Shaders</Filter>
+      <Filter>Resource Files\Shaders\GUI Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="SkymapPS.hlsl">
+      <Filter>Resource Files\Shaders\Skymap Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="SkymapVS.hlsl">
+      <Filter>Resource Files\Shaders\Skymap Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

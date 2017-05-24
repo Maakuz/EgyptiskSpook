@@ -5,6 +5,7 @@
 #include "EntityHandler.h"
 #include "GUIRenderer.h"
 #include "MenuHandler.h"
+#include "SkyRenderer.h"
 
 class Game
 {
@@ -25,6 +26,7 @@ private:
 	EntityHandler* mEntityHandler;
 	AIHandler* mAIHandler;
 	GUIRenderer *mGuiRenderer; //temp
+	SkyRenderer *mSkyRenderer;
 	AudioManager mAudioManager;
 	OptionsHandler* mOptionHandler;
 	MenuHandler mMenuHandler;
