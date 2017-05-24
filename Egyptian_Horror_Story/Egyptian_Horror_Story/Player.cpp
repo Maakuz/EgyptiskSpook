@@ -91,29 +91,6 @@ void Player::updatePosition(float dt)
 		this->col->mPoint = this->mCamera->getPos();
 	}
 
-	//TODO: GÖRA DET FINARE
-	else
-	{
-		DirectX::SimpleMath::Vector3 newForward = this->mPickupableTres->getPosition() - this->getPosition();
-		newForward.Normalize();
-
-		if (newForward.y > this->mCamera->getForward().y)
-			this->mCamera->setPitch(this->mCamera->getPitch() + (dt * CAMERA_SNAP_SPEED));
-
-		else if (newForward.y < this->mCamera->getForward().y)
-			this->mCamera->setPitch(this->mCamera->getPitch() - (dt * CAMERA_SNAP_SPEED));
-
-		
-		float test = atan2(this->getPosition().x - this->mPickupableTres->getPosition().x, this->getPosition().z - this->mPickupableTres->getPosition().z);
-
-		if (test > this->mCamera->getYaw())
-			this->mCamera->setYaw(this->mCamera->getYaw() + (dt * CAMERA_SNAP_SPEED));
-
-		else if (test < this->mCamera->getYaw())
-			this->mCamera->setYaw(this->mCamera->getYaw() - (dt * CAMERA_SNAP_SPEED));
-
-	}
-
 	updateLightPosition();
 
 }

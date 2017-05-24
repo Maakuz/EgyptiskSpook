@@ -1398,6 +1398,8 @@ void EntityHandler::detectCloseTreasures()
 	{
 		this->mPlayer->setPickuppableTreasure(nullptr);
 
+		DirectX::SimpleMath::Vector3 playerToTres = this->mTreasures[i]->getPosition() - this->mPlayer->getPosition();
+
 		if (this->mTreasures[i]->getPickedUp())
 		{
 			this->mEntityRenderer->getGraphicsData()->removeData(this->mTreasures[i]->getKey());
@@ -1407,12 +1409,14 @@ void EntityHandler::detectCloseTreasures()
 			exit = true;
 		}
 
-		//Change to squared for performance
-		
-		else if ((this->mPlayer->getPosition() - this->mTreasures[i]->getPosition()).Length() < TREASURE_PICKUP_DIST)
+		else if (playerToTres.Length() < TREASURE_PICKUP_DIST)
 		{
-			this->mPlayer->setPickuppableTreasure(this->mTreasures[i]);
-			exit = true;
+			playerToTres.Normalize();
+			if (playerToTres.Dot(this->mPlayer->getCamera()->getForward()) > 0.7)
+			{
+				this->mPlayer->setPickuppableTreasure(this->mTreasures[i]);
+				exit = true;
+			}
 		}
 	}
 }
@@ -1505,7 +1509,7 @@ void EntityHandler::loadMap(ID3D11Device* device)
 
 void EntityHandler::setupEntities(ID3D11Device* device)
 {
-	this->loadMap(device);
+	//this->loadMap(device);
 
 	this->mFlashlightModel = new Entity(this->mPlayer->getLight()->getGraphicsKey());
 
