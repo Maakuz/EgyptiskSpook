@@ -1,6 +1,7 @@
 #include "EntityHandler.h"
 #define ENEMY_KEY 400
 #define BASE_TRAP_KEY 1000
+#define TREASURE_PICKUP_DIST 2.f
 
 void EntityHandler::hardcodedMap(ID3D11Device* device)
 {
@@ -1408,7 +1409,7 @@ void EntityHandler::detectCloseTreasures()
 
 		//Change to squared for performance
 		
-		else if ((this->mPlayer->getPosition() - this->mTreasures[i]->getPosition()).Length() < 1.f)
+		else if ((this->mPlayer->getPosition() - this->mTreasures[i]->getPosition()).Length() < TREASURE_PICKUP_DIST)
 		{
 			this->mPlayer->setPickuppableTreasure(this->mTreasures[i]);
 			exit = true;

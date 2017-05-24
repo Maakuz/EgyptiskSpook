@@ -161,6 +161,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="scripts\EnemyAI.lua" />
+    <None Include="scripts\TrapHanger.lua" />
     <None Include="scripts\TrapStone.lua" />
   </ItemGroup>
   <ItemGroup>

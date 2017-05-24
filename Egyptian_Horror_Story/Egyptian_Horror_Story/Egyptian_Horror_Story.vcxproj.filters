@@ -286,6 +286,9 @@
       <Filter>Resource Files\Scripts</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="scripts\TrapHanger.lua">
+      <Filter>Resource Files\Scripts</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Key System.txt">
