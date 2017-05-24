@@ -95,7 +95,6 @@
     <ClCompile Include="EntityHandler.cpp" />
     <ClCompile Include="EntityRenderer.cpp" />
     <ClCompile Include="FBXLoader.cpp" />
-    <ClCompile Include="FontHandler.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GraphicsData.cpp" />
     <ClCompile Include="GraphicsHandler.cpp" />
@@ -127,7 +126,6 @@
     <ClInclude Include="EntityHandler.h" />
     <ClInclude Include="EntityRenderer.h" />
     <ClInclude Include="FBXLoader.h" />
-    <ClInclude Include="FontHandler.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GraphicsData.h" />
     <ClInclude Include="GraphicsHandler.h" />

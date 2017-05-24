@@ -8,8 +8,12 @@ function onStart()
 	SetTrapRotOffset(0, -4, 0)
 end
 
+function getHitboxSize()
+	return 2, 1, 1
+end
+
 function getSize() 
-	return 5, 3, 5 -- width, height, depth
+	return 0.8, 0.5, 0.5 -- width, height, depth
 end
 
 function isImpassible()
@@ -20,7 +24,7 @@ function update(deltaTime)
 	temp = temp + 0.008
 	
 	local rot = math.sin(temp) * 1.4
-	RotateTrap(rot, 0, 0)
+	RotateTrap(0, 0, rot)
 	
 	collision = math.abs(rot) < 0.3
 end
@@ -34,6 +38,6 @@ end
 
 function onEnemyCollision()
 	if collision then
-		PushbackEnemy(position.x, position.y, position.z, 1)
+	--	PushbackEnemy(position.x, position.y, position.z, 1)
 	end
 end

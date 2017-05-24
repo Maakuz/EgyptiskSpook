@@ -7,6 +7,7 @@ Entity::Entity(int graphicsKey)
 	this->mAABB = nullptr;
 
 	this->mGraphicsKey = graphicsKey;
+	this->mScale = DirectX::SimpleMath::Vector3(1, 1, 1);
 }
 
 Entity::~Entity()
@@ -42,6 +43,10 @@ void Entity::setRotation(DirectX::SimpleMath::Vector3 rot) {
 	this->mRot = rot;
 }
 
+void Entity::setScale(DirectX::SimpleMath::Vector3 scale) {
+	this->mScale = scale;
+}
+
 void Entity::setOffsetRotation(DirectX::SimpleMath::Vector3 offsetRot) {
 	this->mOffsetRot = offsetRot;
 }
@@ -61,7 +66,7 @@ void Entity::updateTransformBuffer(ID3D11DeviceContext* context, GraphicsData* g
 	using namespace DirectX::SimpleMath;
 	Matrix offsetMat = Matrix::CreateTranslation(this->mOffsetRot);
 	Matrix posMat = offsetMat * Matrix::CreateRotationZ(mRot.z) * Matrix::CreateRotationX(mRot.x) *
-					Matrix::CreateRotationY(mRot.y) * offsetMat.Invert() * Matrix::CreateTranslation(this->mPos);
+					Matrix::CreateRotationY(mRot.y) * offsetMat.Invert() * Matrix::CreateScale(this->mScale) * Matrix::CreateTranslation(this->mPos);
 	posMat = posMat.Transpose();
 
 	D3D11_MAPPED_SUBRESOURCE data;

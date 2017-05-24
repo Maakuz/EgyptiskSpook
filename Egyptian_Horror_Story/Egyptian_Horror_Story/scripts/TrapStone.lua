@@ -12,8 +12,12 @@ function onStart()
 end
 
 -- Height is high because rock is in the air
+function getHitboxSize()
+	return 1, 50, 1
+end
+
 function getSize() 
-	return 5, 50, 5 -- width, height, depth
+	return 1, 1, 1 -- width, height, depth
 end
 
 function isImpassible()

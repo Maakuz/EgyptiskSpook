@@ -32,16 +32,30 @@ void AIHandler::setupTraps() {
 		lua_getglobal(state, "onStart");
 		handleError(state, lua_pcall(state, 0, 0, 0));
 
-		lua_getglobal(state, "getSize");
-		handleError(state, lua_pcall(state, 0, 3, 0));
+		// Pretty hardcoded but basicly, first load load hitbox size and then model size
+		char *str[2] = { "getHitboxSize", "getSize" };
+		for (int i = 0; i < 2; i++) {
+			lua_getglobal(state, str[i]);
+			handleError(state, lua_pcall(state, 0, 3, 0));
 
-		if (lua_isnumber(state, -1) && lua_isnumber(state, -2) &&
-			lua_isnumber(state, -3)) {
-			trap.trap->createAABB(trap.trap->getPosition(),
-				Vector3(static_cast<float> (lua_tonumber(state, -3)), 0, 0),
-				Vector3(0, static_cast<float> (lua_tonumber(state, -2)), 0),
-				Vector3(0, 0, static_cast<float> (lua_tonumber(state, -1))));
-			lua_pop(state, 3);
+			if (lua_isnumber(state, -1) && lua_isnumber(state, -2) &&
+				lua_isnumber(state, -3)) {
+				Vector3 scale(
+					static_cast<float> (lua_tonumber(state, -3)),
+					static_cast<float> (lua_tonumber(state, -2)),
+					static_cast<float> (lua_tonumber(state, -1))
+				);
+
+				if (i == 0) {
+					trap.trap->createAABB(trap.trap->getPosition(),
+						Vector3(scale.x, 0, 0),
+						Vector3(0, scale.y, 0),
+						Vector3(0, 0, scale.z));
+				} else if (i == 1) {
+					trap.trap->setScale(scale);
+				}
+				lua_pop(state, 3);
+			}
 		}
 	}
 }

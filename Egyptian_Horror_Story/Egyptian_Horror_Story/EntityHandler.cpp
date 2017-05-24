@@ -1418,16 +1418,24 @@ void EntityHandler::detectCloseTreasures()
 
 void EntityHandler::setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context)
 {
-	Trap* test = new Trap(1000, 25, 0, -74);
-	ai->addTrap("scripts/TrapHanger.lua", test);
-
+	Trap* test = new Trap(1000, 19, 0, -12);
 	this->loadEntityModel("fallingRock.fbx", L"", test, device);
+	ai->addTrap("scripts/TrapHanger.lua", test);
 	this->mTraps.push_back(test);
 
-	test = new Trap(1001, 5, 12, -5);
-	ai->addTrap("scripts/TrapStone.lua", test);
-
+	test = new Trap(1001, 19, 0, -8);
 	this->loadEntityModel("fallingRock.fbx", L"", test, device);
+	ai->addTrap("scripts/TrapHanger.lua", test);
+	this->mTraps.push_back(test);
+
+	test = new Trap(1002, 19, 0, -4);
+	this->loadEntityModel("fallingRock.fbx", L"", test, device);
+	ai->addTrap("scripts/TrapHanger.lua", test);
+	this->mTraps.push_back(test);
+
+	test = new Trap(1003, 5, 12, -5);
+	this->loadEntityModel("fallingRock.fbx", L"", test, device);
+	ai->addTrap("scripts/TrapStone.lua", test);
 	this->mTraps.push_back(test);
 	
 	ai->setupAI();
@@ -1523,8 +1531,9 @@ void EntityHandler::initialize()
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, 4));
 	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
 	
-	this->mTraps[0]->setPosition(25, 0, -74);
-	this->mTraps[1]->setPosition(5, 12, -5);
+	for (auto& trap : mTraps) {
+		trap->resetTrap();
+	}
 
 	this->mPlayer->initialize();
 }
