@@ -1,10 +1,13 @@
 #include "ParticleRenderer.h"
 #include <math.h> 
+#include "Emitters.h"
 #define SHADERS 30
 #define DIVIDE 2// should be divisible by 2
 #define START_SIZE 2048  // should be divisible by 2
+#define MAX_SIZE 10000
 
 using namespace DirectX::SimpleMath;
+
 
 ParticleRenderer::ParticleRenderer(CameraClass *camera, GAMESTATE identifier)
 	: mCamera(camera), Renderer(identifier) {
@@ -14,6 +17,18 @@ ParticleRenderer::ParticleRenderer(CameraClass *camera, GAMESTATE identifier)
 
 ParticleRenderer::~ParticleRenderer() {
 	delete this->mGraphicsData;
+
+	for (int i = 0; i < this->mPEs.size(); i++) {
+		if (this->mPEs[i])
+			delete this->mPEs[i];
+	}
+}
+
+void ParticleRenderer::addParticle(ParticleVertex pv, ParticleData pd) {
+	if (this->mParticleVertices.size() < MAX_SIZE) {
+		this->mParticleVertices.push_back(pv);
+		this->mParticleData.push_back(pd);
+	}
 }
 
 void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
@@ -26,14 +41,21 @@ void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	shaders.setupPixelShader(device, SHADERS, L"ParticlePS.hlsl", "main");
 	shaders.setupGeometryShader(device, SHADERS, L"ParticleGS.hlsl", "main");
 
-	for (int i = 0; i < START_SIZE; i++) {
-		addRandomParticle(true);
+
+	this->mPEs.push_back(new AreaStuff(ParticleType::AREAGREJS, this));
+	this->mPEs.push_back(new FallingEmitterHandler(this->mCamera, ParticleType::FALLING, this));
+	//for (int i = 0; i < START_SIZE; i++) {
+	//	((AreaStuff*)this->mPEs[0])->addRandomParticle();
+	//}
+	//this->currentSize = START_SIZE;x
+	//D3D11_SUBRESOURCE_DATA data;
+	//data.pSysMem = &this->mParticleVertices[0];
+	
+	for (int i = 0; i < this->mPEs.size(); i++) {
+		this->mPEs[i]->initialize(i, this->mGraphicsData, device);
 	}
 
-	D3D11_SUBRESOURCE_DATA data;
-	data.pSysMem = &this->mParticleVertices[0];
-
-	mGraphicsData->createVertexBuffer(0, getSize(), &data, device, true);
+	mGraphicsData->createVertexBuffer(0, MAX_SIZE * sizeof(ParticleVertex), NULL, device, true);
 	mGraphicsData->createConstantBuffer(1, sizeof(Vector4), nullptr, device, true);
 	mGraphicsData->loadTexture(0, L"sand.png", device);
 }
@@ -48,6 +70,11 @@ void ParticleRenderer::updateCameraBuffer(ID3D11DeviceContext *context) {
 }
 
 void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
+
+	for (int i = 0; i < this->mPEs.size(); i++) {
+		this->mPEs[i]->updatePerFrame();
+	}
+
 	frame++;
 	float temp = 0;
 	int mod = frame % DIVIDE;
@@ -58,11 +85,22 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 		ParticleVertex *particle = &this->mParticleVertices[i];
 		ParticleData *data = &this->mParticleData[i];
 
-		// TEMP It was 1000, 10 was faster particles
-		particle->position += data->direction / 40.f;
-		if (rand() % 1000 == 0) {
-			temp = getRandomNr() * 2 - 1;
-			data->direction = Vector3(temp, temp, temp);
+		for (int j = 0; j < this->mPEs.size(); j++) {
+			if (data->type == this->mPEs[j]->getID()) {
+				this->mPEs[j]->update(particle, data);
+			}
+		}
+	}
+	piece = mParticleVertices.size() / DIVIDE;
+	start = piece * mod;
+	for (int i = start; i < start + piece; i++) {
+		ParticleVertex *particle = &this->mParticleVertices[i];
+		ParticleData *data = &this->mParticleData[i];
+
+		for (int j = 0; j < this->mPEs.size(); j++) {
+			if (data->type == this->mPEs[j]->getID()) {
+				this->mPEs[j]->handleTimePerParticle(particle, data, i);
+			}
 		}
 	}
 
@@ -84,18 +122,29 @@ void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shade
 						   *vp = this->mCamera->getMatrixBuffer();
 	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
 	shaders.setShaders(context, SHADERS, SHADERS, SHADERS); //20 is from entity shader, change later
-
+	
 	updateCameraBuffer(context);
 	updateParticles(context);
-
+	
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	context->IASetInputLayout(shaders.getInputLayout(SHADERS));
 	context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
 	context->PSSetShaderResources(0, 1, &srv);
 	context->GSSetConstantBuffers(0, 1, &vp);
 	context->GSSetConstantBuffers(1, 1, &cam);
-
+	
 	context->Draw(this->mParticleVertices.size() - 1, 0);
+}
+
+void ParticleRenderer::removeAt(int i) {
+	std::swap(this->mParticleData[i], this->mParticleData[this->mParticleData.size() - 1]);
+	std::swap(this->mParticleVertices[i], this->mParticleVertices[this->mParticleVertices.size() - 1]);
+	this->mParticleData.pop_back();
+	this->mParticleVertices.pop_back();
+}
+
+CameraClass * ParticleRenderer::getCamera() {
+	return this->mCamera;
 }
 
 UINT ParticleRenderer::getSize() const {
@@ -103,38 +152,48 @@ UINT ParticleRenderer::getSize() const {
 }
 
 void ParticleRenderer::addRandomParticle(bool timeIsRandom) {
-	ParticleVertex particle;
-	ParticleData partData;
-
-	//TEMP
-	//particle.position = Vector3(getRandomNr() * 30 - 15, getRandomNr() * 20 - 5, getRandomNr() * 30 - 15);
-	particle.position = Vector3(getRandomNr() * 20 - 10, getRandomNr() * 15 - 3, getRandomNr() * 20 - 10);
-	particle.position += this->mCamera->getPos();
-	particle.dimensions = Vector2(0.01f, 0.01f);
-
-	partData.direction = Vector3(getRandomNr() * 2 - 1, getRandomNr() * 2 - 1,getRandomNr() * 2 - 1);
-	partData.timeLeft = timeIsRandom ? getRandomNr() * 3.5f : 2.f;
-
-	this->mParticleVertices.push_back(particle);
-	this->mParticleData.push_back(partData);
+	//ParticleVertex particle;
+	//ParticleData partData;
+	//
+	////TEMP
+	////particle.position = Vector3(getRandomNr() * 30 - 15, getRandomNr() * 20 - 5, getRandomNr() * 30 - 15);
+	//particle.position = Vector3(getRandomNr() * 20 - 10, getRandomNr() * 15 - 3, getRandomNr() * 20 - 10);
+	//particle.position += this->mCamera->getPos();
+	//particle.dimensions = Vector2(0.01f, 0.01f);
+	//partData.type = AREAGREJS;
+	//partData.direction = Vector3(getRandomNr() * 2 - 1, getRandomNr() * 2 - 1,getRandomNr() * 2 - 1);
+	//partData.timeLeft = timeIsRandom ? getRandomNr() * 3.5f : 2.f;
+	//
+	//this->mParticleVertices.push_back(particle);
+	//this->mParticleData.push_back(partData);
 }
 
-void ParticleRenderer::timeCheck(int start, int piece) {
-	for (int i = start; i < start + piece; i++) {
+
+void ParticleRenderer::timeCheck(int s, int p) {
+	
+	
+
+	int mod = frame % DIVIDE;
+	int piece = mParticleVertices.size() / DIVIDE;
+	int start = piece * mod;
+	//for (int i = start; i < start + piece; i++) {
+	for(int i = 0; i < mParticleData.size(); i++ ) {
 		ParticleVertex *particle = &this->mParticleVertices[i];
 		ParticleData *data = &this->mParticleData[i];
-
-		data->timeLeft -= 0.01f * DIVIDE; //CHANGE LATER
-		if (data->timeLeft <= 0) {
-			addRandomParticle();
+	
+		//data->timeLeft -= 0.01f * DIVIDE; //CHANGE LATER
+		if (data->kill) {
+			if (data->type == FALLING) {
+				data = data;
+			}
 			std::swap(this->mParticleData[i], this->mParticleData[this->mParticleData.size() - 1]);
 			std::swap(this->mParticleVertices[i], this->mParticleVertices[this->mParticleVertices.size() - 1]);
 			this->mParticleData.pop_back();
 			this->mParticleVertices.pop_back();
+			i--;
 		}
 	}
 }
 
-inline float ParticleRenderer::getRandomNr() {
-	return rand() / (RAND_MAX + 1.f);
-}
+
+//--------------------------------------------------------------------------------------

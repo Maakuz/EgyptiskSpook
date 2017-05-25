@@ -170,6 +170,9 @@
     <ClCompile Include="Treasure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Emitters.cpp">
+      <Filter>Source Files\Game Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -252,6 +255,9 @@
     </ClInclude>
     <ClInclude Include="Treasure.h">
       <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Emitters.h">
+      <Filter>Header Files\Game classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
