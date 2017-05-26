@@ -53,7 +53,7 @@ function update(deltaTime)
 			pathToPlayer()
 			sawPlayerLastFrame = true
 		elseif sawPlayerLastFrame and not seesPlayer then -- goes to player if saw player last "frame"
-			--pathToPlayer()
+			pathToPlayer()
 			sawPlayerLastFrame = false
 		end
 	end
@@ -71,7 +71,9 @@ function onReachingPathEnd()
 	SetEnemySpeed(walkSpeed)
 	
 	if SeesPlayer() then
-		pathToPlayer()
+		if not loadingPath then 
+			pathToPlayer()
+		end
 	elseif onPointPath then
 		onReachingPointPathEnd()
 	else
@@ -83,7 +85,7 @@ end
 function onReachingPointPathEnd()
 	StopPathing()
 	SetEnemyWaypoint(waypoints[currentWaypoint])
-		
+	
 	onPointPath = false
 end
 
@@ -93,8 +95,9 @@ function pathToPlayer()
 	LoadPathToPlayer()
 	
 	onPlayerPath = true
-	onPointPath = false
 	loadingPath = true
+	
+	onPointPath = false
 end
 
 function pathToWaypoint()

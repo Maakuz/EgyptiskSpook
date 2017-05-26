@@ -10,6 +10,7 @@
 #include <string>
 #include <math.h>
 #include <assert.h>
+#include <exception>
 
 using namespace DirectX::SimpleMath;
 
@@ -33,9 +34,19 @@ void NavMesh::copy(NavMesh const &navMesh) {
 
 void NavMesh::deleteMemory() {
 	if (mCurrentThread) {
-		mCurrentThread->join();
+		try {
+			mCurrentThread->join();
+		} catch (std::exception &e) {
+			SDL_Log("Bad stuff happend :("
+				"If you are reading this for some reason"
+				"This error message will never be display"
+				"idk why, fix this if u can"
+				"or dont who cares, the program is terminated"
+				"any way :) \n%s", e.what());
+		}
 		delete mCurrentThread;
 	}
+
 	if (mSurface)
 		SDL_FreeSurface(mSurface);
 	if (mCopy)
@@ -65,7 +76,12 @@ NavMesh* NavMesh::operator=(NavMesh const &navMesh) {
 
 void NavMesh::loadGrid(const char *gridName) {
 	if (mCurrentThread) {
-		mCurrentThread->join();
+		try {
+			mCurrentThread->join();
+		}
+		catch (std::exception &e) {
+			SDL_Log("Bad stuff happend");
+		}
 		delete mCurrentThread;
 		mCurrentThread = nullptr;
 	}
@@ -128,7 +144,7 @@ bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
 }
 
 void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
-	int toX, int toZ) {
+	int toX, int toZ) throw() {
 	//A Star algorithm ! THIS IS CURRENTLY VERY UNOPTIMIZED !
 
 	Vector2 toPos = toPixelCoord(toX, toZ);
@@ -200,7 +216,6 @@ void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
 
 void NavMesh::loadPathToCoord(Enemy *enemy, int fromX, int fromZ, int toX, int toZ) {
 	if (mCurrentThread) {
-		SDL_Log("BAD!!");
 		mCurrentThread->join();
 		delete mCurrentThread;
 	}
