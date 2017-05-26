@@ -56,8 +56,6 @@ void AreaStuff::addRandomParticle() {
 }
 
 void ParticleEmitter::initialize(int key, GraphicsData * g, ID3D11Device * dev) {
-	g->createVertexBuffer(key, this->maxSize, NULL, dev, true);
-	this->key = key;
 }
 
 void ParticleEmitter::createParticle(ParticleVertex pv, ParticleData pd) {

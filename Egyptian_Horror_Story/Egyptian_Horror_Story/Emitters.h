@@ -12,6 +12,7 @@ protected:
 	int maxSize;
 public:
 	ParticleEmitter(ParticleType id, ParticleRenderer* pr) { this->id = id; this->pr = pr; }
+	virtual ~ParticleEmitter() {}
 	void initialize(int key, GraphicsData*, ID3D11Device*);
 	virtual void updatePerFrame() = 0;
 	virtual void handleTimePerParticle(ParticleVertex* pv, ParticleData* pd, int index) = 0;
