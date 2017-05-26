@@ -33,8 +33,12 @@ void Enemy::setFollowPath(bool followPath) {
 	mFollowPath = followPath;
 }
 
-void Enemy::setPaused(bool paused) {
-	mPaused = paused;
+void Enemy::setPathLoaded(bool loaded) {
+	mLoaded = loaded;
+}
+
+bool Enemy::isPathLoaded() const {
+	return mLoaded;
 }
 
 void Enemy::setWaypoint(Vector3 waypoint) {

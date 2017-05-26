@@ -32,14 +32,14 @@ void NavMesh::copy(NavMesh const &navMesh) {
 }
 
 void NavMesh::deleteMemory() {
-	if (mSurface)
-		SDL_FreeSurface(mSurface);
-	if (mCopy)
-		SDL_FreeSurface(mCopy);
 	if (mCurrentThread) {
 		mCurrentThread->join();
 		delete mCurrentThread;
 	}
+	if (mSurface)
+		SDL_FreeSurface(mSurface);
+	if (mCopy)
+		SDL_FreeSurface(mCopy);
 }
 
 NavMesh::NavMesh() {
@@ -130,7 +130,6 @@ bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
 void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
 	int toX, int toZ) {
 	//A Star algorithm ! THIS IS CURRENTLY VERY UNOPTIMIZED !
-	enemy->setPaused(true);
 
 	Vector2 toPos = toPixelCoord(toX, toZ);
 	std::vector<Vector3> path;
@@ -143,7 +142,7 @@ void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
 		path.push_back(Vector3(toX, 0, toZ));
 		enemy->setPath(path);
 		enemy->setFollowPath(true);
-		enemy->setPaused(false);
+		enemy->setPathLoaded(true);
 		return;
 	}
 
@@ -196,11 +195,12 @@ void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
 
 	enemy->setPath(path);
 	enemy->setFollowPath(true);
-	enemy->setPaused(false);
+	enemy->setPathLoaded(true);
 }
 
 void NavMesh::loadPathToCoord(Enemy *enemy, int fromX, int fromZ, int toX, int toZ) {
 	if (mCurrentThread) {
+		SDL_Log("BAD!!");
 		mCurrentThread->join();
 		delete mCurrentThread;
 	}

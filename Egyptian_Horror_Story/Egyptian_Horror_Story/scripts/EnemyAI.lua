@@ -26,6 +26,7 @@ waypoints = { -- c = connections, length beetwen gets calc in c++
 			
 -- Frame Counter
 frame = 0
+loadingPath = false
 
 function onStart()
 	SetEnemySpeed(walkSpeed)
@@ -46,33 +47,29 @@ end
 
 function update(deltaTime)
 	frame = frame + 1
-	if frame % 10 == 0 then
+	if frame % 25 == 0 then
 		seesPlayer = SeesPlayer()
-		if not onPlayerPath or not sawPlayerLastFrame and seesPlayer then
+		if not onPlayerPath and not loadingPath and seesPlayer then
 			pathToPlayer()
 			sawPlayerLastFrame = true
-		elseif sawPlayerLastFrame and not seesPlayer then
-			pathToPlayer()
+		elseif sawPlayerLastFrame and not seesPlayer then -- goes to player if saw player last "frame"
+			--pathToPlayer()
 			sawPlayerLastFrame = false
-		end
-	end
-	
-	if frame % 200 == 0 then
-		if onPlayerPath and SeesPlayer() then
-			pathToPlayer()
-			sawPlayerLastFrame = true
 		end
 	end
 end
 
 function onLoadedPath()
-	if seesPlayer() then
+	if SeesPlayer() then
 		pathToPlayer()
 	end
+	
+	loadingPath = false
 end
 
 function onReachingPathEnd()
 	SetEnemySpeed(walkSpeed)
+	
 	if SeesPlayer() then
 		pathToPlayer()
 	elseif onPointPath then
@@ -97,6 +94,7 @@ function pathToPlayer()
 	
 	onPlayerPath = true
 	onPointPath = false
+	loadingPath = true
 end
 
 function pathToWaypoint()
