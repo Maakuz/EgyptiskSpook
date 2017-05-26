@@ -76,7 +76,7 @@ void Game::updateGame(float dt)
 			this->mAIHandler->getNavMeshWidth(), this->mAIHandler->getNavMeshHeight());
 
 	this->mCamera->updateRotation(this->mGraphics->getDeviceContext());
-	this->mSkyRenderer->updateTransform(this->mEntityHandler->getPlayer()->getPosition(), this->mGraphics->getDeviceContext());
+	this->mSkyRenderer->updateTransform(this->mCamera->getPos(), this->mGraphics->getDeviceContext());
 
 
 
