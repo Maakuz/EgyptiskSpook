@@ -65,6 +65,12 @@ function update(deltaTime)
 	end
 end
 
+function onLoadedPath()
+	if seesPlayer() then
+		pathToPlayer()
+	end
+end
+
 function onReachingPathEnd()
 	SetEnemySpeed(walkSpeed)
 	if SeesPlayer() then

@@ -46,6 +46,8 @@ NavMesh::NavMesh() {
 	mCurrentThread = nullptr;
 	mSurface = nullptr;
 	indexArray = nullptr;
+
+	SDL_Log("Nr Of Thread Supported: %d", std::thread::hardware_concurrency());
 }
 
 NavMesh::~NavMesh() {

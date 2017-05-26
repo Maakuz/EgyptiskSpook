@@ -1,6 +1,7 @@
 #include "GUIRenderer.h"
 #define SHADERS 40
 #define GAMEOVERSTARTINDEX 20
+#define HUDSTARTINDEX 40
 
 using namespace DirectX::SimpleMath;
 
@@ -13,9 +14,6 @@ GUIRenderer::GUIRenderer() : Renderer(){
 
 GUIRenderer::~GUIRenderer() {
 	delete this->mGraphicsData;
-
-	if (navTest)
-		navTest->Release();
 }
 
 void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
@@ -36,6 +34,8 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	this->mGameOverElements.push_back(GUI_ELEMENT{ Vector3(-0.2f, -0.2f, 0), dimension });
 	this->mGameOverElements.push_back(GUI_ELEMENT{ Vector3(-0.4f, 0.2f, 0), Vector2(0.8f, 0.2f) });
 
+	this->mHudElements.push_back(GUI_ELEMENT{ Vector3(-0.85f, 0.6f, 0),  Vector2(0.15f, 0.3f) });
+
 	// Add the texture here, texture ID = index of element in element arrays,
 	//this class got own graphicsdata, so infinite ids is availabe (not inf)
 	mGraphicsData->loadTexture(0, L"play.png", device);
@@ -50,6 +50,9 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 
 	data.pSysMem = &this->mGameOverElements[0];
 	this->mGraphicsData->createVertexBuffer(1, sizeof(GUI_ELEMENT) * this->mGameOverElements.size(), &data, device);
+	
+	data.pSysMem = &this->mHudElements[0];
+	this->mGraphicsData->createVertexBuffer(2, sizeof(GUI_ELEMENT) * this->mHudElements.size(), &data, device);
 }
 
 void GUIRenderer::loadButtons(MenuHandler &menuHandler) {
@@ -65,12 +68,12 @@ void GUIRenderer::loadButtons(MenuHandler &menuHandler) {
 void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state) {
 	context->IASetInputLayout(shaders.getInputLayout(SHADERS));
 	shaders.setShaders(context, SHADERS, SHADERS, SHADERS);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	if (state == GAMESTATE::PLAY)
 		renderHud(context, shaders);
 	else if (state == GAMESTATE::MAIN_MENU)
 		renderMenu(context, shaders, 0, this->mMenuElements.size(), 0);
-
 	else if (state == GAMESTATE::GAME_OVER)
 		renderMenu(context, shaders, 1, this->mGameOverElements.size(), GAMEOVERSTARTINDEX);
 }
@@ -80,7 +83,6 @@ void GUIRenderer::renderMenu(ID3D11DeviceContext *context, ShaderHandler &shader
 	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(vertexBufferKey);
 	ID3D11ShaderResourceView *srv;
 
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
 
 	// Loop through and draw buttons, optimize plz
@@ -92,25 +94,23 @@ void GUIRenderer::renderMenu(ID3D11DeviceContext *context, ShaderHandler &shader
 }
 
 void GUIRenderer::renderHud(ID3D11DeviceContext *context, ShaderHandler &shaders) {
-	UINT stride = sizeof(Vector3), offset = 0;
-	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(0);
+	UINT stride = sizeof(GUI_ELEMENT), offset = 0;
+	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(2);
 	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
 
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-	context->IASetInputLayout(shaders.getInputLayout(SHADERS));
 	context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
-	context->PSSetShaderResources(0, 1, &srv);
 
 	if (navTest)
 		context->PSSetShaderResources(0, 1, &navTest);
+	else
+		context->PSSetShaderResources(0, 1, &srv);
 
-	// context->Draw(this->mSize, 0); // not used right now
+	context->Draw(1, 0); // not used right now
 }
 
 void GUIRenderer::setNavigationTest(ID3D11Device *device, void* pixels, int w, int h) {
-	if (navTest)
-		navTest->Release();
-	mGraphicsData->loadTexture(0, L"NAVIGATION_TEST.bmp", device);
+	mGraphicsData->loadTexture(HUDSTARTINDEX, L"NAVIGATION_TEST.bmp", device);
+	navTest = mGraphicsData->getSRV(HUDSTARTINDEX);
 
 	/*
 	ID3D11Texture2D *tex;

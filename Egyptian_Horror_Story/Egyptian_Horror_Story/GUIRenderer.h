@@ -17,6 +17,7 @@ private:
 	GraphicsData *mGraphicsData;
 
 	std::vector<GUI_ELEMENT> mMenuElements;
+	std::vector<GUI_ELEMENT> mHudElements;
 	std::vector<GUI_ELEMENT> mGameOverElements;
 	ID3D11ShaderResourceView *navTest, *menu;
 public:
