@@ -102,6 +102,7 @@
     <ClCompile Include="AIHandler.cpp" />
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="CameraClass.cpp" />
+    <ClCompile Include="Emitters.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityHandler.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="Direct3DHeader.h" />
+    <ClInclude Include="Emitters.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityHandler.h" />
