@@ -87,7 +87,7 @@ end
 function pathToPlayer()
 	SetEnemySpeed(runSpeed)
 	SetCurrentPathNode(0)
-	--LoadPathToPlayer()
+	LoadPathToPlayer()
 	
 	onPlayerPath = true
 	onPointPath = false
