@@ -2,7 +2,8 @@
 #include <math.h> 
 #include <stdio.h>
 
-#define SAND_SPEED 40.f
+#define SAND_SPEED 20.f
+#define LIFE_TIME 10.f
 
 inline float getRandomNr() {
 	return rand() / (RAND_MAX + 1.f);
@@ -63,37 +64,43 @@ void ParticleEmitter::createParticle(ParticleVertex pv, ParticleData pd) {
 	this->pr->addParticle(pv, pd);
 }
 
+void FallingEmitterHandler::createEmitter(int index) {
+	if (getRandomNr() < 0.5) {
+		DirectX::SimpleMath::Vector3 pos = this->c->getPos();
+		DirectX::SimpleMath::Vector3 offset = DirectX::SimpleMath::Vector3(((getRandomNr() * 2) - 1) * 4, 3, ((getRandomNr() * 2) - 1) * 4); 
+		pos += offset; 
+		this->emitters[index] = new FallingEmitter(pos);
+	}
+	else {
+		DirectX::SimpleMath::Vector3 pos = this->c->getPos();
+		DirectX::SimpleMath::Vector3 forward = this->c->getRight();
+		forward = forward.Cross(DirectX::SimpleMath::Vector3(0, 1, 0));
+		DirectX::SimpleMath::Vector3 offset = DirectX::SimpleMath::Vector3(((getRandomNr() * 2) - 1) * 2, 3, ((getRandomNr() * 2) - 1) * 2);
+		pos += offset + forward * (getRandomNr() * 3 + 30);
+		this->emitters[index] = new FallingEmitter(pos);
+	}
+
+}
+
 FallingEmitterHandler::FallingEmitterHandler(CameraClass* c, ParticleType pt, ParticleRenderer * pr) : ParticleEmitter(pt, pr){
 	this->maxSize = 500;
-	this->nrOfEmitters = 10;
+	this->nrOfEmitters = 20;
 	this->c = c;
 	this->emitters = new FallingEmitter*[this->nrOfEmitters];
 	for (int i = 0; i < this->nrOfEmitters; i++)
-		this->emitters[i] = nullptr;
+		this->createEmitter(i);
 }
 
 void FallingEmitterHandler::updatePerFrame() {
 
 	for (int i = 0; i < this->nrOfEmitters; i++) {
-		if (!this->emitters[i])
-			continue;
-		if ((this->emitters[i]->getPos() - this->c->getPos()).LengthSquared() > 50) {
+
+		if (this->emitters[i]->getLifeTime() <= 0/*(this->emitters[i]->getPos() - this->c->getPos()).LengthSquared() > 50*/) {
 			delete this->emitters[i];
-			DirectX::SimpleMath::Vector3 pos = this->c->getPos();
-			DirectX::SimpleMath::Vector3 offset = DirectX::SimpleMath::Vector3(((getRandomNr() * 2) - 1) * 10, 3, ((getRandomNr() * 2) - 1) * 10);
-			pos += offset;
-			this->emitters[i] = new FallingEmitter(pos);
+			this->createEmitter(i);
 		}
 	}
-	for (int i = 0; i < this->nrOfEmitters; i++) {
-		if (!this->emitters[i]) {
-			DirectX::SimpleMath::Vector3 pos = this->c->getPos();
-			DirectX::SimpleMath::Vector3 offset = DirectX::SimpleMath::Vector3(((getRandomNr() * 2) - 1) * 10, 3, ((getRandomNr() * 2) - 1) * 10);
-			pos += offset;
-			this->emitters[i] = new FallingEmitter(pos);
-		}
-			
-	}
+
 
 	for (int i = 0; i < this->nrOfEmitters; i++) {
 		if(this->emitters[i])
@@ -119,9 +126,15 @@ void FallingEmitterHandler::particleRemoved() {
 void FallingEmitterHandler::addRandomParticle() {
 }
 
+FallingEmitterHandler::FallingEmitter::FallingEmitter(DirectX::SimpleMath::Vector3 pos) {
+	this->pos = pos;
+	this->lifeTime = getRandomNr() * LIFE_TIME;
+}
+
 bool FallingEmitterHandler::FallingEmitter::update(FallingEmitterHandler * feh)
 {
 	this->timeLeft -= 0.01f * 2;
+	this->lifeTime -= 0.01f * 2;
 	if (this->timeLeft < 0) {
 		this->timeLeft = getRandomNr() / 3;
 		ParticleVertex pv;
@@ -132,7 +145,7 @@ bool FallingEmitterHandler::FallingEmitter::update(FallingEmitterHandler * feh)
 		ParticleData pd;
 		pd.direction = DirectX::SimpleMath::Vector3(0, -1.f, 0);
 		//pd.timeLeft = getRandomNr() * 3.5f;
-		pd.timeLeft = 30.f;
+		pd.timeLeft = 3.f;
 		pd.kill = false;
 		pd.type = ParticleType::FALLING;
 

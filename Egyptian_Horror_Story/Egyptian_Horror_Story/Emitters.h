@@ -39,18 +39,18 @@ private:
 	class FallingEmitter {
 		DirectX::SimpleMath::Vector3 pos;
 		float timeLeft;
+		float lifeTime;
 	public:
-		FallingEmitter(DirectX::SimpleMath::Vector3 pos) {
-			this->pos = pos;
-			
-		}
+		FallingEmitter(DirectX::SimpleMath::Vector3 pos);
 		void setPos(DirectX::SimpleMath::Vector3 pos) { this->pos = pos; }
 		DirectX::SimpleMath::Vector3 getPos() { return this->pos; }
 		bool update(FallingEmitterHandler* feh);
+		float getLifeTime() { return this->lifeTime; }
 	};
 	FallingEmitter** emitters;
 	int nrOfEmitters;
 	CameraClass* c;
+	void createEmitter(int index);
 public:
 	FallingEmitterHandler(CameraClass* c, ParticleType pt, ParticleRenderer* pr);
 
