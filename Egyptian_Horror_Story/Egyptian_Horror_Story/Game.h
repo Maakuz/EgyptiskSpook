@@ -32,6 +32,9 @@ private:
 	MenuHandler mMenuHandler;
 	SDL_Window* mWindow;
 
+	bool mVictory;
+
+	void checkVictory();
 	void setupRenderers();
 	void setupEntityHandler();
 public:

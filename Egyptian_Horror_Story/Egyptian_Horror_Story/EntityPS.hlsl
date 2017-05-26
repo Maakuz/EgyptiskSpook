@@ -34,6 +34,11 @@ cbuffer brightnessBuffer : register(b3)
     float brightness;
 }
 
+cbuffer fadeoutBuffer : register(b4)
+{
+    float fadeout;
+}
+
 
 float4 main(VS_OUT input) : SV_TARGET
 {
@@ -100,5 +105,5 @@ float4 main(VS_OUT input) : SV_TARGET
     //*****************SHADOW MAPPING FINALLY END*******************
 
     //return shadowMap.Sample(sSampler, input.uv);
-    return tex.Sample(sSampler, input.uv) * lighting;
+    return tex.Sample(sSampler, input.uv) * lighting * fadeout;
 }

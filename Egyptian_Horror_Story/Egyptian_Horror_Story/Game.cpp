@@ -1,6 +1,29 @@
 #include "Game.h"
 #include "ParticleRenderer.h"
 
+void Game::checkVictory()
+{
+	DirectX::SimpleMath::Vector3 pos = this->mEntityHandler->getPlayer()->getPosition();
+
+	if (pos.x > 74 && pos.x < 80 && pos.z > -50 && pos.z < -43)
+	{
+		this->mVictory = true;
+	}
+
+	if (this->mVictory)
+	{
+		this->mEntityHandler->getEntityRenderer()->setFadeout(
+			this->mEntityHandler->getEntityRenderer()->getFadeout() - 0.003f,
+			this->mGraphics->getDeviceContext());
+
+		if (this->mEntityHandler->getEntityRenderer()->getFadeout() < 0)
+		{
+			SDL_SetRelativeMouseMode(SDL_bool::SDL_FALSE);
+			this->mStateHandler->setState(GAMESTATE::GAME_OVER);
+		}
+	}
+}
+
 void Game::setupRenderers()
 {
 	mGuiRenderer = new GUIRenderer();
@@ -85,6 +108,8 @@ void Game::updateGame(float dt)
 		this->mStateHandler->setState(GAMESTATE::GAME_OVER);
 		SDL_SetRelativeMouseMode(SDL_bool::SDL_FALSE);
 	}
+
+	this->checkVictory();
 }
 
 void Game::draw() {
@@ -97,6 +122,8 @@ void Game::draw() {
 
 void Game::initialize()
 {
+	this->mEntityHandler->getEntityRenderer()->setFadeout(1, this->mGraphics->getDeviceContext());
+	this->mVictory = false;
 	this->mEntityHandler->initialize();
 	this->mAIHandler->setupAI();
 	this->mEntityHandler->initializeTreasure(this->mGraphics->getDevice());
