@@ -114,7 +114,6 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 }
 
 void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state) {
-	if (state != GAMESTATE::PLAY) return;
 
 	UINT stride = sizeof(ParticleVertex), offset = 0;
 	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(0),

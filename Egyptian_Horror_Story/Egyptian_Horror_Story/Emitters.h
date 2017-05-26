@@ -53,6 +53,7 @@ private:
 	void createEmitter(int index);
 public:
 	FallingEmitterHandler(CameraClass* c, ParticleType pt, ParticleRenderer* pr);
+	~FallingEmitterHandler();
 
 	void updatePerFrame();
 	void handleTimePerParticle(ParticleVertex* pv, ParticleData* pd, int index);

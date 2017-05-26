@@ -91,6 +91,14 @@ FallingEmitterHandler::FallingEmitterHandler(CameraClass* c, ParticleType pt, Pa
 		this->createEmitter(i);
 }
 
+FallingEmitterHandler::~FallingEmitterHandler() {
+	for (int i = 0; i < this->nrOfEmitters; i++) {
+		if (emitters[i])
+			delete this->emitters[i];
+	}
+	delete[] emitters;
+}
+
 void FallingEmitterHandler::updatePerFrame() {
 
 	for (int i = 0; i < this->nrOfEmitters; i++) {
