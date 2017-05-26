@@ -227,10 +227,9 @@ void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
 
 	std::vector<Vector3> newPath; //Using vector3 is waste of memory!
 	newPath.reserve(path.size() - redudants);
-	for (int i = path.size() - 1; i >= 0; i--) {
+	for (int i = path.size() - 1; i >= 0; i--)
 		if (path[i].y != -999)
 			newPath.push_back(path[i]);
-	}
 
 	savePathTest(newPath);
 
