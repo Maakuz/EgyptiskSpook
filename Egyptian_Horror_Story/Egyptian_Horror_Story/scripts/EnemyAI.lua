@@ -60,11 +60,14 @@ function update(deltaTime)
 end
 
 function onLoadedPath()
+	SetCurrentPathNode(0)
+	loadingPath = false
+	SetEnemySpeed(runSpeed)
+	StartPathing()
+		
 	if SeesPlayer() then
 		pathToPlayer()
 	end
-	
-	loadingPath = false
 end
 
 function onReachingPathEnd()
@@ -90,8 +93,6 @@ function onReachingPointPathEnd()
 end
 
 function pathToPlayer()
-	SetEnemySpeed(runSpeed)
-	SetCurrentPathNode(0)
 	LoadPathToPlayer()
 	
 	onPlayerPath = true
