@@ -55,7 +55,7 @@ void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 		this->mPEs[i]->initialize(i, this->mGraphicsData, device);
 	}
 
-	mGraphicsData->createVertexBuffer(0, MAX_SIZE * sizeof(ParticleVertex), NULL, device, true);
+	mGraphicsData->createVertexBuffer(2000, MAX_SIZE * sizeof(ParticleVertex), NULL, device, true);
 	mGraphicsData->createConstantBuffer(1, sizeof(Vector4), nullptr, device, true);
 	mGraphicsData->loadTexture(0, L"sand.png", device);
 }

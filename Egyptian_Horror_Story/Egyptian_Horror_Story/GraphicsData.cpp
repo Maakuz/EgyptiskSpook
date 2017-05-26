@@ -48,6 +48,9 @@ bool GraphicsData::loadTexture(int key, wchar_t* fileName, ID3D11Device* device)
 
 HRESULT GraphicsData::createConstantBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device, bool isDynamic)
 {
+	if (this->mCBuffers[key])
+		exit(-66);
+
 	D3D11_BUFFER_DESC desc;
 	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	desc.ByteWidth = size;
@@ -68,6 +71,9 @@ HRESULT GraphicsData::createConstantBuffer(int key, UINT size, D3D11_SUBRESOURCE
 
 HRESULT GraphicsData::createVertexBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device, bool isDynamic)
 {
+	if (this->mBuffers[key])
+		exit(-54);
+
 	D3D11_BUFFER_DESC desc;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	desc.ByteWidth = size;
