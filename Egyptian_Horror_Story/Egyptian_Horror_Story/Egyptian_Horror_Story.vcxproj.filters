@@ -188,6 +188,9 @@
     <ClCompile Include="Treasure.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="Emitters.cpp">
+      <Filter>Source Files\Game Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -276,6 +279,9 @@
     </ClInclude>
     <ClInclude Include="SkyRenderer.h">
       <Filter>Header Files\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Emitters.h">
+      <Filter>Header Files\Game classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

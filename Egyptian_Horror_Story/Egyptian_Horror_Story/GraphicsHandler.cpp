@@ -92,7 +92,7 @@ GraphicsHandler::~GraphicsHandler() {
 			delete renderer;
 	}
 
-	//this->mDebugDevice->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+	this->mDebugDevice->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 	this->mDebugDevice->Release();
 }
 
@@ -225,6 +225,11 @@ void GraphicsHandler::renderRenderers(ID3D11Buffer* WVP, ID3D11Buffer* lightWVP,
 			//Needs to be null in order to be used as depthmap
 			ID3D11ShaderResourceView* srvNull = nullptr;
 			this->mContext->PSSetShaderResources(1, 1, &srvNull);
+
+			//this needs to be set for both particles and entities so I'll just
+			//set it for every pixel shader here.
+			ID3D11Buffer* temp = ptr->getGraphicsData()->getConstantBuffer(700);
+			this->mContext->PSSetConstantBuffers(4, 1, &temp);
 
 			this->mContext->VSSetConstantBuffers(0, 1, &lightWVP);
 			this->mContext->OMSetRenderTargets(0, nullptr, this->mDSVShadow);

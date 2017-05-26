@@ -11,6 +11,7 @@ class EntityRenderer : public Renderer
 private:
 	GraphicsData mGraphicsData;
 	bool shadowPass;
+	float mFadeout;
 
 public:
 	EntityRenderer(GAMESTATE identifier);
@@ -23,6 +24,9 @@ public:
 	bool loadObject(ID3D11Device *device, int key, EntityStruct::VertexStruct* vertices, int nrOfVertices, UINT cbufferSize, wchar_t* texturePath = L"../Resource/Textures/placeholder.png", DirectX::SimpleMath::Vector3 translation = DirectX::SimpleMath::Vector3(0, 0, 0), bool isDynamic = true);
 	void setShadowPass(bool value);
 
+	//if a devicecontext is sent the fadeoutbuffer will be updated
+	void setFadeout(float value, ID3D11DeviceContext* context = nullptr);
+	float getFadeout() const;
 
 	GraphicsData* getGraphicsData();
 

@@ -7,8 +7,12 @@ struct VS_OUT
     float3 texCoord : TEXCOORD;
 };
 
+cbuffer fadeoutBuffer : register(b4)
+{
+    float fadeout;
+}
+
 float4 main(VS_OUT input) : SV_Target
 {
-   // return float4(1, 1, 0, 1);
-	return skyMap.Sample(sState, input.texCoord);
+	return skyMap.Sample(sState, input.texCoord) * fadeout;
 }

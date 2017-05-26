@@ -28,6 +28,7 @@ Enemy: 400
 Level: 401
 Treasures: 5xx
 Traps: 10xx
+Fadeout thingy: 700
 
 SOUND EFFECTS: 
 monster: 0
