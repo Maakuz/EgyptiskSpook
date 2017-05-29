@@ -9,6 +9,8 @@
 #include "FBXLoader.h"
 #include "AudioManager.h"
 #include "AIHandler.h"
+#include <ctime>
+#include <random>
 
 #define WALLTEXTURE L"pyramidStone.png"
 
@@ -31,6 +33,10 @@ private:
 
 	bool footstepsPlaying;
 	int mNrOfKeys;
+	float mTrapPercentage;
+	float mTreasurePercentage;
+
+	std::vector<DirectX::SimpleMath::Vector3> mTrapPositions;
 
 	/* From image space to world space */
 	DirectX::SimpleMath::Vector2 toPixelCoord(int x, int z, int w, int h) const;
@@ -51,6 +57,7 @@ public:
 	void initializeTreasureAndTraps(AIHandler* ai, ID3D11Device* device);
 	void setupEntities(AIHandler* ai, ID3D11Device* device);
 	void setupAudioManager(AudioManager* manager);
+	void setupDifficulty(settings::DifficultySettings& diff);
 
 	void initialize();
 

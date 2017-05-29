@@ -11,11 +11,13 @@
 #include <math.h>
 
 
-#define DEFAULTWIDTH 1280
-#define DEFAULTHEIGHT 720
-#define DEFAULTFOV 0.45
-#define DEFAULTFARPLANE 100
-#define DEFAULTBRIGHTNESS 0
+#define DEFAULT_WIDTH 1280
+#define DEFAULT_HEIGHT 720
+#define DEFAULT_FOV 0.45
+#define DEFAULT_FARPLANE 100
+#define DEFAULT_BRIGHTNESS 0
+#define DEFAULT_TRAP_PERCENTAGE 0.3f
+#define DEFAULT_TREASURE_PERCENTAGE 0.3f
 
 #define FOVUPKEY SDL_SCANCODE_RIGHT
 #define FOVDOWNKEY SDL_SCANCODE_LEFT
@@ -24,6 +26,7 @@ class OptionsHandler
 {
 private:
 	settings::GraphicSettings mGraphics;
+	settings::DifficultySettings mDifficulty;
 	ID3D11Buffer* mBrightnessBuffer;
 
 
@@ -38,6 +41,7 @@ public:
 	bool handleButtonRelease(SDL_KeyboardEvent const& key, ID3D11DeviceContext* context);
 
 	settings::GraphicSettings& getGraphicSettings();
+	settings::DifficultySettings& getDifficultySettings();
 	
 	ID3D11Buffer* getBrightnessBuffer();
 };

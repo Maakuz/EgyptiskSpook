@@ -63,6 +63,12 @@ namespace settings
 		float brightness;
 		float farPlane;
 	};
+
+	struct DifficultySettings
+	{
+		float trapPercentage;
+		float treasurePercentage;
+	};
 }
 
 

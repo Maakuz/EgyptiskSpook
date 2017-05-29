@@ -8,7 +8,7 @@ timeToFall = 0.5
 temp = 0
 
 function onStart()
-	position.x, position.y, position.z = GetPosition(); -- it is static, so lets just get it
+	position.x, position.y, position.z = GetPosition() -- it is static, so lets just get it
 end
 
 -- Height is high because rock is in the air

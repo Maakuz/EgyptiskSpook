@@ -1476,6 +1476,8 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 
 void EntityHandler::initializeTreasureAndTraps(AIHandler* ai, ID3D11Device* device)
 {
+	using namespace DirectX::SimpleMath;
+
 	for (int i = 0; i < this->mTreasures.size(); i++)
 	{
 		this->mEntityRenderer->getGraphicsData()->removeData(this->mTreasures[i]->getKey());
@@ -1546,7 +1548,7 @@ void EntityHandler::initializeTreasureAndTraps(AIHandler* ai, ID3D11Device* devi
 					{
 						Treasure* tres = new Treasure(500 + this->mTreasures.size(), 20.f);
 
-						DirectX::SimpleMath::Vector2 temp = toPixelCoord(i, height - j, width, height);
+						Vector2 temp = toPixelCoord(i, height - j, width, height);
 
 						tres->setPosition(temp.x, 0, temp.y);
 
@@ -1560,18 +1562,30 @@ void EntityHandler::initializeTreasureAndTraps(AIHandler* ai, ID3D11Device* devi
 						colors[count + 1] == 0 &&
 						colors[count + 2] == 255)
 					{
-						DirectX::SimpleMath::Vector2 temp = toPixelCoord(i, height - j, width, height);
+						Vector2 temp = toPixelCoord(i, height - j, width, height);
 
-						Trap* test = new Trap(1000 + this->mTraps.size(), temp.x, 0, temp.y);
-						this->loadEntityModel("fallingRock.fbx", L"", test, device);
-						ai->addTrap("scripts/TrapHanger.lua", test);
-						this->mTraps.push_back(test);
+						this->mTrapPositions.push_back(Vector3(temp.x, 0, temp.y));
 					}
 
 					
 
 					count += 3;
 				}
+			}
+
+			std::vector<Vector3> trapPosCopy = this->mTrapPositions;
+
+			for (int i = 0; i < floor(this->mTrapPositions.size() * this->mTrapPercentage); i++)
+			{
+				int trapPos = rand() % trapPosCopy.size();
+
+				Vector3 temp = trapPosCopy[trapPos];
+				trapPosCopy.erase(trapPosCopy.begin() + trapPos);
+
+				Trap* test = new Trap(1000 + this->mTraps.size(), temp.x, 12, temp.z);
+				this->loadEntityModel("fallingRock.fbx", L"", test, device);
+				ai->addTrap("scripts/TrapStone.lua", test);
+				this->mTraps.push_back(test);
 			}
 
 
@@ -1586,6 +1600,7 @@ EntityHandler::EntityHandler()
 {
 	this->mEntityRenderer = new EntityRenderer(GAMESTATE::PLAY);
 	this->footstepsPlaying = false;
+	srand(time(NULL));
 }
 
 EntityHandler::~EntityHandler()
@@ -1638,6 +1653,12 @@ void EntityHandler::setupAudioManager(AudioManager* manager)
 	this->mAudioManager->createEmitter(1);
 	this->mAudioManager->apply3DToInstance(1, 1);
 	this->mAudioManager->playSfx(0);
+}
+
+void EntityHandler::setupDifficulty(settings::DifficultySettings & diff)
+{
+	this->mTrapPercentage = diff.trapPercentage;
+	this->mTreasurePercentage = diff.treasurePercentage;
 }
 
 void EntityHandler::initialize()

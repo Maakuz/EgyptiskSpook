@@ -42,6 +42,7 @@ void Game::setupRenderers()
 
 void Game::setupEntityHandler()
 {
+	this->mEntityHandler->setupDifficulty(this->mOptionHandler->getDifficultySettings());
 
 	this->mEntityHandler->setupAudioManager(&this->mAudioManager);
 	this->mEntityHandler->setupPlayer(this->mGraphics->getDevice(),

@@ -1,5 +1,7 @@
 #include "OptionsHandler.h"
 #define SETTINGPATH "../UserSettings/settings.ini"
+#define OUT(a, b) out << a << " " << b << "\n"
+#define IN(a) in >> str >> a
 
 void OptionsHandler::updateBuffer(ID3D11DeviceContext* context)
 {
@@ -31,31 +33,34 @@ OptionsHandler::OptionsHandler()
 
 	if (in.is_open())
 	{
-		in >> str;
-		in >> this->mGraphics.width;
+		IN(this->mGraphics.width);
 		
-		in >> str;
-		in >> this->mGraphics.height;
+		IN(this->mGraphics.height);
 		
-		in >> str;
-		in >> this->mGraphics.fov;
+		IN(this->mGraphics.fov);
 		
-		in >> str;
-		in >> this->mGraphics.farPlane;
+		IN(this->mGraphics.farPlane);
 		
-		in >> str;
-		in >> this->mGraphics.brightness;
+		IN(this->mGraphics.brightness);
+
+		IN(this->mDifficulty.trapPercentage);
+		
+		IN(this->mDifficulty.treasurePercentage);
+
 
 		in.close();
 	}
 
 	else
 	{
-		this->mGraphics.brightness = DEFAULTBRIGHTNESS;
-		this->mGraphics.height = DEFAULTHEIGHT;
-		this->mGraphics.width = DEFAULTWIDTH;
-		this->mGraphics.farPlane = DEFAULTFARPLANE;
-		this->mGraphics.fov = DEFAULTFOV;
+		this->mGraphics.brightness = DEFAULT_BRIGHTNESS;
+		this->mGraphics.height = DEFAULT_HEIGHT;
+		this->mGraphics.width = DEFAULT_WIDTH;
+		this->mGraphics.farPlane = DEFAULT_FARPLANE;
+		this->mGraphics.fov = DEFAULT_FOV;
+		
+		this->mDifficulty.trapPercentage = DEFAULT_TRAP_PERCENTAGE;
+		this->mDifficulty.treasurePercentage = DEFAULT_TREASURE_PERCENTAGE;
 	}
 
 }
@@ -66,11 +71,13 @@ OptionsHandler::~OptionsHandler()
 
 	if (out.is_open())
 	{
-		out << "ScreenWidth " << this->mGraphics.width << "\n";
-		out << "ScreenHeight " << this->mGraphics.height << "\n";
-		out << "FieldOfView " << this->mGraphics.fov << "\n";
-		out << "ViewDistance " << this->mGraphics.farPlane << "\n";
-		out << "Brightness " << this->mGraphics.brightness << "\n";
+		OUT("Screen_Width", this->mGraphics.width);
+		OUT("Screen_Height", this->mGraphics.height);
+		OUT("Field_Of_View", this->mGraphics.fov);
+		OUT("View_Distance", this->mGraphics.farPlane);
+		OUT("Brightness", this->mGraphics.brightness);
+		OUT("Trap_Percentage", this->mDifficulty.trapPercentage);
+		OUT("Treasure_percentage", this->mDifficulty.treasurePercentage);
 
 		out << "\nThis file will be overwritten with the current in game values on exit!\n";
 
@@ -141,6 +148,11 @@ bool OptionsHandler::handleButtonRelease(SDL_KeyboardEvent const& key, ID3D11Dev
 settings::GraphicSettings& OptionsHandler::getGraphicSettings()
 {
 	return this->mGraphics;
+}
+
+settings::DifficultySettings & OptionsHandler::getDifficultySettings()
+{
+	return this->mDifficulty;
 }
 
 ID3D11Buffer* OptionsHandler::getBrightnessBuffer()
