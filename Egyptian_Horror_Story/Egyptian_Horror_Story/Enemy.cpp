@@ -2,7 +2,7 @@
 #include "Player.h"
 #include <SDL.h>
 #define HALF_PATH_SIZE 2.5f
-#define GROUND_Y -8
+#define GROUND_Y 0
 #define toV3(v2) Vector3(v2.x, GROUND_Y, v2.y)
 using namespace DirectX::SimpleMath;
 

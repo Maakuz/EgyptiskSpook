@@ -95,6 +95,7 @@ end
 
 function pathToPlayer()
 	sleep = 0.1
+	Log("Load Path")
 	LoadPathToPlayer()
 	
 	onPlayerPath = true

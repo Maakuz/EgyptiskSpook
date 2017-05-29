@@ -1620,7 +1620,7 @@ void EntityHandler::setupAudioManager(AudioManager* manager)
 void EntityHandler::initialize()
 {
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, 4));
-	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
+	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(21, 0, 7));
 	
 	for (auto& trap : mTraps) {
 		trap->resetTrap();
