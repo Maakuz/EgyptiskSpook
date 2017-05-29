@@ -32,6 +32,8 @@ private:
 	bool footstepsPlaying;
 	int mNrOfKeys;
 
+	DirectX::SimpleMath::Vector2 toPixelCoord(int x, int z, int w, int h) const;
+
 	void hardcodedMap(ID3D11Device* device);
 	void loadEntityModel(std::string modelName, wchar_t* textureName, Entity* entity, ID3D11Device* device);
 	void updateAudio();

@@ -2,6 +2,21 @@
 #define ENEMY_KEY 400
 #define BASE_TRAP_KEY 1000
 #define TREASURE_PICKUP_DIST 2.f
+#define SCALE_X 1
+#define SCALE_Z -1
+#define OFFSET_X 9 * SCALE_X
+#define OFFSET_Z -9 * SCALE_Z
+#define TREASUREMAPPATH "../Resource/Textures/TreasureMesh.bmp"
+
+DirectX::SimpleMath::Vector2 EntityHandler::toPixelCoord(int x, int z, int w, int h) const {
+	int pX = floor(x * SCALE_X) + OFFSET_X;
+	int pY = -(floor(z * SCALE_Z) + OFFSET_Z);
+
+	pX %= w;
+	pY %= h;
+
+	return DirectX::SimpleMath::Vector2(abs(pX), abs(pY));
+}
 
 void EntityHandler::hardcodedMap(ID3D11Device* device)
 {
@@ -1454,7 +1469,7 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 
 	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
 
-	this->loadEntityModel("ModelTest2.fbx", L"dargon_bump.jpg", this->mEnemy, device);
+	this->loadEntityModel("monster.fbx", L"dargon_bump.jpg", this->mEnemy, device);
 }
 
 void EntityHandler::initializeTreasure(ID3D11Device* device)
@@ -1467,11 +1482,81 @@ void EntityHandler::initializeTreasure(ID3D11Device* device)
 
 	this->mTreasures.clear();
 
-	Treasure* tres = new Treasure(500, 20.f);
+	std::ifstream file(TREASUREMAPPATH, std::ios::binary);
+	if (file.is_open())
+	{
+		BITMAPFILEHEADER* fHeader = nullptr;
+		BITMAPINFOHEADER* iHeader = nullptr;
 
-	this->loadEntityModel("treasure1.fbx", L"sand.bmp", tres, device);
+		UINT8* headers[2] = { nullptr };
+		UINT8* colors = nullptr;
 
-	this->mTreasures.push_back(tres);
+		headers[0] = new UINT8[sizeof(BITMAPFILEHEADER)];
+		headers[1] = new UINT8[sizeof(BITMAPINFOHEADER)];
+
+		file.read((char*)headers[0], sizeof(BITMAPFILEHEADER));
+		file.read((char*)headers[1], sizeof(BITMAPINFOHEADER));
+
+		fHeader = (BITMAPFILEHEADER*)headers[0];
+		iHeader = (BITMAPINFOHEADER*)headers[1];
+
+		if (fHeader->bfType == 0x4D42)
+		{
+			int height = iHeader->biHeight;
+			int width = iHeader->biWidth;
+
+			int size = width * height * 3;
+
+			colors = new UINT8[size];
+
+			for (size_t i = 0; i < size; i++)
+			{
+				colors[i] = 0;
+			}
+
+			file.seekg(fHeader->bfOffBits);
+
+			//Read all the bits into the color array
+			file.read((char*)colors, size);
+
+			file.close();
+
+			//Create vectors from the color array
+			int count = 0;
+			int pos = 0;
+			for (int j = 0; j < height; j++)
+			{
+				for (int i = 0; i < width; i++)
+				{
+					if (
+						colors[count] == 0 && 
+						colors[count + 1] == 0 && 
+						colors[count + 2] == 255)
+					{
+						Treasure* tres = new Treasure(500 + this->mTreasures.size(), 20.f);
+
+						DirectX::SimpleMath::Vector2 temp = toPixelCoord(i, j, width, height);
+
+						tres->setPosition(temp.y, 0.4f, temp.x);
+
+						this->loadEntityModel("treasure1.fbx", L"sand.bmp", tres, device);
+
+						this->mTreasures.push_back(tres);
+					}
+
+					
+
+					count += 3;
+				}
+			}
+
+			delete headers[0];
+			delete headers[1];
+			delete colors;
+		}
+	}
+
+
 }
 
 EntityHandler::EntityHandler()
