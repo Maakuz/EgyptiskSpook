@@ -1535,9 +1535,9 @@ void EntityHandler::initializeTreasure(ID3D11Device* device)
 					{
 						Treasure* tres = new Treasure(500 + this->mTreasures.size(), 20.f);
 
-						DirectX::SimpleMath::Vector2 temp = toPixelCoord(i, j, width, height);
+						DirectX::SimpleMath::Vector2 temp = toPixelCoord(-i, width - j, width, height);
 
-						tres->setPosition(temp.y, 0.4f, temp.x);
+						tres->setPosition(temp.x, 0, temp.y);
 
 						this->loadEntityModel("treasure1.fbx", L"sand.bmp", tres, device);
 
@@ -1643,7 +1643,7 @@ void EntityHandler::update(ID3D11DeviceContext* context, float dt)
 
 	this->detectCloseTreasures();
 
-	this->updateCollision();
+	//this->updateCollision();
 
 	this->updateAudio();
 }
