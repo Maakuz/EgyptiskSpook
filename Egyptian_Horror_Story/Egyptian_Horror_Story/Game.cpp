@@ -48,10 +48,10 @@ void Game::setupEntityHandler()
 		this->mGraphics->getDeviceContext(),
 		this->mCamera);
 
-	this->mEntityHandler->setupEntities(this->mGraphics->getDevice());
-
 	//this is neccessary for the traps
 	this->mAIHandler = new AIHandler(mEntityHandler->getEnemy(), mEntityHandler->getPlayer());
+	
+	this->mEntityHandler->setupEntities(this->mAIHandler, this->mGraphics->getDevice());
 
 	this->mEntityHandler->setupTraps(this->mAIHandler, this->mGraphics->getDevice(), this->mGraphics->getDeviceContext());
 
@@ -125,8 +125,8 @@ void Game::initialize()
 	this->mEntityHandler->getEntityRenderer()->setFadeout(1, this->mGraphics->getDeviceContext());
 	this->mVictory = false;
 	this->mEntityHandler->initialize();
+	this->mEntityHandler->initializeTreasureAndTraps(this->mAIHandler, this->mGraphics->getDevice());
 	this->mAIHandler->setupAI();
-	this->mEntityHandler->initializeTreasure(this->mGraphics->getDevice());
 }
 
 void Game::update(float dt) {
@@ -157,7 +157,7 @@ bool Game::handleKeyboardRelease(SDL_KeyboardEvent const& key)
 	this->mOptionHandler->handleButtonRelease(key, this->mGraphics->getDeviceContext());
 
 	if (key.keysym.scancode == SDL_SCANCODE_2)
-		this->mEntityHandler->initializeTreasure(this->mGraphics->getDevice());
+		this->mEntityHandler->initializeTreasureAndTraps(this->mAIHandler, this->mGraphics->getDevice());
 
 	return true;
 }

@@ -1440,12 +1440,7 @@ void EntityHandler::detectCloseTreasures()
 
 void EntityHandler::setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context)
 {
-	Trap* test = new Trap(1000, 19, 0, -12);
-	this->loadEntityModel("fallingRock.fbx", L"", test, device);
-	ai->addTrap("scripts/TrapHanger.lua", test);
-	this->mTraps.push_back(test);
-
-	test = new Trap(1001, 19, 0, -8);
+	/*test = new Trap(1001, 19, 0, -8);
 	this->loadEntityModel("fallingRock.fbx", L"", test, device);
 	ai->addTrap("scripts/TrapHanger.lua", test);
 	this->mTraps.push_back(test);
@@ -1458,9 +1453,8 @@ void EntityHandler::setupTraps(AIHandler* ai, ID3D11Device* device, ID3D11Device
 	test = new Trap(1003, 5, 12, -5);
 	this->loadEntityModel("fallingRock.fbx", L"", test, device);
 	ai->addTrap("scripts/TrapStone.lua", test);
-	this->mTraps.push_back(test);
+	this->mTraps.push_back(test);*/
 	
-	ai->setupAI();
 }
 
 void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera)
@@ -1474,7 +1468,7 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 	this->loadEntityModel("monster.fbx", L"dargon_bump.jpg", this->mEnemy, device);
 }
 
-void EntityHandler::initializeTreasure(ID3D11Device* device)
+void EntityHandler::initializeTreasureAndTraps(AIHandler* ai, ID3D11Device* device)
 {
 	for (int i = 0; i < this->mTreasures.size(); i++)
 	{
@@ -1482,7 +1476,16 @@ void EntityHandler::initializeTreasure(ID3D11Device* device)
 		delete this->mTreasures[i];
 	}
 
+	for (int i = 0; i < this->mTraps.size(); i++)
+	{
+		this->mEntityRenderer->getGraphicsData()->removeData(this->mTraps[i]->getKey());
+		delete this->mTraps[i];
+	}
+
+	ai->resetTraps();
+
 	this->mTreasures.clear();
+	this->mTraps.clear();
 
 	std::ifstream file(TREASUREMAPPATH, std::ios::binary);
 	if (file.is_open())
@@ -1532,8 +1535,8 @@ void EntityHandler::initializeTreasure(ID3D11Device* device)
 				{
 					if (
 						colors[count] == 0 && 
-						colors[count + 1] == 0 && 
-						colors[count + 2] == 255)
+						colors[count + 1] == 255 && 
+						colors[count + 2] == 0)
 					{
 						Treasure* tres = new Treasure(500 + this->mTreasures.size(), 20.f);
 
@@ -1546,11 +1549,25 @@ void EntityHandler::initializeTreasure(ID3D11Device* device)
 						this->mTreasures.push_back(tres);
 					}
 
+					else if (
+						colors[count] == 0 &&
+						colors[count + 1] == 0 &&
+						colors[count + 2] == 255)
+					{
+						DirectX::SimpleMath::Vector2 temp = toPixelCoord(i, height - j, width, height);
+
+						Trap* test = new Trap(1000 + this->mTraps.size(), temp.x, 0, temp.y);
+						this->loadEntityModel("fallingRock.fbx", L"", test, device);
+						ai->addTrap("scripts/TrapHanger.lua", test);
+						this->mTraps.push_back(test);
+					}
+
 					
 
 					count += 3;
 				}
 			}
+
 
 			delete headers[0];
 			delete headers[1];
@@ -1594,7 +1611,7 @@ void EntityHandler::loadMap(ID3D11Device* device)
 	this->loadEntityModel("LevelDesignTest.fbx", WALLTEXTURE, this->mLevel, device);
 }
 
-void EntityHandler::setupEntities(ID3D11Device* device)
+void EntityHandler::setupEntities(AIHandler* ai, ID3D11Device* device)
 {
 	this->hardcodedMap(device);
 	//this->loadMap(device);
@@ -1605,7 +1622,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 	this->loadEntityModel("flashLight.fbx", L"dargon_bump.jpg", mFlashlightModel, device);
 
 
-	this->initializeTreasure(device);
+	this->initializeTreasureAndTraps(ai, device);
 }
 
 void EntityHandler::setupAudioManager(AudioManager* manager)

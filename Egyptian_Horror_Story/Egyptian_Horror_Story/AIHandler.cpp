@@ -88,6 +88,16 @@ void AIHandler::setupAI() {
 	setupTraps();
 }
 
+void AIHandler::resetTraps()
+{
+	for (TrapScript &trap : mTraps) {
+		assert(lua_gettop(trap.state) == 0);
+		lua_close(trap.state);
+	}
+
+	this->mTraps.clear();
+}
+
 void AIHandler::addLuaFunctionsEnemy() {
 	// For debugging
 	addLuaFunction(mEnemyState, "Log", AICFunctions::log, nullptr, 0);

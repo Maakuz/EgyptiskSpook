@@ -50,6 +50,7 @@ class AIHandler {
 
 		void update(float dt);
 		void setupAI();
+		void resetTraps();
 
 		void addTrap(char const *scriptPath, Trap *trap);
 
