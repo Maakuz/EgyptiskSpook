@@ -135,12 +135,24 @@ void Game::update(float dt) {
 
 bool Game::handleKeyboardPress(SDL_KeyboardEvent const& key)
 {
+	DirectX::SimpleMath::Vector3 pos = this->mEntityHandler->getPlayer()->getPosition();
 	this->mEntityHandler->getPlayer()->handleKeyboardPress(key);
 	this->mOptionHandler->handleButtonPress(key, this->mGraphics->getDeviceContext());
 
 	switch (key.keysym.scancode)
 	{
+	case SDL_SCANCODE_Q:
+		SDL_Log("x = %f, y = %f, z = %f", pos.x, pos.y, pos.z); // TESTING METHOD
+		break;
+	case SDL_SCANCODE_R:
+	{
+		// CHANGE THIS IF IMG SIZE IS CHANGED
+		DirectX::SimpleMath::Vector2 img = this->mEntityHandler->getPosition(pos.x, pos.z, 56, 86);
+		SDL_Log("Px = %f, Py = %f", img.x, img.y); // TESTING METHOD
+		break;
+	}
 	case FOVUPKEY:
+		break;
 	case FOVDOWNKEY:
 		this->mCamera->updateProjection(
 			this->mGraphics->getDeviceContext(), 
