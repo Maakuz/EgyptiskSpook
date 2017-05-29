@@ -2,20 +2,22 @@
 #define ENEMY_KEY 400
 #define BASE_TRAP_KEY 1000
 #define TREASURE_PICKUP_DIST 2.f
-#define SCALE_X 1
-#define SCALE_Z -1
-#define OFFSET_X 9 * SCALE_X
+#define SCALE_X 1.f
+#define SCALE_Z -1.f
+#define OFFSET_X -9 * SCALE_X
 #define OFFSET_Z -9 * SCALE_Z
 #define TREASUREMAPPATH "../Resource/Textures/TreasureMesh.bmp"
 
 DirectX::SimpleMath::Vector2 EntityHandler::toPixelCoord(int x, int z, int w, int h) const {
+	x = abs(x) % w;
+	z = abs(z) % h;
+	
 	int pX = floor(x * SCALE_X) + OFFSET_X;
-	int pY = -(floor(z * SCALE_Z) + OFFSET_Z);
+	int pY = (floor(z * SCALE_Z) + OFFSET_Z);
 
-	pX %= w;
-	pY %= h;
+	
 
-	return DirectX::SimpleMath::Vector2(abs(pX), abs(pY));
+	return DirectX::SimpleMath::Vector2(pX, pY);
 }
 
 void EntityHandler::hardcodedMap(ID3D11Device* device)
@@ -1535,11 +1537,11 @@ void EntityHandler::initializeTreasure(ID3D11Device* device)
 					{
 						Treasure* tres = new Treasure(500 + this->mTreasures.size(), 20.f);
 
-						DirectX::SimpleMath::Vector2 temp = toPixelCoord(-i, width - j, width, height);
+						DirectX::SimpleMath::Vector2 temp = toPixelCoord(i, height - j, width, height);
 
 						tres->setPosition(temp.x, 0, temp.y);
 
-						this->loadEntityModel("treasure1.fbx", L"sand.bmp", tres, device);
+						this->loadEntityModel("treasure1.fbx", L"ankhTexture.png", tres, device);
 
 						this->mTreasures.push_back(tres);
 					}

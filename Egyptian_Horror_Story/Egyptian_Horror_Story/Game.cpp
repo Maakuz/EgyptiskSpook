@@ -156,6 +156,9 @@ bool Game::handleKeyboardRelease(SDL_KeyboardEvent const& key)
 	this->mEntityHandler->getPlayer()->handleKeyboardRelease(key);
 	this->mOptionHandler->handleButtonRelease(key, this->mGraphics->getDeviceContext());
 
+	if (key.keysym.scancode == SDL_SCANCODE_2)
+		this->mEntityHandler->initializeTreasure(this->mGraphics->getDevice());
+
 	return true;
 }
 
