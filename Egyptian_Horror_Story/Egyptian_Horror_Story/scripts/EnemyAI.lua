@@ -76,7 +76,7 @@ function onReachingPathEnd()
 	
 	if SeesPlayer() then
 		if not loadingPath then 
-			pathToPlayer()
+			sleep = 0.1
 		end
 	elseif onPointPath then
 		onReachingPointPathEnd()
@@ -94,8 +94,7 @@ function onReachingPointPathEnd()
 end
 
 function pathToPlayer()
-	sleep = 0.1
-	Log("Load Path")
+	sleep = 0.25
 	LoadPathToPlayer()
 	
 	onPlayerPath = true

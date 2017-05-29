@@ -156,9 +156,6 @@ bool Player::handleKeyboardPress(SDL_KeyboardEvent const &key)
 bool Player::handleKeyboardRelease(SDL_KeyboardEvent const &key)
 {
 	switch (key.keysym.scancode) {
-		case SDL_SCANCODE_Q:
-			SDL_Log("x = %f, y = %f, z = %f", getPosition().x, getPosition().y, getPosition().z); // TESTING METHOD
-			break;
 		case SDL_SCANCODE_A:
 			if (this->mDirection.x == -1)
 				this->mDirection.x = 0;

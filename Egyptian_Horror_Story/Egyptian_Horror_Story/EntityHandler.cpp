@@ -15,9 +15,15 @@ DirectX::SimpleMath::Vector2 EntityHandler::toPixelCoord(int x, int z, int w, in
 	int pX = floor(x * SCALE_X) + OFFSET_X;
 	int pY = (floor(z * SCALE_Z) + OFFSET_Z);
 
-	
-
 	return DirectX::SimpleMath::Vector2(pX, pY);
+}
+
+DirectX::SimpleMath::Vector2 EntityHandler::getPosition(int x, int y, int w, int h) const {
+	DirectX::SimpleMath::Vector2 pixel(x, y);
+	return DirectX::SimpleMath::Vector2(
+		(pixel.x - OFFSET_X) / SCALE_X,
+		(pixel.y - OFFSET_Z) / SCALE_Z
+	);
 }
 
 void EntityHandler::hardcodedMap(ID3D11Device* device)
@@ -1574,8 +1580,6 @@ void EntityHandler::initializeTreasureAndTraps(AIHandler* ai, ID3D11Device* devi
 			delete colors;
 		}
 	}
-
-
 }
 
 EntityHandler::EntityHandler()

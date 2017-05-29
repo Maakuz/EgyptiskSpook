@@ -32,6 +32,7 @@ private:
 	bool footstepsPlaying;
 	int mNrOfKeys;
 
+	/* From image space to world space */
 	DirectX::SimpleMath::Vector2 toPixelCoord(int x, int z, int w, int h) const;
 
 	void hardcodedMap(ID3D11Device* device);
@@ -39,7 +40,6 @@ private:
 	void updateAudio();
 	void updateCollision();
 	void detectCloseTreasures();
-
 public:
 	EntityHandler();
 	virtual ~EntityHandler();
@@ -55,6 +55,8 @@ public:
 	void initialize();
 
 	void update(ID3D11DeviceContext* context, float dt);
+	/* From world space to image space */
+	DirectX::SimpleMath::Vector2 getPosition(int x, int y, int w, int h) const;
 
 	EntityRenderer* getEntityRenderer();
 	Player* getPlayer();
