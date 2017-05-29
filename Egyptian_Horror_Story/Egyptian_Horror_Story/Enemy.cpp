@@ -2,6 +2,8 @@
 #include "Player.h"
 #include <SDL.h>
 #define HALF_PATH_SIZE 2.5f
+#define GROUND_Y -8
+#define toV3(v2) Vector3(v2.x, GROUND_Y, v2.y)
 using namespace DirectX::SimpleMath;
 
 Enemy::Enemy(int graphicsKey) : Entity(graphicsKey) {
@@ -41,17 +43,18 @@ bool Enemy::isPathLoaded() const {
 	return mLoaded;
 }
 
-void Enemy::setWaypoint(Vector3 waypoint) {
-	mVelocity = waypoint - getPosition();
+void Enemy::setWaypoint(Vector2 waypoint) {
+	Vector3 waypoint3 = toV3(waypoint);
+	mVelocity = waypoint3 - getPosition();
 	mVelocity.Normalize();
-	mWaypoint = waypoint;
+	mWaypoint = waypoint3;
 }
 
-void Enemy::setPath(std::vector<Vector3> path) {
+void Enemy::setPath(std::vector<Vector2> path) {
 	mPath = path;
 }
 
-std::vector<Vector3> Enemy::getPath() const {
+std::vector<Vector2> Enemy::getPath() const {
 	return mPath;
 }
 
@@ -123,15 +126,14 @@ int Enemy::updateWaypoint(lua_State *state) {
 	if (lua_istable(state, -1)) {
 		lua_pushstring(state, "x");
 		lua_gettable(state, -2);
-		lua_pushstring(state, "y");
-		lua_gettable(state, -3);
 		lua_pushstring(state, "z");
-		lua_gettable(state, -4);
+		lua_gettable(state, -3);
 
 		if (lua_isnumber(state, -1) && lua_isnumber(state, -2) && lua_isnumber(state, -3)) {
-			Vector3 waypoint(static_cast<float> (lua_tonumber(state, -3)),
+			Vector2 waypoint(
 				static_cast<float> (lua_tonumber(state, -2)),
-				static_cast<float> (lua_tonumber(state, -1)));
+				static_cast<float> (lua_tonumber(state, -1))
+			);
 			enemy->setWaypoint(waypoint);
 		}
 
@@ -169,9 +171,9 @@ int Enemy::getNextWaypoint(lua_State *state) {
 
 	Vector3 waypoint;
 	if (enemy->onPath())
-		waypoint = enemy->mPath[enemy->currentPathNode];
+		waypoint = toV3(enemy->mPath[enemy->currentPathNode]);
 	else
-		waypoint = enemy->getWaypoint();
+		waypoint = toV3(enemy->getWaypoint());
 
 	lua_pushnumber(state, waypoint.x);
 	lua_pushnumber(state, waypoint.y);

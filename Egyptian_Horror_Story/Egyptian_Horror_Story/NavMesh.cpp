@@ -146,16 +146,15 @@ bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
 void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
 	int toX, int toZ) throw() {
 	//A Star algorithm ! THIS IS CURRENTLY VERY UNOPTIMIZED !
-
 	Vector2 toPos = toPixelCoord(toX, toZ);
-	std::vector<Vector3> path; //Using vector3 is waste of memory!
+	std::vector<Vector2> path;
 	std::vector<Node> openList;
 	std::unordered_map<int, Node> closedList;
 	openList.push_back({ toPixelCoord(fromX, fromZ), 0, 0, 0, 0 });
 	std::make_heap(openList.begin(), openList.end()); //use stl heap thingy, can make my own heap class if neccesary
 
 	if (toPos == openList[0].node) { // if at same node
-		path.push_back(Vector3(toX, 0, toZ));
+		path.push_back(Vector2(toX, toZ));
 		enemy->setPath(path);
 		enemy->setFollowPath(true);
 		enemy->setPathLoaded(true);
@@ -204,33 +203,10 @@ void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
 	}
 
 	// optimize path
-	bool x, z, before;
-	int redudants = 0, type, lastType = -1;
-	for (int i = 0; i < path.size(); i++) {
-		Vector3 pos = path.at(i);
-		x = pos.x == path.at(i).x, z = pos.z == path.at(i).z;
-		type = (x || z) ? 1 : x && z ? 2 : -1;
-		before = (i > 0 && path[i - 1].y != -999);
-		/* checks if current node is redundant
-		(redudant = next node changes only x or z, or changes both, BUT 
-		the next before this node cant be "redudant" becuase that needs this
-		node to go on that "path")
-		path = nodes in a Horizontal, Vertical or diagonal line
-		*/
-		if (type == lastType || before) {
-			path[i] = Vector3(0, -999, 0);
-			redudants++;
-		}
-
-		lastType = type;
+	std::vector<Vector2> newPath;
+	for (int i = path.size() - 1; i >= 0; i--) {
+		newPath.push_back(path[i]);
 	}
-
-	std::vector<Vector3> newPath; //Using vector3 is waste of memory!
-	newPath.reserve(path.size() - redudants);
-	for (int i = path.size() - 1; i >= 0; i--)
-		if (path[i].y != -999)
-			newPath.push_back(path[i]);
-
 	savePathTest(newPath);
 
 	enemy->setPath(newPath);
@@ -249,7 +225,7 @@ void NavMesh::loadPathToCoord(Enemy *enemy, int fromX, int fromZ, int toX, int t
 }
 
 // Save image so the path taken is visible
-void NavMesh::savePathTest(std::vector<Vector3> &path) {
+void NavMesh::savePathTest(std::vector<Vector2> &path) {
 	UINT32 rMask, gMask, bMask, aMask;
 	rMask = 0xFF000000;
 	gMask = 0x00FF0000;
@@ -269,8 +245,8 @@ void NavMesh::savePathTest(std::vector<Vector3> &path) {
 	int counter = 0;
 	unsigned int i = 0;
 
-	for (Vector3 v3 : path) {
-		Vector2 pos = toPixelCoord(v3.x, v3.z);
+	for (Vector2 pos : path) {
+		pos = toPixelCoord(pos.x, pos.y);
 		i = static_cast<unsigned int> (pos.x + pos.y * mCopy->w);
 
 		if (counter == 0) pixels[i] = (255 << 16);
@@ -303,10 +279,9 @@ inline bool NavMesh::isWalkable(Vector2 const &node) const {
 	return col.r != BLOCKADE;
 }
 
-Vector3 NavMesh::getPosition(Vector2 pixel) const {
-	return Vector3(
+Vector2 NavMesh::getPosition(Vector2 pixel) const {
+	return Vector2(
 		(pixel.x - OFFSET_X) / SCALE_X,
-		0,
 		(pixel.y - OFFSET_Z) / SCALE_Z
 	);
 }
