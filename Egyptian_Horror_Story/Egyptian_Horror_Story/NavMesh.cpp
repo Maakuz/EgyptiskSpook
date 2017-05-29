@@ -10,6 +10,7 @@
 #include <string>
 #include <math.h>
 #include <assert.h>
+#include <exception>
 
 using namespace DirectX::SimpleMath;
 
@@ -32,20 +33,32 @@ void NavMesh::copy(NavMesh const &navMesh) {
 }
 
 void NavMesh::deleteMemory() {
+	if (mCurrentThread) {
+		try {
+			mCurrentThread->join();
+		} catch (std::exception &e) {
+			SDL_Log("Bad stuff happend :("
+				"If you are reading this for some reason"
+				"This error message will never be display"
+				"idk why, fix this if u can"
+				"or dont who cares, the program is terminated"
+				"any way :) \n%s", e.what());
+		}
+		delete mCurrentThread;
+	}
+
 	if (mSurface)
 		SDL_FreeSurface(mSurface);
 	if (mCopy)
 		SDL_FreeSurface(mCopy);
-	if (mCurrentThread) {
-		mCurrentThread->join();
-		delete mCurrentThread;
-	}
 }
 
 NavMesh::NavMesh() {
 	mCurrentThread = nullptr;
 	mSurface = nullptr;
 	indexArray = nullptr;
+
+	SDL_Log("Nr Of Thread Supported: %d", std::thread::hardware_concurrency());
 }
 
 NavMesh::~NavMesh() {
@@ -63,7 +76,12 @@ NavMesh* NavMesh::operator=(NavMesh const &navMesh) {
 
 void NavMesh::loadGrid(const char *gridName) {
 	if (mCurrentThread) {
-		mCurrentThread->join();
+		try {
+			mCurrentThread->join();
+		}
+		catch (std::exception &e) {
+			SDL_Log("Bad stuff happend");
+		}
 		delete mCurrentThread;
 		mCurrentThread = nullptr;
 	}
@@ -126,12 +144,11 @@ bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
 }
 
 void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
-	int toX, int toZ) {
+	int toX, int toZ) throw() {
 	//A Star algorithm ! THIS IS CURRENTLY VERY UNOPTIMIZED !
-	enemy->setPaused(true);
 
 	Vector2 toPos = toPixelCoord(toX, toZ);
-	std::vector<Vector3> path;
+	std::vector<Vector3> path; //Using vector3 is waste of memory!
 	std::vector<Node> openList;
 	std::unordered_map<int, Node> closedList;
 	openList.push_back({ toPixelCoord(fromX, fromZ), 0, 0, 0, 0 });
@@ -141,7 +158,7 @@ void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
 		path.push_back(Vector3(toX, 0, toZ));
 		enemy->setPath(path);
 		enemy->setFollowPath(true);
-		enemy->setPaused(false);
+		enemy->setPathLoaded(true);
 		return;
 	}
 
@@ -186,15 +203,39 @@ void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
 		parent = closedList[parent.parentIndex];
 	}
 
-	for (int i = 0; i < floor(path.size() / 2); i++) {
-		std::swap(path[i], path[path.size() - i - 1]);
+	// optimize path
+	bool x, z, before;
+	int redudants = 0, type, lastType = -1;
+	for (int i = 0; i < path.size(); i++) {
+		Vector3 pos = path.at(i);
+		x = pos.x == path.at(i).x, z = pos.z == path.at(i).z;
+		type = (x || z) ? 1 : x && z ? 2 : -1;
+		before = (i > 0 && path[i - 1].y != -999);
+		/* checks if current node is redundant
+		(redudant = next node changes only x or z, or changes both, BUT 
+		the next before this node cant be "redudant" becuase that needs this
+		node to go on that "path")
+		path = nodes in a Horizontal, Vertical or diagonal line
+		*/
+		if (type == lastType || before) {
+			path[i] = Vector3(0, -999, 0);
+			redudants++;
+		}
+
+		lastType = type;
 	}
 
-	savePathTest(path);
+	std::vector<Vector3> newPath; //Using vector3 is waste of memory!
+	newPath.reserve(path.size() - redudants);
+	for (int i = path.size() - 1; i >= 0; i--)
+		if (path[i].y != -999)
+			newPath.push_back(path[i]);
 
-	enemy->setPath(path);
+	savePathTest(newPath);
+
+	enemy->setPath(newPath);
 	enemy->setFollowPath(true);
-	enemy->setPaused(false);
+	enemy->setPathLoaded(true);
 }
 
 void NavMesh::loadPathToCoord(Enemy *enemy, int fromX, int fromZ, int toX, int toZ) {

@@ -163,6 +163,11 @@ void AIHandler::addLuaFunction(lua_State *state, const char *name,
 }
 
 void AIHandler::update(float dt) {
+	updateEnemy(dt);
+	updateTraps(dt);
+}
+
+void AIHandler::updateEnemy(float dt) {
 	lua_getglobal(mEnemyState, "update");
 	lua_pushnumber(mEnemyState, dt);
 	handleError(mEnemyState, lua_pcall(mEnemyState, 1, 0, 0));
@@ -177,6 +182,14 @@ void AIHandler::update(float dt) {
 		handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
 	}
 
+	if (mEnemy->isPathLoaded()) {
+		mEnemy->setPathLoaded(false);
+		lua_getglobal(mEnemyState, "onLoadedPath");
+		handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
+	}
+}
+
+void AIHandler::updateTraps(float dt) {
 	Vector3 pPos = mPlayer->getPosition();
 	Vector2 pixelPos = navMesh.toPixelCoord(pPos.x, pPos.z);
 
@@ -197,6 +210,7 @@ void AIHandler::update(float dt) {
 			handleError(state, lua_pcall(state, 0, 0, 0));
 		}
 	}
+
 }
 
 bool inline AIHandler::handleError(lua_State *state, int error) {

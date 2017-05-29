@@ -34,6 +34,9 @@ class AIHandler {
 		void setupEnemy();
 		bool handleError(lua_State *state, int error);
 
+		void updateEnemy(float dt);
+		void updateTraps(float dt);
+
 		// lua functions
 		void addLuaFunctionsEnemy();
 		void addLuaFunctionsTrap(lua_State *state, Trap *trap);
