@@ -1454,7 +1454,7 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 
 	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
 
-	this->loadEntityModel("ModelTest2.fbx", L"dargon_bump.jpg", this->mEnemy, device);
+	this->loadEntityModel("monster.fbx", L"dargon_bump.jpg", this->mEnemy, device);
 }
 
 void EntityHandler::initializeTreasure(ID3D11Device* device)
@@ -1509,7 +1509,7 @@ void EntityHandler::loadMap(ID3D11Device* device)
 
 void EntityHandler::setupEntities(ID3D11Device* device)
 {
-	//this->hardcodedMap(device);
+	this->hardcodedMap(device);
 	//this->loadMap(device);
 
 
