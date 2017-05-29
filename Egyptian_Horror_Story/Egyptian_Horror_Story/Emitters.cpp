@@ -56,8 +56,6 @@ void AreaStuff::addRandomParticle() {
 }
 
 void ParticleEmitter::initialize(int key, GraphicsData * g, ID3D11Device * dev) {
-	g->createVertexBuffer(key, this->maxSize, NULL, dev, true);
-	this->key = key;
 }
 
 void ParticleEmitter::createParticle(ParticleVertex pv, ParticleData pd) {
@@ -89,6 +87,14 @@ FallingEmitterHandler::FallingEmitterHandler(CameraClass* c, ParticleType pt, Pa
 	this->emitters = new FallingEmitter*[this->nrOfEmitters];
 	for (int i = 0; i < this->nrOfEmitters; i++)
 		this->createEmitter(i);
+}
+
+FallingEmitterHandler::~FallingEmitterHandler() {
+	for (int i = 0; i < this->nrOfEmitters; i++) {
+		if (emitters[i])
+			delete this->emitters[i];
+	}
+	delete[] emitters;
 }
 
 void FallingEmitterHandler::updatePerFrame() {

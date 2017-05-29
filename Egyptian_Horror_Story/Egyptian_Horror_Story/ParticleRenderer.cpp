@@ -55,7 +55,7 @@ void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 		this->mPEs[i]->initialize(i, this->mGraphicsData, device);
 	}
 
-	mGraphicsData->createVertexBuffer(2000, MAX_SIZE * sizeof(ParticleVertex), NULL, device, true);
+	mGraphicsData->createVertexBuffer(0, MAX_SIZE * sizeof(ParticleVertex), NULL, device, true);
 	mGraphicsData->createConstantBuffer(1, sizeof(Vector4), nullptr, device, true);
 	mGraphicsData->loadTexture(0, L"sand.png", device);
 }
@@ -114,7 +114,6 @@ void ParticleRenderer::updateParticles(ID3D11DeviceContext *context) {
 }
 
 void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, GAMESTATE const &state) {
-	if (state != GAMESTATE::PLAY) return;
 
 	UINT stride = sizeof(ParticleVertex), offset = 0;
 	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(0),

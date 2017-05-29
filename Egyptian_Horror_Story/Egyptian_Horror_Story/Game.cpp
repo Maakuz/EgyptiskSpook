@@ -30,7 +30,7 @@ void Game::setupRenderers()
 	this->mSkyRenderer = new SkyRenderer();
 	this->mGraphics->addRenderer(mGuiRenderer);
 
-	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera, mStateHandler->getState()));
+	this->mGraphics->addRenderer(new ParticleRenderer(this->mCamera, GAMESTATE::PLAY));
 	this->mGraphics->addRenderer(this->mEntityHandler->getEntityRenderer());
 	this->mGraphics->addRenderer(this->mSkyRenderer);
 
