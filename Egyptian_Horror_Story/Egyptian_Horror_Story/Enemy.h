@@ -13,12 +13,13 @@ public:
 		NOTHING, ON_WAYPOINT, ON_PATH_WAYPOINT, ON_REACHED_PATH_DESTINATION
 	};
 private:
-	DirectX::SimpleMath::Vector3 mVelocity, mWaypoint;
+	DirectX::SimpleMath::Vector3 mVelocity;
+	DirectX::SimpleMath::Vector3 mWaypoint;
 	float mSpeed;
 	bool mFollowPath, mPaused, mLoaded;
 
 	int currentPathNode;
-	std::vector<DirectX::SimpleMath::Vector3> mPath;
+	std::vector<DirectX::SimpleMath::Vector2> mPath;
 public:
 	// temp ? 
 	Capsule* mCapsule;
@@ -32,15 +33,15 @@ public:
 	void setVelocity(DirectX::SimpleMath::Vector3 velocity);
 	void setFollowPath(bool followPath);
 	void setPathLoaded(bool pathLoaded);
-	void setWaypoint(DirectX::SimpleMath::Vector3 waypoint);
+	void setWaypoint(DirectX::SimpleMath::Vector2 waypoint);
 
 	DirectX::SimpleMath::Vector3 getVelocity() const;
 	DirectX::SimpleMath::Vector3 getWaypoint() const;
 	bool onPath() const;
 	bool isPathLoaded() const;
 
-	void setPath(std::vector<DirectX::SimpleMath::Vector3> path);
-	std::vector<DirectX::SimpleMath::Vector3> getPath() const;
+	void setPath(std::vector<DirectX::SimpleMath::Vector2> path);
+	std::vector<DirectX::SimpleMath::Vector2> getPath() const;
 
 	void updatePosition(GraphicsData* gData, ID3D11DeviceContext* context, DirectX::SimpleMath::Vector3 playerPos);
 

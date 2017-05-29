@@ -14,19 +14,20 @@ prevWaypoint = 0
 currentWaypoint = 1
 
 waypoints = { -- c = connections, length beetwen gets calc in c++
-				{x = -6, y = 0, z = 6, c = {2, 4}},
-				{x = -6, y = 0, z = -47, c = {1, 7, 5}},
-				{x = 45, y = 0, z = -47, c = {7, 4, 6}},
-				{x = 45, y = 0, z = 6, c = {1, 3}},
-				{x = -6, y = 0, z = -74, c = {2, 6}},
-				{x = 45, y = 0, z = -74, c = {5, 3}},
-				{x = 17, y = 0, z = -47, c = {2, 3, 8}},
-				{x = 17, y = 0, z = -61, c = {7}},
+				{x = -6, z = 6, c = {2, 4}},
+				{x = -6, z = -47, c = {1, 7, 5}},
+				{x = 45, z = -47, c = {7, 4, 6}},
+				{x = 45, z = 6, c = {1, 3}},
+				{x = -6, z = -74, c = {2, 6}},
+				{x = 45, z = -74, c = {5, 3}},
+				{x = 17, z = -47, c = {2, 3, 8}},
+				{x = 17, z = -61, c = {7}},
 			}
 			
 -- Frame Counter
 frame = 0
 loadingPath = false
+sleep = 0
 
 function onStart()
 	SetEnemySpeed(walkSpeed)
@@ -46,15 +47,19 @@ function onReachingWaypoint()
 end
 
 function update(deltaTime)
-	frame = frame + 1
-	if frame % 25 == 0 then
-		seesPlayer = SeesPlayer()
-		if not onPlayerPath and not loadingPath and seesPlayer then
-			pathToPlayer()
-			sawPlayerLastFrame = true
-		elseif sawPlayerLastFrame and not seesPlayer then -- goes to player if saw player last "frame"
-			pathToPlayer()
-			sawPlayerLastFrame = false
+	if sleep > 0 then
+		sleep = sleep - deltaTime
+	else
+		frame = frame + 1
+		if frame % 25 == 0 and not loadingPath then
+			seesPlayer = SeesPlayer()
+			if not onPlayerPath and seesPlayer then
+				pathToPlayer()
+				sawPlayerLastFrame = true
+			elseif sawPlayerLastFrame and not seesPlayer then -- goes to player if saw player last "frame"
+				pathToPlayer()
+				sawPlayerLastFrame = false
+			end
 		end
 	end
 end
@@ -64,10 +69,6 @@ function onLoadedPath()
 	loadingPath = false
 	SetEnemySpeed(runSpeed)
 	StartPathing()
-		
-	if SeesPlayer() then
-		pathToPlayer()
-	end
 end
 
 function onReachingPathEnd()
@@ -93,6 +94,7 @@ function onReachingPointPathEnd()
 end
 
 function pathToPlayer()
+	sleep = 0.1
 	LoadPathToPlayer()
 	
 	onPlayerPath = true
