@@ -1499,7 +1499,7 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 
 	this->mEnemy = new Enemy(ENEMY_KEY);
 
-	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
+	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(21, 0, 7));
 
 	this->loadEntityModel("monster.fbx", L"dargon_bump.jpg", this->mEnemy, device);
 }
