@@ -77,7 +77,6 @@ void Enemy::updatePosition(GraphicsData* gData, ID3D11DeviceContext* context, Di
 	memcpy(data.pData, &posMat, sizeof(DirectX::XMMATRIX));
 	
 	context->Unmap(gData->getConstantBuffer(this->getKey()), 0);
-
 }
 
 Vector3 Enemy::getVelocity() const {
@@ -129,7 +128,7 @@ int Enemy::updateWaypoint(lua_State *state) {
 		lua_pushstring(state, "z");
 		lua_gettable(state, -3);
 
-		if (lua_isnumber(state, -1) && lua_isnumber(state, -2) && lua_isnumber(state, -3)) {
+		if (lua_isnumber(state, -1) && lua_isnumber(state, -2)) {
 			Vector2 waypoint(
 				static_cast<float> (lua_tonumber(state, -2)),
 				static_cast<float> (lua_tonumber(state, -1))

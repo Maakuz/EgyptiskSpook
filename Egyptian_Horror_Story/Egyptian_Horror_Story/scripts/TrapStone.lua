@@ -46,7 +46,6 @@ end
 
 function onEnemyCollision()
 	if fallenDown then
-		DamagePlayer()
 		PushbackEnemy(position.x, position.y, position.z, 2)
 	else
 		falling = true

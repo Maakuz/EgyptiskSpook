@@ -111,7 +111,7 @@ SDL_Color NavMesh::getPixelAtCoord(int x, int z) const {
 
 Vector2 NavMesh::toPixelCoord(int x, int z) const {
 	int pX = floor(x * SCALE_X) + OFFSET_X;
-	int pY = -(floor(z * SCALE_Z) + OFFSET_Z);
+	int pY = (floor(z * SCALE_Z) + OFFSET_Z);
 
 	pX %= getWidth();
 	pY %= getHeight();
