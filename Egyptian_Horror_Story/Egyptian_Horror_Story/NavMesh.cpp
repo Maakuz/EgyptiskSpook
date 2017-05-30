@@ -1,7 +1,7 @@
 #define PATH "../Resource/Textures/"
-#define SCALE_X 1
-#define SCALE_Z -1
-#define OFFSET_X 9 * SCALE_X
+#define SCALE_X 1.f
+#define SCALE_Z -1.f
+#define OFFSET_X -9 * SCALE_X
 #define OFFSET_Z -9 * SCALE_Z
 #define BLOCKADE 0
 #define AVOID 128
@@ -109,14 +109,14 @@ SDL_Color NavMesh::getPixelAtCoord(int x, int z) const {
 		[indexArray[pX + pY * getWidth()]];
 }
 
-Vector2 NavMesh::toPixelCoord(int x, int z) const {
+DirectX::SimpleMath::Vector2 NavMesh::toPixelCoord(int x, int z) const {
+	x = abs(x) % getWidth();
+	z = abs(z) % getHeight();
+
 	int pX = floor(x * SCALE_X) + OFFSET_X;
-	int pY = -(floor(z * SCALE_Z) + OFFSET_Z);
+	int pY = (floor(z * SCALE_Z) + OFFSET_Z);
 
-	pX %= getWidth();
-	pY %= getHeight();
-
-	return Vector2(abs(pX), abs(pY));
+	return DirectX::SimpleMath::Vector2(pX, pY);
 }
 
 bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
