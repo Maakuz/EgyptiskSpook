@@ -52,6 +52,16 @@ int AICFunctions::setEntityRotation(lua_State *state) {
 	return 0;
 }
 
+int AICFunctions::getEntityRotation(lua_State *state) {
+	Entity *entity = static_cast<Entity*>
+		(lua_touserdata(state, lua_upvalueindex(1)));
+	Vector3 rotation = entity->getRotation();
+	lua_pushnumber(state, rotation.x);
+	lua_pushnumber(state, rotation.y);
+	lua_pushnumber(state, rotation.z);
+	return 3;
+}
+
 int AICFunctions::setEntityOffsetRotation(lua_State *state) {
 	Entity *entity = static_cast<Entity*>
 		(lua_touserdata(state, lua_upvalueindex(1)));

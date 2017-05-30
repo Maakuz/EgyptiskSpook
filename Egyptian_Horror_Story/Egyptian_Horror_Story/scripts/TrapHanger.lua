@@ -24,7 +24,8 @@ function update(deltaTime)
 	temp = temp + deltaTime
 	
 	local rot = math.sin(temp) * 1.4
-	RotateTrap(0, 0, rot)
+	rotX, rotY, rotZ = GetRotation()
+	RotateTrap(rotX, rotY, rot)
 	
 	collision = math.abs(rot) < 0.35
 end

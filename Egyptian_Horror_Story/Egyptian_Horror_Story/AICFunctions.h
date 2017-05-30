@@ -19,6 +19,8 @@ public:
 	static int setEntityPosition(lua_State *state);
 	static int getEntityPosition(lua_State *state);
 	static int setEntityRotation(lua_State *state);
+	static int getEntityRotation(lua_State *state);
+
 	static int setEntityOffsetRotation(lua_State *state);
 	static int slowEntity(lua_State *state);
 	static int stunEntity(lua_State *state);

@@ -122,7 +122,7 @@ void Game::initialize()
 	this->mEntityHandler->getEntityRenderer()->setFadeout(1, this->mGraphics->getDeviceContext());
 	this->mVictory = false;
 	this->mEntityHandler->initialize();
-	this->mEntityHandler->initializeTreasureAndTraps(this->mAIHandler, this->mGraphics->getDevice());
+	this->mEntityHandler->initializeTreasureAndTraps(this->mAIHandler, this->mGraphics->getDevice(), this->mGraphics->getDeviceContext());
 	this->mAIHandler->setupAI();
 }
 
@@ -166,7 +166,7 @@ bool Game::handleKeyboardRelease(SDL_KeyboardEvent const& key)
 	this->mOptionHandler->handleButtonRelease(key, this->mGraphics->getDeviceContext());
 
 	if (key.keysym.scancode == SDL_SCANCODE_2)
-		this->mEntityHandler->initializeTreasureAndTraps(this->mAIHandler, this->mGraphics->getDevice());
+		this->mEntityHandler->initializeTreasureAndTraps(this->mAIHandler, this->mGraphics->getDevice(), this->mGraphics->getDeviceContext());
 
 	return true;
 }

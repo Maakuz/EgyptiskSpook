@@ -43,6 +43,11 @@ void Entity::setRotation(DirectX::SimpleMath::Vector3 rot) {
 	this->mRot = rot;
 }
 
+DirectX::SimpleMath::Vector3 Entity::getRotation() const
+{
+	return this->mRot;
+}
+
 void Entity::setScale(DirectX::SimpleMath::Vector3 scale) {
 	this->mScale = scale;
 }

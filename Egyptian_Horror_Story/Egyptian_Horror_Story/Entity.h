@@ -22,6 +22,7 @@ public:
 	virtual void setPosition(float x, float y, float z);
 	virtual void setScale(DirectX::SimpleMath::Vector3 scale);
 	virtual void setRotation(DirectX::SimpleMath::Vector3 rot);
+	DirectX::SimpleMath::Vector3 getRotation() const;
 	virtual void setOffsetRotation(DirectX::SimpleMath::Vector3 offRot); // Used to transform before rotation
 	DirectX::SimpleMath::Vector3 getPosition() const;
 

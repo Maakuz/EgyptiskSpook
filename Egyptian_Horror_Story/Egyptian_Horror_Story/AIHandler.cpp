@@ -141,6 +141,7 @@ void AIHandler::addLuaFunctionsTrap(lua_State *state, Trap *trap) {
 	addLuaFunction(state, "GetPosition", AICFunctions::getEntityPosition, userData, ARRAYSIZE(userData));
 	addLuaFunction(state, "SetPosition", AICFunctions::setEntityPosition, userData, ARRAYSIZE(userData));
 	addLuaFunction(state, "RotateTrap", AICFunctions::setEntityRotation, userData, ARRAYSIZE(userData));
+	addLuaFunction(state, "GetRotation", AICFunctions::getEntityRotation, userData, ARRAYSIZE(userData));
 	addLuaFunction(state, "SetTrapRotOffset", AICFunctions::setEntityOffsetRotation, userData, ARRAYSIZE(userData));
 
 	// PLAYER FUNCTIONS
