@@ -184,6 +184,13 @@ void AIHandler::updateEnemy(float dt) {
 
 	Enemy::UPDATE_RETURNS ret = mEnemy->update(dt);
 
+	// should not be checked every frame, change later
+	if ((mEnemy->getPosition() - mPlayer->getPosition())
+		.Length() < 4.f) {
+		lua_getglobal(mEnemyState, "onPlayerCollision");
+		handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));
+	}
+
 	if (ret == Enemy::ON_WAYPOINT) {
 		lua_getglobal(mEnemyState, "onReachingWaypoint");
 		handleError(mEnemyState, lua_pcall(mEnemyState, 0, 0, 0));

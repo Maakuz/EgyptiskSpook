@@ -6,8 +6,8 @@ onPointPath = false
 sawPlayerLastFrame = false
 
 -- Speeds movement per second
-walkSpeed = 10
-runSpeed = 14
+walkSpeed = 6
+runSpeed = 10
 
 -- Waypoint System
 prevWaypoint = 0
@@ -115,4 +115,11 @@ function pathToWaypoint()
 	
 	onPointPath = true
 	onPlayerPath = false
+end
+
+function onPlayerCollision()
+	if sleep <= 0 then
+		DamagePlayer()
+		sleep = 0.5
+	end
 end
