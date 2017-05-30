@@ -9,7 +9,7 @@ function onStart()
 end
 
 function getHitboxSize()
-	return 2.5, 25, 2.5
+	return 2, 25, 2
 end
 
 function getSize() 
