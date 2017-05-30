@@ -4,16 +4,16 @@ collision = true
 temp = 0
 
 function onStart()
-	position.x, position.y, position.z = GetPosition(); -- it is static, so lets just get it
-	SetTrapRotOffset(0, -4, 0)
+	position.x, position.y, position.z = GetPosition() -- it is static, so lets just get it
+	SetTrapRotOffset(0, -0.5, 0)
 end
 
 function getHitboxSize()
-	return 2, 1, 1
+	return 2.5, 10, 2.5
 end
 
 function getSize() 
-	return 0.8, 0.5, 0.5 -- width, height, depth
+	return 1.8, 1.5, 1.5 -- width, height, depth
 end
 
 function isImpassible()
@@ -21,7 +21,7 @@ function isImpassible()
 end
 
 function update(deltaTime)
-	temp = temp + 0.008
+	temp = temp + deltaTime
 	
 	local rot = math.sin(temp) * 1.4
 	RotateTrap(0, 0, rot)

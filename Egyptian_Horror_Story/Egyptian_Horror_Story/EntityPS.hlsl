@@ -75,11 +75,10 @@ float4 main(VS_OUT input) : SV_TARGET
         specularity = pow(saturate(dot(input.normal.xyz, H)), specularIntensity) * falloff;
     }
 
-    float attenuation = (1.f / (0.01 * max(20, pow(length(lightToPos.xyz), 2))));
+    float attenuation = saturate(1.f / (0.01 * max(20, pow(length(lightToPos.xyz), 2))));
     
     diffuse *= attenuation;
     specularity *= attenuation;
-    lighting = saturate(diffuse + ambient) + specularity;
 
     //*******************SHADOW MAPPING FINALLY*********************
     if (falloff > 0)
@@ -96,13 +95,18 @@ float4 main(VS_OUT input) : SV_TARGET
         posFromLight.y = (posFromLight.y * -0.5) + 0.5;
 
 
-        float depth = shadowMap.Sample(sSampler, posFromLight.xy).x;
+        float depth = shadowMap.Sample(sSampler, posFromLight.xy).r;
 
         if (depth < posFromLight.z - 0.0001)
-            lighting *= float4(0.3, 0.3, 0.3, 1);
+        {
+            diffuse = 0;
+            specularity = 0;
+        }
     }
 
     //*****************SHADOW MAPPING FINALLY END*******************
+
+    lighting = saturate(diffuse + ambient) + specularity;
 
     //return shadowMap.Sample(sSampler, input.uv);
     return tex.Sample(sSampler, input.uv) * lighting * fadeout;

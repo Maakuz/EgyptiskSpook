@@ -53,10 +53,6 @@ void Game::setupEntityHandler()
 	this->mAIHandler = new AIHandler(mEntityHandler->getEnemy(), mEntityHandler->getPlayer());
 	
 	this->mEntityHandler->setupEntities(this->mAIHandler, this->mGraphics->getDevice());
-
-	this->mEntityHandler->setupTraps(this->mAIHandler, this->mGraphics->getDevice(), this->mGraphics->getDeviceContext());
-
-	this->mEntityHandler->initialize();
 }
 
 Game::Game(GraphicsHandler* mGraphicsHandler, OptionsHandler* options, SDL_Window* window) {

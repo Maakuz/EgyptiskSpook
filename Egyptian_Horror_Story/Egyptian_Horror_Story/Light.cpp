@@ -1,14 +1,15 @@
 #include "Light.h"
+using namespace DirectX::SimpleMath;
 
-Light::Light(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 direction, ID3D11Device* device, ID3D11DeviceContext* context, GraphicsData* gData)
+Light::Light(Vector3 pos, Vector3 direction, ID3D11Device* device, ID3D11DeviceContext* context, GraphicsData* gData)
 {
-	this->mLightInfo.pos = DirectX::SimpleMath::Vector4(pos.x, pos.y, pos.z, 1);
-	this->mLightInfo.dir = DirectX::SimpleMath::Vector4(direction.x, direction.y, direction.z, 1);
+	this->mLightInfo.pos = Vector4(pos.x, pos.y, pos.z, 1);
+	this->mLightInfo.dir = Vector4(direction.x, direction.y, direction.z, 1);
 	this->mLightInfo.flashlightOn = false;
 
 	this->mLightFOV = M_PI * 0.5f;
 
-	this->mMatrices.view = DirectX::XMMatrixLookToLH(pos, direction, DirectX::SimpleMath::Vector3(0, 1, 0));
+	this->mMatrices.view = DirectX::XMMatrixLookToLH(pos, direction, Vector3(0, 1, 0));
 
 	this->mMatrices.projection = DirectX::XMMatrixPerspectiveFovLH(mLightFOV, 1, 0.1f, 200);
 	this->mMatrices.projection = this->mMatrices.projection.Transpose();
@@ -35,15 +36,14 @@ Light::~Light()
 {
 }
 
-void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 offset, DirectX::SimpleMath::Vector3 dir)
+void Light::update(Vector3 pos, Vector3 forward, Vector3 right, Vector3 up)
 {
-	using namespace DirectX::SimpleMath;
 
 	//Needs to be a little in front of the model
-	Vector3 newPos(pos + offset + (dir * 1.25f));
+	Vector3 newPos(pos + (right * 0.4f) - (up * 0.4f) + (forward * 0.7f));
 
 	this->mLightInfo.pos = Vector4(newPos.x, newPos.y, newPos.z, 1);
-	this->mLightInfo.dir = Vector4(dir.x, dir.y, dir.z, 1);
+	this->mLightInfo.dir = Vector4(forward.x, forward.y, forward.z, 0);
 
 	this->mMatrices.view = DirectX::XMMatrixLookToLH(this->mLightInfo.pos, this->mLightInfo.dir, Vector3(0, 1, 0));
 	this->mMatrices.view = this->mMatrices.view.Transpose();
@@ -68,10 +68,10 @@ void Light::update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector
 
 
 	//Transform matrix //THE 1.5 TIMES OFFSET IS A TEMPORARY FIX AND MAY GET TWEAKED
-	Matrix transform = Matrix::CreateTranslation(pos + dir + offset);
+	Matrix transform = Matrix::CreateTranslation(pos + forward + (right * 0.7f) + (up * -1.f));
 	transform = transform.Transpose();
 
-	Vector3 d = dir;
+	Vector3 d = forward;
 	d.Normalize();
 
 	float pitch = asin(-d.y) + (M_PI / 2);

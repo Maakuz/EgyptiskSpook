@@ -31,7 +31,7 @@ public:
 	Light(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 direction, ID3D11Device* device, ID3D11DeviceContext* context, GraphicsData* gData);
 	Light(const Light& other) = delete;
 	virtual ~Light();
-	void update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 offset, DirectX::SimpleMath::Vector3 dir);
+	void update(DirectX::SimpleMath::Vector3 pos, DirectX::SimpleMath::Vector3 forward, DirectX::SimpleMath::Vector3 right, DirectX::SimpleMath::Vector3 up);
 
 	void operator=(const Light& other) = delete;
 

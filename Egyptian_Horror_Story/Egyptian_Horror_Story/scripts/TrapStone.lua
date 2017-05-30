@@ -13,11 +13,11 @@ end
 
 -- Height is high because rock is in the air
 function getHitboxSize()
-	return 1, 50, 1
+	return 2, 50, 2
 end
 
 function getSize() 
-	return 1, 1, 1 -- width, height, depth
+	return 2.5, 2.5, 2.5 -- width, height, depth
 end
 
 function isImpassible()

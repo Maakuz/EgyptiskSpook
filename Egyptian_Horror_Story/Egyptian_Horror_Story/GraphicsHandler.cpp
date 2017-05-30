@@ -96,7 +96,6 @@ GraphicsHandler::~GraphicsHandler() {
 	this->mDebugDevice->Release();
 }
 
-
 HRESULT GraphicsHandler::setupSwapChain() {
 	DXGI_SWAP_CHAIN_DESC mSwapChainDesc;
 	ZeroMemory(&mSwapChainDesc, sizeof(mSwapChainDesc));

@@ -60,6 +60,11 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 	{
 		key = item.first;
 
+		//This is the next level of ugly code, 299 is the flashlight model key.
+		//If it is a shadow pass we do not want to include the flashlight.
+		if (this->shadowPass && key == 299)
+			continue;
+
 		temp = this->mGraphicsData.getVertexBuffer(key);
 		context->IASetVertexBuffers(0, 1, &temp, &stride, &offset);
 

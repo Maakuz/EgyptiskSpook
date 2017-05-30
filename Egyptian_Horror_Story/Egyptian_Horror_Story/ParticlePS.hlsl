@@ -65,7 +65,6 @@ float4 main(VS_OUT input) : SV_TARGET
     float attenuation = (1.f / (0.01 * max(20, pow(length(lightToPos.xyz), 2))));
     
     diffuse *= attenuation;
-    lighting = saturate(diffuse + ambient);
 
     //*******************SHADOW MAPPING FINALLY*********************
     if (falloff > 0)
@@ -85,10 +84,14 @@ float4 main(VS_OUT input) : SV_TARGET
         float depth = shadowMap.Sample(sSampler, posFromLight.xy).x;
 
         if (depth < posFromLight.z - 0.0001)
-            lighting *= float4(0.3, 0.3, 0.3, 1);
+        {
+            diffuse = 0;
+        }
     }
 
     //*****************SHADOW MAPPING FINALLY END*******************
+
+    lighting = saturate(diffuse + ambient);
 
     //return shadowMap.Sample(sSampler, input.uv);
     return tex.Sample(sSampler, input.uv) * lighting * fadeout;

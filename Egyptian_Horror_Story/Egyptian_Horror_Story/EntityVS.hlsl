@@ -14,7 +14,7 @@ struct VS_OUT
     float2 uv : TEXCOORD;
 };
 
-cbuffer VP
+cbuffer VP : register(b0)
 {
     matrix view;
     matrix projection;
@@ -39,7 +39,7 @@ VS_OUT main(VS_IN input)
     output.pos = mul(output.pos, projection);
 
     output.normal = input.normal;
-    output.normal = (float3)mul(float4(input.normal, 0), translation);
+    output.normal = normalize((float3)mul(float4(input.normal, 0), translation));
     
     output.uv = input.uv;
 

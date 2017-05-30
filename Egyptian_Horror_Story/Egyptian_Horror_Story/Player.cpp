@@ -245,12 +245,8 @@ void Player::setPrevPos(DirectX::SimpleMath::Vector3 pos)
 
 // private
 void Player::updateLightPosition() {
-	DirectX::SimpleMath::Vector3 offset;
 
-	offset += this->mCamera->getRight() * 0.7f;
-	offset += this->mCamera->getUp() * -1.f;
-
-	this->mLight->update(this->mCamera->getPos(), offset, this->mCamera->getForward());
+	this->mLight->update(this->mCamera->getPos(), this->mCamera->getForward(), this->mCamera->getRight(), this->mCamera->getUp());
 }
 
 void Player::computeVelocity() {
