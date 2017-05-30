@@ -9,11 +9,11 @@ function onStart()
 end
 
 function getHitboxSize()
-	return 2.5, 10, 2.5
+	return 3, 25, 3
 end
 
 function getSize() 
-	return 1.8, 1.5, 1.5 -- width, height, depth
+	return 1.5, 1.5, 1.5 -- width, height, depth
 end
 
 function isImpassible()
@@ -26,7 +26,7 @@ function update(deltaTime)
 	local rot = math.sin(temp) * 1.4
 	RotateTrap(0, 0, rot)
 	
-	collision = math.abs(rot) < 0.3
+	collision = math.abs(rot) < 0.35
 end
 
 function onPlayerCollision()

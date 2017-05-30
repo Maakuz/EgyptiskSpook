@@ -13,7 +13,7 @@ end
 
 -- Height is high because rock is in the air
 function getHitboxSize()
-	return 2, 50, 2
+	return 5, 50, 5
 end
 
 function getSize() 
@@ -36,10 +36,10 @@ function update(deltaTime)
 end
 
 function onPlayerCollision()
-	if fallenDown then
+	if falling and temp >= 0.7 and temp <= 1.0 then
 		DamagePlayer()
 		PushbackPlayer(position.x, position.y, position.z, 1)
-	else
+	elseif not fallenDown then
 		falling = true
 	end
 end
@@ -47,7 +47,7 @@ end
 function onEnemyCollision()
 	if fallenDown then
 		DamagePlayer()
-		PushbackEnemy(position.x, position.y, position.z, 1)
+		PushbackEnemy(position.x, position.y, position.z, 2)
 	else
 		falling = true
 	end
