@@ -36,8 +36,14 @@ private:
 	float mTrapPercentage;
 	float mTreasurePercentage;
 
-	std::vector<DirectX::SimpleMath::Vector3> mTrapPositions;
-	std::vector<DirectX::SimpleMath::Vector3> mTreasurePositions;
+	struct PosRot
+	{
+		DirectX::SimpleMath::Vector3 pos;
+		float rot;
+	};
+
+	std::vector<PosRot> mTrapPositions;
+	std::vector<PosRot> mTreasurePositions;
 
 	/* From image space to world space */
 	DirectX::SimpleMath::Vector2 toPixelCoord(int x, int z, int w, int h) const;
@@ -47,12 +53,12 @@ private:
 	void updateAudio();
 	void updateCollision();
 	void detectCloseTreasures();
-	void createAhnk(ID3D11Device* device, DirectX::SimpleMath::Vector3 pos);
-	void createTreasureChest(ID3D11Device* device, DirectX::SimpleMath::Vector3 pos);
-	void createBoulderTrap(AIHandler* ai, ID3D11Device* device, DirectX::SimpleMath::Vector3 pos, float yOffset);
+	void createAhnk(ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot);
+	void createTreasureChest(ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot);
+	void createBoulderTrap(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot, float yOffset);
 
 	//At least I tried spelling it!
-	void createGuillioutineTrap(AIHandler* ai, ID3D11Device* device, DirectX::SimpleMath::Vector3 pos);
+	void createGuillioutineTrap(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot);
 
 	void setupTreasureAndTraps(AIHandler* ai, ID3D11Device* device);
 public:
@@ -66,7 +72,7 @@ public:
 	void setupAudioManager(AudioManager* manager);
 	void setupDifficulty(settings::DifficultySettings& diff);
 
-	void initializeTreasureAndTraps(AIHandler* ai, ID3D11Device* device);
+	void initializeTreasureAndTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context);
 	void initialize();
 
 	void update(ID3D11DeviceContext* context, float dt);

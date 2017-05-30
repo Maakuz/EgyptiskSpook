@@ -1,7 +1,7 @@
 #include "EntityHandler.h"
 #define ENEMY_KEY 400
 #define BASE_TRAP_KEY 1000
-#define TREASURE_PICKUP_DIST 2.f
+#define TREASURE_PICKUP_DIST 3.f
 #define SCALE_X 1.f
 #define SCALE_Z -1.f
 #define OFFSET_X -9 * SCALE_X
@@ -1327,7 +1327,6 @@ void EntityHandler::loadEntityModel(std::string modelName, wchar_t* textureName,
 		textureName,
 		entity->getPosition()
 		);
-
 }
 
 void EntityHandler::updateAudio()
@@ -1444,40 +1443,52 @@ void EntityHandler::detectCloseTreasures()
 	}
 }
 
-void EntityHandler::createAhnk(ID3D11Device* device, DirectX::SimpleMath::Vector3 pos)
+void EntityHandler::createAhnk(ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot)
 {
 	Treasure* tres = new Treasure(500 + this->mTreasures.size(), 20.f);
 
-	tres->setPosition(pos.x, pos.y -0.3f, pos.z);
+	tres->setPosition(posRot.pos.x, posRot.pos.y -0.3f, posRot.pos.z);
+	tres->setRotation(DirectX::SimpleMath::Vector3(0, posRot.rot * M_PI, 0));
 
 	this->loadEntityModel("treasure1.fbx", L"ankhTexture.png", tres, device);
+	tres->updateTransformBuffer(context, this->mEntityRenderer->getGraphicsData());
 
 	this->mTreasures.push_back(tres);
 }
 
-void EntityHandler::createTreasureChest(ID3D11Device* device, DirectX::SimpleMath::Vector3 pos)
+void EntityHandler::createTreasureChest(ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot)
 {
 	Treasure* tres = new Treasure(500 + this->mTreasures.size(), 20.f);
 
-	tres->setPosition(pos.x, pos.y, pos.z);
+	tres->setPosition(posRot.pos.x, posRot.pos.y, posRot.pos.z);
+	tres->setRotation(DirectX::SimpleMath::Vector3(0, posRot.rot * M_PI, 0));
 
 	this->loadEntityModel("treasure2.fbx", L"chestTexture.png", tres, device);
+	tres->updateTransformBuffer(context, this->mEntityRenderer->getGraphicsData());
 
 	this->mTreasures.push_back(tres);
 }
 
-void EntityHandler::createBoulderTrap(AIHandler* ai, ID3D11Device* device, DirectX::SimpleMath::Vector3 pos, float yOffset)
+void EntityHandler::createBoulderTrap(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot, float yOffset)
 {
-	Trap* trap = new Trap(1000 + this->mTraps.size(), pos.x, pos.y + yOffset, pos.z);
+	Trap* trap = new Trap(1000 + this->mTraps.size(), posRot.pos.x, posRot.pos.y + yOffset, posRot.pos.z);
+	trap->setRotation(DirectX::SimpleMath::Vector3(0, posRot.rot * M_PI, 0));
+
 	this->loadEntityModel("rock.fbx", L"sandstone.jpg", trap, device);
+	trap->updateTransformBuffer(context, this->mEntityRenderer->getGraphicsData());
+
 	ai->addTrap("scripts/TrapStone.lua", trap);
 	this->mTraps.push_back(trap);
 }
 
-void EntityHandler::createGuillioutineTrap(AIHandler* ai, ID3D11Device* device, DirectX::SimpleMath::Vector3 pos)
+void EntityHandler::createGuillioutineTrap(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot)
 {
-	Trap* trap = new Trap(1000 + this->mTraps.size(), pos.x, pos.y + 5.f, pos.z);
+	Trap* trap = new Trap(1000 + this->mTraps.size(), posRot.pos.x, posRot.pos.y + 5.f, posRot.pos.z);
+	trap->setRotation(DirectX::SimpleMath::Vector3(0, posRot.rot * M_PI, 0));
+
 	this->loadEntityModel("Guilliotine.fbx", L"", trap, device);
+	trap->updateTransformBuffer(context, this->mEntityRenderer->getGraphicsData());
+
 	ai->addTrap("scripts/TrapHanger.lua", trap);
 	this->mTraps.push_back(trap);
 }
@@ -1543,24 +1554,30 @@ void EntityHandler::setupTreasureAndTraps(AIHandler* ai, ID3D11Device* device)
 			{
 				for (int i = 0; i < width; i++)
 				{
+					//TREASURE
 					if (
-						colors[count] == 0 && 
 						colors[count + 1] == 255 && 
 						colors[count + 2] == 0)
 					{
-						Vector2 temp = toPixelCoord(i, height - j, width, height);
+						Vector2 pos = toPixelCoord(i, height - j, width, height);
+						PosRot temp;
+						temp.pos = Vector3(pos.x, -1.4f, pos.y);
+						temp.rot = colors[count] / 100.f;
 
-						this->mTreasurePositions.push_back(Vector3(temp.x, -1.4f, temp.y));
+						this->mTreasurePositions.push_back(temp);
 					}
 
+					//TRAPS
 					else if (
-						colors[count] == 0 &&
 						colors[count + 1] == 0 &&
 						colors[count + 2] == 255)
 					{
-						Vector2 temp = toPixelCoord(i, height - j, width, height);
+						Vector2 pos = toPixelCoord(i, height - j, width, height);
+						PosRot temp;
+						temp.pos = Vector3(pos.x, -1.6f, pos.y);
+						temp.rot = colors[count] / 100.f;
 
-						this->mTrapPositions.push_back(Vector3(temp.x, -1.6f, temp.y));
+						this->mTrapPositions.push_back(temp);
 					}
 
 					count += 3;
@@ -1639,7 +1656,7 @@ void EntityHandler::setupDifficulty(settings::DifficultySettings & diff)
 	this->mTreasurePercentage = diff.treasurePercentage;
 }
 
-void EntityHandler::initializeTreasureAndTraps(AIHandler* ai, ID3D11Device* device)
+void EntityHandler::initializeTreasureAndTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context)
 {
 	using namespace DirectX::SimpleMath;
 
@@ -1660,41 +1677,41 @@ void EntityHandler::initializeTreasureAndTraps(AIHandler* ai, ID3D11Device* devi
 	this->mTraps.clear();
 	this->mTreasures.clear();
 
-	std::vector<Vector3> trapPosCopy = this->mTrapPositions;
+	std::vector<PosRot> trapPosCopy = this->mTrapPositions;
 
 	for (int i = 0; i < floor(this->mTrapPositions.size() * this->mTrapPercentage); i++)
 	{
 		int trapPos = rand() % trapPosCopy.size();
 
-		Vector3 temp = trapPosCopy[trapPos];
+		PosRot temp = trapPosCopy[trapPos];
 		trapPosCopy.erase(trapPosCopy.begin() + trapPos);
 
 
 
 		if (rand() % 1000 < 500)
-			this->createBoulderTrap(ai, device, temp, 12.f);
+			this->createBoulderTrap(ai, device, context, temp, 12.f);
 
 		else
-			this->createGuillioutineTrap(ai, device, temp);
+			this->createGuillioutineTrap(ai, device, context, temp);
 	}
 
 	//***************************TREASURE*******************************
-	std::vector<Vector3> treasurePosCopy = this->mTreasurePositions;
+	std::vector<PosRot> treasurePosCopy = this->mTreasurePositions;
 
 	for (int i = 0; i < floor(this->mTreasurePositions.size() * this->mTreasurePercentage); i++)
 	{
 		int treasurePos = rand() % treasurePosCopy.size();
 
-		Vector3 temp = treasurePosCopy[treasurePos];
+		PosRot temp = treasurePosCopy[treasurePos];
 		treasurePosCopy.erase(treasurePosCopy.begin() + treasurePos);
 
 
 
 		if (rand() % 1000 < 500)
-			this->createAhnk(device, temp);
+			this->createAhnk(device, context, temp);
 
 		else
-			this->createTreasureChest(device, temp);
+			this->createTreasureChest(device, context, temp);
 	}
 
 }
