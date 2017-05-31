@@ -8,6 +8,10 @@ function onStart()
 	SetTrapRotOffset(0, -0.5, 0)
 end
 
+function getHitboxSize()
+	return 0, 0, 0
+end
+
 function getLength() -- Sphere intersections
 	return 3.5
 end
