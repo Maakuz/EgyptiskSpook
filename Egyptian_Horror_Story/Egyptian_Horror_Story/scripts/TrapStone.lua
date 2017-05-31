@@ -6,6 +6,7 @@ falling = false
 fallY = 12
 timeToFall = 0.5
 temp = 0
+triggered = false
 
 function onStart()
 	position.x, position.y, position.z = GetPosition() -- it is static, so lets just get it
@@ -14,6 +15,10 @@ end
 -- Height is high because rock is in the air
 function getHitboxSize()
 	return 5, 50, 5
+end
+
+function getLength() -- Sphere intersections
+	return 3
 end
 
 function getSize() 
@@ -36,9 +41,9 @@ function update(deltaTime)
 end
 
 function onPlayerCollision()
-	if falling and temp >= 0.7 and temp <= 1.0 then
+	if falling then
 		DamagePlayer()
-		PushbackPlayer(position.x, position.y, position.z, 1)
+		PushbackPlayer(position.x, position.y, position.z, getLength())
 	elseif not fallenDown then
 		falling = true
 	end
@@ -46,9 +51,24 @@ end
 
 function onEnemyCollision()
 	if fallenDown then
-		PushbackEnemy(position.x, position.y, position.z, 2)
+		PushbackEnemy(position.x, position.y, position.z, getLength())
 	else
 		falling = true
+	end
+end
+
+function onPlayerTrigger()
+	trigger()
+end
+
+function onEnemyTrigger()
+	trigger()
+end
+
+function trigger()
+	if not fallenDown then
+		falling = true
+		triggered = true
 	end
 end
 

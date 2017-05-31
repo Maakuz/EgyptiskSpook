@@ -72,6 +72,7 @@ void Entity::updateTransformBuffer(ID3D11DeviceContext* context, GraphicsData* g
 	Matrix offsetMat = Matrix::CreateTranslation(this->mOffsetRot);
 	Matrix posMat = offsetMat * Matrix::CreateRotationZ(mRot.z) * Matrix::CreateRotationX(mRot.x) *
 					Matrix::CreateRotationY(mRot.y) * offsetMat.Invert() * Matrix::CreateScale(this->mScale) * Matrix::CreateTranslation(this->mPos);
+	mWorldPos = Vector3::Transform(Vector3(), posMat);
 	posMat = posMat.Transpose();
 
 	D3D11_MAPPED_SUBRESOURCE data;
@@ -87,4 +88,8 @@ void Entity::updateTransformBuffer(ID3D11DeviceContext* context, GraphicsData* g
 int Entity::getKey() const
 {
 	return this->mGraphicsKey;
+}
+
+DirectX::SimpleMath::Vector3 Entity::getWorldPosition() const {
+	return mWorldPos;
 }

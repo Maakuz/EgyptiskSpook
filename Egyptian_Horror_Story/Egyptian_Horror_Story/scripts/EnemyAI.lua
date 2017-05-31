@@ -7,7 +7,7 @@ sawPlayerLastFrame = false
 
 -- Speeds movement per second
 walkSpeed = 6
-runSpeed = 10
+runSpeed = 9
 
 -- Waypoint System
 prevWaypoint = 0
@@ -31,6 +31,7 @@ onWaypoint = true
 sleep = 0
 
 function onStart()
+	currentWaypoint = 6 -- 6 is the close one to current spawn point (see cpp code)
 	SetEnemySpeed(walkSpeed)
 	SetEnemyWaypoint(waypoints[currentWaypoint])
 	onWaypoint = true
@@ -51,6 +52,7 @@ end
 function update(deltaTime)
 	if sleep > 0 then
 		sleep = sleep - deltaTime
+		Log("Sleep: " .. sleep)
 	else
 		frame = frame + 1
 		if frame % 25 == 0 and not loadingPath then
@@ -99,7 +101,6 @@ function onReachingPointPathEnd()
 end
 
 function pathToPlayer()
-	sleep = 0.25
 	LoadPathToPlayer()
 	
 	onPlayerPath = true
@@ -120,6 +121,6 @@ end
 function onPlayerCollision()
 	if sleep <= 0 then
 		DamagePlayer()
-		sleep = 0.5
+		sleep = 2
 	end
 end

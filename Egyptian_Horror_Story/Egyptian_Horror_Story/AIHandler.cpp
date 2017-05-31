@@ -57,6 +57,14 @@ void AIHandler::setupTraps() {
 				lua_pop(state, 3);
 			}
 		}
+
+		lua_getglobal(state, "getLength");
+		handleError(state, lua_pcall(state, 0, 1, 0));
+		if (lua_isnumber(state, -1)) {
+			float length = static_cast<float> (lua_tonumber(state, -1));
+			trap.trap->setLength(length);
+			lua_pop(state, 1);
+		}
 	}
 }
 
@@ -217,15 +225,33 @@ void AIHandler::updateTraps(float dt) {
 		lua_pushnumber(state, dt);
 		handleError(state, lua_pcall(state, 1, 0, 0));
 
-		// should not be checked every frame, change later
-		if (script.trap->getAABB()->aabbVSCapsule(*mPlayer->col)) {
-			lua_getglobal(state, "onPlayerCollision");
-			handleError(state, lua_pcall(state, 0, 0, 0));
-		}
+		lua_getglobal(state, "triggered");
+		if (lua_isboolean(state, -1)) {
+			bool triggered = lua_toboolean(state, -1);
+			lua_pop(state, 1);
+			if (!triggered) {
+				// should not be checked every frame, change later
+				if (script.trap->getAABB()->aabbVSCapsule(*mPlayer->col)) {
+					lua_getglobal(state, "onPlayerTrigger");
+					handleError(state, lua_pcall(state, 0, 0, 0));
+				}
 
-		if (script.trap->getAABB()->aabbVSCapsule(*mEnemy->mCapsule)) {
-			lua_getglobal(state, "onEnemyCollision");
-			handleError(state, lua_pcall(state, 0, 0, 0));
+				if (script.trap->getAABB()->aabbVSCapsule(*mEnemy->mCapsule)) {
+					lua_getglobal(state, "onEnemyTrigger");
+					handleError(state, lua_pcall(state, 0, 0, 0));
+				}
+			}
+			else {
+				if (script.trap->sphereVsPoint(mPlayer->getPosition())) {
+					lua_getglobal(state, "onPlayerCollision");
+					handleError(state, lua_pcall(state, 0, 0, 0));
+				}
+
+				if (script.trap->sphereVsPoint(mEnemy->getPosition())) {
+					lua_getglobal(state, "onEnemyCollision");
+					handleError(state, lua_pcall(state, 0, 0, 0));
+				}
+			}
 		}
 	}
 
