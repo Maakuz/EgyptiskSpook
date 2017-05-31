@@ -60,7 +60,8 @@ void Player::initialize()
 	this->mSneaking = false;
 	this->mSprinting = false;
 	this->mSneakTime = 0;
-	this->mScore = 0;
+	this->mNrOfAnkhs = 0;
+	this->mNrOfChests = 0;
 
 	this->mMaxStamina = MAX_STAMINA;
 	this->mSpeed = SPEED;
@@ -324,7 +325,12 @@ void Player::updateTreasureGrabbing(float dt)
 
 		if (this->mPickupableTres->getPickupCounter() >= this->mPickupableTres->getPickupTime())
 		{
-			this->mScore += this->mPickupableTres->getValue();
+			if (this->mPickupableTres->getValue() == 100)
+				this->mNrOfAnkhs++;
+
+			else if (this->mPickupableTres->getValue() == 300)
+				this->mNrOfChests++;
+
 			this->mPickupableTres->setPickedUp(true);
 			this->mIsPickingTres = false;
 			this->mPickupableTres = nullptr;
@@ -348,7 +354,12 @@ bool Player::isDead() const {
 	return dead;
 }
 
-int Player::getScore() const
+int Player::getNrOfChests() const
 {
-	return this->mScore;
+	return this->mNrOfChests;
+}
+
+int Player::getNrOfAhnks() const
+{
+	return this->mNrOfAnkhs;
 }

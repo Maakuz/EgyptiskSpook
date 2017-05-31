@@ -25,6 +25,7 @@ private:
 	Entity* mLevel;
 	Player* mPlayer;
 	Enemy* mEnemy;
+	Entity* megaWall;
 	
 	FBXLoader mLoader;
 
@@ -47,6 +48,8 @@ private:
 
 	/* From image space to world space */
 	DirectX::SimpleMath::Vector2 toPixelCoord(int x, int z, int w, int h) const;
+
+	void addToMegarray(std::vector<EntityStruct::VertexStruct>& megarray, EntityStruct::VertexStruct arrayToadd[], int arratSize = 6);
 
 	void hardcodedMap(ID3D11Device* device);
 	void loadEntityModel(std::string modelName, wchar_t* textureName, Entity* entity, ID3D11Device* device);

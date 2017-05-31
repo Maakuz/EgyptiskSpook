@@ -5,9 +5,13 @@ void Game::checkVictory()
 {
 	DirectX::SimpleMath::Vector3 pos = this->mEntityHandler->getPlayer()->getPosition();
 
-	if (pos.x > 74 && pos.x < 80 && pos.z > -50 && pos.z < -43)
+	if (pos.x > 74 && pos.x < 80 && pos.z > -50 && pos.z < -43 && !mVictory)
 	{
 		this->mVictory = true;
+		Player *player = this->mEntityHandler->getPlayer();
+		this->mGuiRenderer->createTreasures(this->mGraphics->getDevice(),
+			player->getNrOfChests(),
+			player->getNrOfAhnks());
 	}
 
 	if (this->mVictory)
@@ -119,6 +123,7 @@ void Game::draw() {
 
 void Game::initialize()
 {
+	this->mGuiRenderer->clearTreasures();
 	this->mEntityHandler->getEntityRenderer()->setFadeout(1, this->mGraphics->getDeviceContext());
 	this->mVictory = false;
 	this->mEntityHandler->initialize();
