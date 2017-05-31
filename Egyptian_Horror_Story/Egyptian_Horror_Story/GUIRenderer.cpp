@@ -2,6 +2,9 @@
 #define SHADERS 40
 #define GAMEOVERSTARTINDEX 20
 #define HUDSTARTINDEX 40
+#define TREASUREINDEX 60
+#define CHESTTEXTURE 7777
+#define AHNKTEXTURE 7778
 
 using namespace DirectX::SimpleMath;
 
@@ -10,6 +13,9 @@ GUIRenderer::GUIRenderer() : Renderer(){
 
 	// for testing
 	navTest = nullptr;
+
+	hasTreasures = false;
+	ahnkStartIndex = 0;
 }
 
 GUIRenderer::~GUIRenderer() {
@@ -44,6 +50,9 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 	mGraphicsData->loadTexture(GAMEOVERSTARTINDEX, L"Confirm.png", device);
 	mGraphicsData->loadTexture(GAMEOVERSTARTINDEX + 1, L"gameOver.png", device);
 
+	mGraphicsData->loadTexture(CHESTTEXTURE, L"chest.png", device);
+	mGraphicsData->loadTexture(AHNKTEXTURE, L"ahnk.png", device);
+
 	D3D11_SUBRESOURCE_DATA data;
 	data.pSysMem = &this->mMenuElements[0];
 	mGraphicsData->createVertexBuffer(0, sizeof(GUI_ELEMENT) * this->mMenuElements.size(), &data, device);
@@ -75,7 +84,11 @@ void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, G
 	else if (state == GAMESTATE::MAIN_MENU)
 		renderMenu(context, shaders, 0, this->mMenuElements.size(), 0);
 	else if (state == GAMESTATE::GAME_OVER)
+	{
 		renderMenu(context, shaders, 1, this->mGameOverElements.size(), GAMEOVERSTARTINDEX);
+		if (hasTreasures) 
+			renderTreasure(context, shaders);
+	}
 }
 
 void GUIRenderer::renderMenu(ID3D11DeviceContext *context, ShaderHandler &shaders, int vertexBufferKey, int nrOfElements, int srvOffset) {
@@ -93,6 +106,27 @@ void GUIRenderer::renderMenu(ID3D11DeviceContext *context, ShaderHandler &shader
 	}
 }
 
+void GUIRenderer::renderTreasure(ID3D11DeviceContext *context, ShaderHandler &shaders) {
+	UINT stride = sizeof(GUI_ELEMENT), offset = 0;
+	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(TREASUREINDEX);
+	ID3D11ShaderResourceView *srv;
+
+	context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
+
+	// Loop through and draw buttons, optimize plz
+	srv = this->mGraphicsData->getSRV(CHESTTEXTURE);
+	context->PSSetShaderResources(0, 1, &srv);
+	for (int i = 0; i < ahnkStartIndex; i++) {
+		context->Draw(1, i);
+	}
+
+	srv = this->mGraphicsData->getSRV(AHNKTEXTURE);
+	context->PSSetShaderResources(0, 1, &srv);
+	for (int i = ahnkStartIndex; i < mTreasures.size(); i++) {
+		context->Draw(1, i);
+	}
+}
+
 void GUIRenderer::renderHud(ID3D11DeviceContext *context, ShaderHandler &shaders) {
 	UINT stride = sizeof(GUI_ELEMENT), offset = 0;
 	ID3D11Buffer *buffer = this->mGraphicsData->getVertexBuffer(2);
@@ -106,6 +140,39 @@ void GUIRenderer::renderHud(ID3D11DeviceContext *context, ShaderHandler &shaders
 		context->PSSetShaderResources(0, 1, &srv);
 
 	context->Draw(1, 0); // not used right now
+}
+
+void GUIRenderer::clearTreasures() {
+	if (hasTreasures) {
+		this->mTreasures.clear();
+		this->mGraphicsData->removeData(TREASUREINDEX);
+		hasTreasures = false;
+	}
+}
+
+void GUIRenderer::createTreasures(ID3D11Device* device, int chests, int ahnks)
+{
+	Vector2 dimension = { 0.2f, 0.2f };
+	// Add new GUI elements here
+
+	for (int i = 0; i < chests; i++)
+	{
+		this->mTreasures.push_back(GUI_ELEMENT{Vector3(-0.8f + i * 0.35, 0.7f, 0), dimension });
+	}
+
+	ahnkStartIndex = mTreasures.size();
+
+	for (int i = 0; i < ahnks; i++)
+	{
+		this->mTreasures.push_back(GUI_ELEMENT{Vector3(-0.8f + i * 0.35, 0.4f, 0), dimension });
+	}
+
+	if (mTreasures.size() > 0) {
+		D3D11_SUBRESOURCE_DATA data;
+		data.pSysMem = &this->mTreasures[0];
+		mGraphicsData->createVertexBuffer(TREASUREINDEX, sizeof(GUI_ELEMENT) * this->mTreasures.size(), &data, device);
+		hasTreasures = true;
+	}
 }
 
 void GUIRenderer::setNavigationTest(ID3D11Device *device, void* pixels, int w, int h) {

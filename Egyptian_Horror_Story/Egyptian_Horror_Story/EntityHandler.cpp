@@ -1445,7 +1445,7 @@ void EntityHandler::detectCloseTreasures()
 
 void EntityHandler::createAhnk(ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot)
 {
-	Treasure* tres = new Treasure(500 + this->mTreasures.size(), 20.f);
+	Treasure* tres = new Treasure(500 + this->mTreasures.size(), 20.f, 100);
 
 	tres->setPosition(posRot.pos.x, posRot.pos.y -0.3f, posRot.pos.z);
 	tres->setRotation(DirectX::SimpleMath::Vector3(0, posRot.rot * M_PI, 0));
@@ -1458,7 +1458,7 @@ void EntityHandler::createAhnk(ID3D11Device* device, ID3D11DeviceContext* contex
 
 void EntityHandler::createTreasureChest(ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot)
 {
-	Treasure* tres = new Treasure(500 + this->mTreasures.size(), 20.f);
+	Treasure* tres = new Treasure(500 + this->mTreasures.size(), 30.f, 300);
 
 	tres->setPosition(posRot.pos.x, posRot.pos.y, posRot.pos.z);
 	tres->setRotation(DirectX::SimpleMath::Vector3(0, posRot.rot * M_PI, 0));
@@ -1729,7 +1729,7 @@ void EntityHandler::update(ID3D11DeviceContext* context, float dt)
 	DirectX::SimpleMath::Vector3 prevPos = this->mPlayer->getPosition();
 
 	this->mPlayer->updatePosition(dt);
-	this->mEnemy->updatePosition(this->mEntityRenderer->getGraphicsData(), context, this->mPlayer->getPosition());
+	//this->mEnemy->updatePosition(this->mEntityRenderer->getGraphicsData(), context, this->mPlayer->getPosition());
 
 	for (auto& trap : this->mTraps) {
 		trap->updateAABB();
@@ -1738,7 +1738,7 @@ void EntityHandler::update(ID3D11DeviceContext* context, float dt)
 
 	this->detectCloseTreasures();
 
-	this->updateCollision();
+	//this->updateCollision();
 
 	this->updateAudio();
 }

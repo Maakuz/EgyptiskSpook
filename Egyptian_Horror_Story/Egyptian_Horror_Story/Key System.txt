@@ -29,6 +29,8 @@ Level: 401
 Treasures: 5xx
 Traps: 10xx
 Fadeout thingy: 700
+GUI ahnk: 7777
+GUI chest: 7778
 
 SOUND EFFECTS: 
 monster: 0

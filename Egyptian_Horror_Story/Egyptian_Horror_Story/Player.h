@@ -25,7 +25,8 @@ private:
 	// Treasure Var
 	Treasure* mPickupableTres;
 	bool mIsPickingTres;
-	int mScore;
+	int mNrOfAnkhs;
+	int mNrOfChests;
 
 	// Light Var
 	Light* mLight;
@@ -71,7 +72,8 @@ public:
 	void damage();
 	bool isDamaged() const;
 	bool isDead() const;
-	int getScore() const;
+	int getNrOfChests() const;
+	int getNrOfAhnks() const;
 };
 
 #endif
