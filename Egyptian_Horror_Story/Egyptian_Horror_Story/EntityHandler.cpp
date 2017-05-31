@@ -37,7 +37,6 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	wall = new Wall(
 		Vector3(-10, -2.f, 10.f),
 		Vector3(57.f, 0.f, 0.f),
-
 		Vector3(0.f, 6.f, 0.f),
 		Vector3(0.f, 0.f, -1.f),
 		Vector3(0.f, 0.f, -1.f), tmpKey++);
@@ -46,7 +45,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		ent = new Entity(tmpKey++);
 
 		EntityStruct::VertexStruct testData[] = {
-			Vector3(-10+i*9.5 , -2.f , 10.f),
+			Vector3(-10 + i*9.5 , -2.f , 10.f),
 			Vector3(0, 0, -1),
 			Vector2(0.f, 1.f),
 
@@ -75,6 +74,39 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		this->mEntities.push_back(ent);
 	}
 
+
+
+
+	/*wall = new Wall(
+	Vector3(-3, -2, 10),
+	Vector3(50.f, 0.f, 0.f),
+	Vector3(0.f, 6.f, 0.f),
+	Vector3(0.f, 0.f, -1.f),
+	Vector3(0.f, 0.f, -1.f), tmpKey++);
+	*/
+
+	/*EntityStruct::VertexStruct testData40[] = {
+	Vector3(-3, -2 , 10),
+	Vector3(0, 0, -1),
+	Vector2(0.f, 1.f),
+	Vector3(-3 , 4 , 10),
+	Vector3(0, 0, -1),
+	Vector2(0.f, 0.f),
+	Vector3(47 , -2, 10),
+	Vector3(0, 0, -1),
+	Vector2(1.f, 1.f),
+	Vector3(-3 , 4 , 10),
+	Vector3(0, 0, -1),
+	Vector2(0.f, 0.f),
+	Vector3(47, 4, 10),
+	Vector3(0, 0, -1),
+	Vector2(1.f, 0.f),
+	Vector3(47 , -2 , 10),
+	Vector3(0, 0, -1),
+	Vector2(1.f, 1.f)
+	};
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData40, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	this->mEntities.push_back(wall);*/
 	wall = new Wall(
 		Vector3(-3, -2.f, -43.f),
 		Vector3(-1.f, 0.f, 0.f),
@@ -86,9 +118,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 		ent = new Entity(tmpKey++);
 		EntityStruct::VertexStruct testData3[] = {
-
 			Vector3(-3, -2.f , -33.8 + i*9.2),
-
 			Vector3(-1, 0, 0),
 			Vector2(0.f, 1.f),
 
@@ -114,9 +144,9 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		};
 		this->mEntityRenderer->loadObject(device, ent->getKey(), testData3, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 
-
 		this->mEntities.push_back(ent);
 	}
+
 
 
 	// fet vägg i z led	
@@ -134,20 +164,17 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		ent = new Entity(tmpKey++);
 
 		EntityStruct::VertexStruct testData4[] = {
-
 			Vector3(-10, -2 , 2 - i * 8),
 			Vector3(1, 0, 0),
 			Vector2(0.f, 1.f),
 
 			Vector3(-10, 4, 2 - i * 8),
-
 			Vector3(1, 0, 0),
 			Vector2(0.f, 0.f),
 
 			Vector3(-10, -2 , 10 - i * 8),
 			Vector3(1, 0, 0),
 			Vector2(1.f, 1.f),
-
 
 			Vector3(-10, 4 , 2 - i * 8),
 			Vector3(1, 0, 0),
@@ -167,6 +194,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	}
 
 
+
 	//Ingång
 	wall = new Wall(
 		Vector3(20, -2, -50),
@@ -180,7 +208,6 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 
 		EntityStruct::VertexStruct testData5[] = {
-
 			Vector3(30 + i * 10, -2 , -50),
 			Vector3(0, 0, 1),
 			Vector2(0.f, 1.f),
@@ -222,7 +249,6 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 		ent = new Entity(tmpKey++);
 		EntityStruct::VertexStruct testData10[] = {
-
 			Vector3(6 + i * 9, -2 , -50),
 			Vector3(0, 0, 1),
 			Vector2(0.f, 1.f),
@@ -250,6 +276,8 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		this->mEntityRenderer->loadObject(device, ent->getKey(), testData10, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 		this->mEntities.push_back(ent);
 	}
+
+
 
 	//rum
 	wall = new Wall(
@@ -304,8 +332,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 		ent = new Entity(tmpKey++);
 		EntityStruct::VertexStruct testData12[] = {
-			Vector3(5, -2 , -70+i*5),
-
+			Vector3(5, -2 , -70 + i * 5),
 			Vector3(1, 0, 0),
 			Vector2(0.f, 1.f),
 
@@ -387,9 +414,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 		ent = new Entity(tmpKey++);
 		EntityStruct::VertexStruct testData14[] = {
-
 			Vector3(5 + i * 5, -2 , -50),
-			
 			Vector3(0, 0, -1),
 			Vector2(0.f, 1.f),
 
@@ -424,8 +449,8 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0.f, 0.f, -1.f), tmpKey++);
 	this->mEntities.push_back(wall);
 
-
 	for (int i = 0; i < 2; i++) {
+
 
 		ent = new Entity(tmpKey++);
 
@@ -457,6 +482,8 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		this->mEntityRenderer->loadObject(device, ent->getKey(), testData15, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 		this->mEntities.push_back(ent);
 	}
+
+
 	//End rum
 
 	wall = new Wall(
@@ -464,18 +491,14 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(43.f, 0.f, 0.f),
 		Vector3(0.f, 6.f, 0.f),
 		Vector3(0.f, 0.f, -1.f),
-
 		Vector3(0.f, 0.f, -1.f), tmpKey++);
-
 	this->mEntities.push_back(wall);
 	for (int i = 0; i < 5; i++) {
 
 		ent = new Entity(tmpKey++);
 
 		EntityStruct::VertexStruct testData6[] = {
-
 			Vector3(-3 + i*8.6, -2 , -43),
-
 			Vector3(0, 0, -1),
 			Vector2(0.f, 1.f),
 
@@ -498,12 +521,11 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 			Vector3(5.6 + i*8.6 , -2 , -43),
 			Vector3(0, 0, -1),
 			Vector2(1.f, 1.f)
-
 		};
 		this->mEntityRenderer->loadObject(device, ent->getKey(), testData6, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 		this->mEntities.push_back(ent);
-	};
-	
+	}
+
 	wall = new Wall(
 		Vector3(40, -2, -43),
 		Vector3(1.f, 0.f, 0.f),
@@ -516,9 +538,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		ent = new Entity(tmpKey++);
 
 		EntityStruct::VertexStruct testData7[] = {
-
 			Vector3(40, -2 , -43 + i*9.2),
-
 			Vector3(1, 0, 0),
 			Vector2(0.f, 1.f),
 
@@ -559,9 +579,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		ent = new Entity(tmpKey++);
 
 		EntityStruct::VertexStruct testData8[] = {
-
 			Vector3(47, -2 , -71 + i * 7),
-
 			Vector3(-1, 0, 0),
 			Vector2(0.f, 1.f),
 
@@ -594,7 +612,6 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		Vector3(0.f, 6.f, 0.f),
 		Vector3(0.f, 0.f, 53.f),
 		Vector3(-1.f, 0.f, 0.f), tmpKey++);
-
 
 	this->mEntities.push_back(wall);
 	for (int i = 0; i < 5; i++) {
@@ -642,9 +659,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		ent = new Entity(tmpKey++);
 		// andra sidan rumvägg
 		EntityStruct::VertexStruct testData9[] = {
-
 			Vector3(40, -2 , -71 + i * 7),
-
 			Vector3(1, 0, 0),
 			Vector2(0.f, 1.f),
 
@@ -672,7 +687,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		this->mEntities.push_back(ent);
 	}
 
-	
+
 	wall = new Wall(
 		Vector3(47, -2, -43),
 		Vector3(33.f, 0.f, 0.f),
@@ -686,9 +701,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		ent = new Entity(tmpKey++);
 
 		EntityStruct::VertexStruct testData17[] = {
-
 			Vector3(47 + i*6.6, -2 , -43),
-
 			Vector3(0, 0, -1),
 			Vector2(0.f, 1.f),
 
@@ -756,6 +769,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	}
 
 
+
 	//mittemot sidan vi vill ha
 	wall = new Wall(
 		Vector3(-3, -2, 3),
@@ -768,9 +782,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 		ent = new Entity(tmpKey++);
 		EntityStruct::VertexStruct testData19[] = {
-
 			Vector3(5.6 + i*8.6, -2 , 3),
-
 			Vector3(0, 0, 1),
 			Vector2(0.f, 1.f),
 
@@ -811,9 +823,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 		ent = new Entity(tmpKey++);
 		EntityStruct::VertexStruct testData41[] = {
-
 			Vector3(-3, -2.f , -64 + i * 7),
-
 			Vector3(-1, 0, 0),
 			Vector2(0.f, 1.f),
 
@@ -833,9 +843,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 			Vector3(-1, 0, 0),
 			Vector2(1.f, 0.f),
 
-
 			Vector3(-3, -2.f , -71 + i * 7),
-
 			Vector3(-1, 0, 0),
 			Vector2(1.f, 1.f)
 		};
@@ -856,9 +864,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		ent = new Entity(tmpKey++);
 
 		EntityStruct::VertexStruct testData42[] = {
-
 			Vector3(-3 + i*8.6, -2 , -71),
-
 			Vector3(0, 0, -1),
 			Vector2(0.f, 1.f),
 
@@ -888,7 +894,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 
 	//bakre vägg
 	wall = new Wall(
-	Vector3(-10, -2, -78),
+		Vector3(-10, -2, -78),
 		Vector3(57.f, 0.f, 0.f),
 		Vector3(0.f, 6.f, 0.f),
 		Vector3(0.f, 0.f, 1.f),
@@ -930,13 +936,166 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 	}
 
 
+
+
+	//första
+
+	/*Entity* ent;
+	for (int i = 0; i < 11; i++) {
+	ent = new Entity(tmpKey++);
+	EntityStruct::VertexStruct testData2[] = {
+	Vector3(-10.f, -2.f, -78+i*8),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(-10.f, -2.f, -70 + i * 8),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(-3, -2.f, -70 + i * 8),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(-3, -2.f, -70 + i * 8),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(-3, -2.f, -78 + i * 8),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(-10.f, -2.f, -78 + i * 8),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 1.f)
+	};
+	this->mEntities.push_back(ent);
+	this->mEntityRenderer->loadObject(device, ent->getKey(), testData2, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	}
+	for (int i = 0; i < 5; i++) {
+	ent = new Entity(tmpKey++);
+	EntityStruct::VertexStruct testData21[] = {
+	Vector3(-3+i*8.6, -2.f, -50.f),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(-3 + i*8.6, -2.f, -43),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(5.6 + i*8.6, -2.f, -43),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(5.6 + i*8.6, -2.f, -43),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(5.6 + i*8.6, -2.f, -50.f),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(-3 + i*8.6, -2.f, -50.f),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 1.f)
+	};
+	this->mEntities.push_back(ent);
+	this->mEntityRenderer->loadObject(device, ent->getKey(), testData21, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	}
+
+	ent = new Entity(tmpKey++);
+	EntityStruct::VertexStruct testData22[] = {
+	Vector3(40, -2.f, -78),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(40, -2.f, 10),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(47, -2.f, 10),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(47, -2.f, 10),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(47, -2.f, -78.f),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(40, -2.f, -78.f),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 1.f)
+	};
+	this->mEntities.push_back(ent);
+	this->mEntityRenderer->loadObject(device, ent->getKey(), testData22, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	//Rum
+	ent = new Entity(tmpKey++);
+	EntityStruct::VertexStruct testData23[] = {
+	Vector3(30, -2.f, -70),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(5, -2.f, -70),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(5, -2.f, -50),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(5, -2.f, -50),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(30, -2.f, -50),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(30, -2.f, -70),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 0.f)
+	};
+	this->mEntities.push_back(ent);
+	this->mEntityRenderer->loadObject(device, ent->getKey(), testData23, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	ent = new Entity(tmpKey++);
+	EntityStruct::VertexStruct testData29[] = {
+	Vector3(47, -2.f, -50.f),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(47, -2.f, -43),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(80, -2.f, -43),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(80, -2.f, -43),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(80, -2.f, -50.f),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(47, -2.f, -50.f),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 1.f)
+	};
+	this->mEntities.push_back(ent);
+	this->mEntityRenderer->loadObject(device, ent->getKey(), testData29, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	*/
+	//DETTA ÄR ETT GOLV
+
+
+	/*Entity* ent;
+	ent = new Entity(tmpKey++);
+	EntityStruct::VertexStruct testData31[] = {
+	Vector3(-3, -2.f, 3),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(-3, -2.f, 10),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(40, -2.f, 10),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(40, -2.f, 10),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(40, -2.f, 3.f),
+	Vector3(0, 1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(-3, -2.f, 3.f),
+	Vector3(0, 1, 0),
+	Vector2(0.f, 1.f)
+	};
+	this->mEntities.push_back(ent);
+	this->mEntityRenderer->loadObject(device, ent->getKey(), testData31, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);*/
+
 	for (int i = 0; i < 14; i++) {
 		for (int j = 0; j < 14; j++) {
 			ent = new Entity(tmpKey++);
 			EntityStruct::VertexStruct testData31[] = {
-
 				Vector3(-10 + i * 7, -2.f, 10 - j * 7),
-
 				Vector3(0, 1, 0),
 				Vector2(0.f, 1.f),
 
@@ -973,7 +1132,7 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 				Vector3(-10 + i * 7, 4.f, 10 - j * 7),
 				Vector3(0, -1, 0),
 				Vector2(0.f, 1.f),
-				
+
 				Vector3(-3 + i * 7, 4.f, 3 - j * 7),
 				Vector3(0, -1, 0),
 				Vector2(1.f, 0.f),
@@ -982,11 +1141,9 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 				Vector3(0, -1, 0),
 				Vector2(1.f, 0.f),
 
-
 				Vector3(-10 + i * 7, 4.f, 10 - j * 7),
 				Vector3(0, -1, 0),
 				Vector2(0.f, 1.f),
-
 
 				Vector3(-10 + i * 7, 4.f, 3.f - j * 7),
 				Vector3(0, -1, 0),
@@ -999,6 +1156,276 @@ void EntityHandler::hardcodedMap(ID3D11Device* device)
 		}
 	}
 
+	//for (int i = 0; i < 14; i++) {
+	//	for (int j = 0; j < 14; j++) {
+	//		Entity* tmp = new Entity(tmpKey++);
+	//		EntityStruct::VertexStruct testData34[] = {
+	//			Vector3(-10 + i * 7, 4.f, 10 - j * 7),
+	//			Vector3(0, 1, 0),
+	//			Vector2(0.f, 1.f),
+	//
+	//			Vector3(-3 + i * 7, 4.f, 10 - j * 7),
+	//			Vector3(0, 1, 0),
+	//			Vector2(0.f, 0.f),
+	//
+	//			Vector3(-3 + i * 7, 4.f, 3 - j * 7),
+	//			Vector3(0, 1, 0),
+	//			Vector2(1.f, 0.f),
+	//
+	//			Vector3(-10 + i * 7, 4.f, 10 - j * 7),
+	//			Vector3(0, 1, 0),
+	//			Vector2(0.f, 1.f),
+	//
+	//			Vector3(-3 + i * 7, 4.f, 3.f - j * 7),
+	//			Vector3(0, 1, 0),
+	//			Vector2(1.f, 0.f),
+	//
+	//			Vector3(-10 + i * 7, 4.f, 3.f - j * 7),
+	//			Vector3(0, 1, 0),
+	//			Vector2(1.f, 1.f)
+	//		};
+	//
+	//		this->mEntities.push_back(tmp);
+	//		this->mEntityRenderer->loadObject(device, tmp->getKey(), testData34, 6, sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	//	}
+	//}
+
+	//Tak
+	//Rumtak
+	/*
+	wall = new Wall(
+	Vector3(5, 4, -70),
+	Vector3(25.f, 0.f, 0.f),
+	Vector3(0.f, 1.f, 0.f),
+	Vector3(0.f, 0.f, 20.f),
+	Vector3(0.f, -1.f, 0.f), tmpKey++);
+	EntityStruct::VertexStruct testData24[] = {
+	Vector3(5, 4.f, -70),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(30, 4.f, -70),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(30, 4.f, -50),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(30, 4.f, -50),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(5, 4.f, -50),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(5, 4.f, -70),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f)
+	};
+	this->mEntities.push_back(wall);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData24, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	wall = new Wall(
+	Vector3(40, 4, -78),
+	Vector3(7.f, 0.f, 0.f),
+	Vector3(0.f, 1.f, 0.f),
+	Vector3(0.f, 0.f, 88.f),
+	Vector3(0.f, -1.f, 0.f), tmpKey++);
+	EntityStruct::VertexStruct testData25[] = {
+	Vector3(47, 4.f, 10),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(40, 4.f, 10),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(40, 4.f, -78),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(40, 4.f, -78.f),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(47, 4.f, -78.f),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(47, 4.f, 10),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f)
+	};
+	this->mEntities.push_back(wall);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData25, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	wall = new Wall(
+	Vector3(-10, 4, -78),
+	Vector3(7.f, 0.f, 0.f),
+	Vector3(0.f, 1.f, 0.f),
+	Vector3(0.f, 0.f, 88.f),
+	Vector3(0.f, -1.f, 0.f), tmpKey++);
+	EntityStruct::VertexStruct testData27[] = {
+	Vector3(-3, 4.f, 10.f),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(-10.f, 4.f, 10.f),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(-10.f, 4.f, -78.f),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(-10.f, 4.f, -78.f),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(-3, 4.f, -78.f),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(-3, 4.f, 10.f),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f)
+	};
+	this->mEntities.push_back(wall);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData27, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	wall = new Wall(
+	Vector3(-3, 4, -50),
+	Vector3(43.f, 0.f, 0.f),
+	Vector3(0.f, 1.f, 0.f),
+	Vector3(0.f, 0.f, 7.f),
+	Vector3(0.f, -1.f, 0.f), tmpKey++);
+	EntityStruct::VertexStruct testData28[] = {
+	Vector3(40, 4.f, -43),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(-3, 4.f, -43),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(-3, 4.f, -50.f),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(-3, 4.f, -50.f),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(40, 4.f, -50.f),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(40, 4.f, -43),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f)
+	};
+	this->mEntities.push_back(wall);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData28, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	wall = new Wall(
+	Vector3(47, 4, -50),
+	Vector3(33.f, 0.f, 0.f),
+	Vector3(0.f, 1.f, 0.f),
+	Vector3(0.f, 0.f, 7.f),
+	Vector3(0.f, -1.f, 0.f), tmpKey++);
+	EntityStruct::VertexStruct testData30[] = {
+	Vector3(80, 4.f, -43),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(47, 4.f, -43),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(47, 4.f, -50.f),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(47, 4.f, -50.f),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(80, 4.f, -50.f),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(80, 4.f, -43),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f)
+	};
+	this->mEntities.push_back(wall);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData30, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	wall = new Wall(
+	Vector3(-3, 4, 3),
+	Vector3(43.f, 0.f, 0.f),
+	Vector3(0.f, 1.f, 0.f),
+	Vector3(0.f, 0.f, 7.f),
+	Vector3(0.f, -1.f, 0.f), tmpKey++);
+	EntityStruct::VertexStruct testData32[] = {
+	Vector3(40, 4.f, 10),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(-3, 4.f, 10),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(-3, 4.f, 3),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(-3, 4.f, 3.f),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(40, 4.f, 3.f),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(40, 4.f, 10),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f)
+	};
+	this->mEntities.push_back(wall);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData32, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	wall = new Wall(
+	Vector3(-3, 4, -78),
+	Vector3(43.f, 0.f, 0.f),
+	Vector3(0.f, 1.f, 0.f),
+	Vector3(0.f, 0.f, 7.f),
+	Vector3(0.f, -1.f, 0.f), tmpKey++);
+	EntityStruct::VertexStruct testData33[] = {
+	Vector3(-3, 4.f, -71),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f),
+	Vector3(-3, 4.f, -78),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 0.f),
+	Vector3(40, 4.f, -78),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(40, 4.f, -78),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 0.f),
+	Vector3(40, 4.f, -71),
+	Vector3(0, -1, 0),
+	Vector2(1.f, 1.f),
+	Vector3(-3, 4.f, -71),
+	Vector3(0, -1, 0),
+	Vector2(0.f, 1.f)
+	};
+	this->mEntities.push_back(wall);
+	this->mEntityRenderer->loadObject(device, wall->getKey(), testData33, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
+	*/
+
+	//wall = new Wall(
+	//	Vector3(-3, 4, -78),
+	//	Vector3(43.f, 0.f, 0.f),
+	//	Vector3(0.f, 1.f, 0.f),
+	//	Vector3(0.f, 0.f, 7.f),
+	//	Vector3(0.f, -1.f, 0.f), tmpKey++);
+	//
+	//EntityStruct::VertexStruct testData34[] = {
+	//	Vector3(40, -2, -78),
+	//	Vector3(0, 1, 0),
+	//	Vector2(1.f, 0.f),
+	//
+	//	Vector3(-3, -2, -78),
+	//	Vector3(0, 1, 0),
+	//	Vector2(0.f, 0.f),
+	//
+	//	Vector3(-3, -2, -71),
+	//	Vector3(0, 1, 0),
+	//	Vector2(0.f, 1.f),
+	//
+	//	Vector3(-3, -2, -71),
+	//	Vector3(0, 1, 0),
+	//	Vector2(0.f, 1.f),
+	//
+	//	Vector3(40, -2, -71),
+	//	Vector3(0, 1, 0),
+	//	Vector2(1.f, 1.f),
+	//
+	//	Vector3(40, -2, -78),
+	//	Vector3(0, 1, 0),
+	//	Vector2(1.f, 0.f)
+	//};
+	//
+	//this->mEntities.push_back(wall);
+	//this->mEntityRenderer->loadObject(device, wall->getKey(), testData34, 6,  sizeof(DirectX::XMFLOAT4X4), WALLTEXTURE);
 }
 
 void EntityHandler::loadEntityModel(std::string modelName, wchar_t* textureName, Entity* entity, ID3D11Device* device)
@@ -1016,7 +1443,6 @@ void EntityHandler::loadEntityModel(std::string modelName, wchar_t* textureName,
 		textureName,
 		entity->getPosition()
 		);
-
 }
 
 void EntityHandler::updateAudio()
@@ -1133,38 +1559,159 @@ void EntityHandler::detectCloseTreasures()
 	}
 }
 
+void EntityHandler::createAhnk(ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot)
+{
+	Treasure* tres = new Treasure(500 + this->mTreasures.size(), 20.f, 100);
+
+	tres->setPosition(posRot.pos.x, posRot.pos.y -0.3f, posRot.pos.z);
+	tres->setRotation(DirectX::SimpleMath::Vector3(0, posRot.rot * M_PI, 0));
+
+	this->loadEntityModel("treasure1.fbx", L"ankhTexture.png", tres, device);
+	tres->updateTransformBuffer(context, this->mEntityRenderer->getGraphicsData());
+
+	this->mTreasures.push_back(tres);
+}
+
+void EntityHandler::createTreasureChest(ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot)
+{
+	Treasure* tres = new Treasure(500 + this->mTreasures.size(), 30.f, 300);
+
+	tres->setPosition(posRot.pos.x, posRot.pos.y, posRot.pos.z);
+	tres->setRotation(DirectX::SimpleMath::Vector3(0, posRot.rot * M_PI, 0));
+
+	this->loadEntityModel("treasure2.fbx", L"chestTexture.png", tres, device);
+	tres->updateTransformBuffer(context, this->mEntityRenderer->getGraphicsData());
+
+	this->mTreasures.push_back(tres);
+}
+
+void EntityHandler::createBoulderTrap(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot, float yOffset)
+{
+	Trap* trap = new Trap(1000 + this->mTraps.size(), posRot.pos.x, posRot.pos.y + yOffset, posRot.pos.z);
+	trap->setRotation(DirectX::SimpleMath::Vector3(0, posRot.rot * M_PI, 0));
+
+	this->loadEntityModel("rock.fbx", L"sandstone.jpg", trap, device);
+	trap->updateTransformBuffer(context, this->mEntityRenderer->getGraphicsData());
+
+	ai->addTrap("scripts/TrapStone.lua", trap);
+	this->mTraps.push_back(trap);
+}
+
+void EntityHandler::createGuillioutineTrap(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot)
+{
+	Trap* trap = new Trap(1000 + this->mTraps.size(), posRot.pos.x, posRot.pos.y + 5.f, posRot.pos.z);
+	trap->setRotation(DirectX::SimpleMath::Vector3(0, posRot.rot * M_PI, 0));
+
+	this->loadEntityModel("Guilliotine.fbx", L"", trap, device);
+	trap->updateTransformBuffer(context, this->mEntityRenderer->getGraphicsData());
+
+	ai->addTrap("scripts/TrapHanger.lua", trap);
+	this->mTraps.push_back(trap);
+}
+
 void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* context, CameraClass* camera)
 {
 	this->mPlayer = new Player(camera, device, context, this->mNrOfKeys++, this->mEntityRenderer->getGraphicsData());
 
 	this->mEnemy = new Enemy(ENEMY_KEY);
 
-	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
+	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(30, 0, 7));
 
-	this->loadEntityModel("ModelTest2.fbx", L"dargon_bump.jpg", this->mEnemy, device);
+	this->loadEntityModel("monster.fbx", L"dargon_bump.jpg", this->mEnemy, device);
 }
 
-void EntityHandler::initializeTreasure(ID3D11Device* device)
+void EntityHandler::setupTreasureAndTraps(AIHandler* ai, ID3D11Device* device)
 {
-	for (int i = 0; i < this->mTreasures.size(); i++)
+	using namespace DirectX::SimpleMath;
+
+	std::ifstream file(TREASUREMAPPATH, std::ios::binary);
+	if (file.is_open())
 	{
-		this->mEntityRenderer->getGraphicsData()->removeData(this->mTreasures[i]->getKey());
-		delete this->mTreasures[i];
+		BITMAPFILEHEADER* fHeader = nullptr;
+		BITMAPINFOHEADER* iHeader = nullptr;
+
+		UINT8* headers[2] = { nullptr };
+		UINT8* colors = nullptr;
+
+		headers[0] = new UINT8[sizeof(BITMAPFILEHEADER)];
+		headers[1] = new UINT8[sizeof(BITMAPINFOHEADER)];
+
+		file.read((char*)headers[0], sizeof(BITMAPFILEHEADER));
+		file.read((char*)headers[1], sizeof(BITMAPINFOHEADER));
+
+		fHeader = (BITMAPFILEHEADER*)headers[0];
+		iHeader = (BITMAPINFOHEADER*)headers[1];
+
+		if (fHeader->bfType == 0x4D42)
+		{
+			int height = iHeader->biHeight;
+			int width = iHeader->biWidth;
+
+			int size = width * height * 3;
+
+			colors = new UINT8[size];
+
+			for (size_t i = 0; i < size; i++)
+			{
+				colors[i] = 0;
+			}
+
+			file.seekg(fHeader->bfOffBits);
+
+			//Read all the bits into the color array
+			file.read((char*)colors, size);
+
+			file.close();
+
+			//Create vectors from the color array
+			int count = 0;
+			int pos = 0;
+			for (int j = 0; j < height; j++)
+			{
+				for (int i = 0; i < width; i++)
+				{
+					//TREASURE
+					if (
+						colors[count + 1] == 255 && 
+						colors[count + 2] == 0)
+					{
+						Vector2 pos = toPixelCoord(i, height - j, width, height);
+						PosRot temp;
+						temp.pos = Vector3(pos.x, -1.4f, pos.y);
+						temp.rot = colors[count] / 100.f;
+
+						this->mTreasurePositions.push_back(temp);
+					}
+
+					//TRAPS
+					else if (
+						colors[count + 1] == 0 &&
+						colors[count + 2] == 255)
+					{
+						Vector2 pos = toPixelCoord(i, height - j, width, height);
+						PosRot temp;
+						temp.pos = Vector3(pos.x, -1.6f, pos.y);
+						temp.rot = colors[count] / 100.f;
+
+						this->mTrapPositions.push_back(temp);
+					}
+
+					count += 3;
+				}
+			}
+
+			delete headers[0];
+			delete headers[1];
+			delete colors;
+		}
 	}
-
-	this->mTreasures.clear();
-
-	Treasure* tres = new Treasure(500, 20.f);
-
-	this->loadEntityModel("treasure1.fbx", L"sand.bmp", tres, device);
-
-	this->mTreasures.push_back(tres);
 }
 
 EntityHandler::EntityHandler()
 {
 	this->mEntityRenderer = new EntityRenderer(GAMESTATE::PLAY);
 	this->footstepsPlaying = false;
+	srand(time(NULL));
 }
 
 EntityHandler::~EntityHandler()
@@ -1194,7 +1741,7 @@ void EntityHandler::loadMap(ID3D11Device* device)
 	this->loadEntityModel("LevelDesignTest.fbx", WALLTEXTURE, this->mLevel, device);
 }
 
-void EntityHandler::setupEntities(ID3D11Device* device)
+void EntityHandler::setupEntities(AIHandler* ai, ID3D11Device* device)
 {
 	this->hardcodedMap(device);
 	//this->loadMap(device);
@@ -1205,7 +1752,7 @@ void EntityHandler::setupEntities(ID3D11Device* device)
 	this->loadEntityModel("flashLight.fbx", L"dargon_bump.jpg", mFlashlightModel, device);
 
 
-	this->initializeTreasure(device);
+	this->setupTreasureAndTraps(ai, device);
 }
 
 void EntityHandler::setupAudioManager(AudioManager* manager)
@@ -1219,14 +1766,76 @@ void EntityHandler::setupAudioManager(AudioManager* manager)
 	this->mAudioManager->playSfx(0);
 }
 
+void EntityHandler::setupDifficulty(settings::DifficultySettings & diff)
+{
+	this->mTrapPercentage = diff.trapPercentage;
+	this->mTreasurePercentage = diff.treasurePercentage;
+}
+
+void EntityHandler::initializeTreasureAndTraps(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context)
+{
+	using namespace DirectX::SimpleMath;
+
+	for (int i = 0; i < this->mTraps.size(); i++)
+	{
+		this->mEntityRenderer->getGraphicsData()->removeData(this->mTraps[i]->getKey());
+		delete this->mTraps[i];
+	}
+
+	for (int i = 0; i < this->mTreasures.size(); i++)
+	{
+		this->mEntityRenderer->getGraphicsData()->removeData(this->mTreasures[i]->getKey());
+		delete this->mTreasures[i];
+	}
+
+	ai->resetTraps();
+
+	this->mTraps.clear();
+	this->mTreasures.clear();
+
+	std::vector<PosRot> trapPosCopy = this->mTrapPositions;
+
+	for (int i = 0; i < floor(this->mTrapPositions.size() * this->mTrapPercentage); i++)
+	{
+		int trapPos = rand() % trapPosCopy.size();
+
+		PosRot temp = trapPosCopy[trapPos];
+		trapPosCopy.erase(trapPosCopy.begin() + trapPos);
+
+
+
+		if (rand() % 1000 < 500)
+			this->createBoulderTrap(ai, device, context, temp, 12.f);
+
+		else
+			this->createGuillioutineTrap(ai, device, context, temp);
+	}
+
+	//***************************TREASURE*******************************
+	std::vector<PosRot> treasurePosCopy = this->mTreasurePositions;
+
+	for (int i = 0; i < floor(this->mTreasurePositions.size() * this->mTreasurePercentage); i++)
+	{
+		int treasurePos = rand() % treasurePosCopy.size();
+
+		PosRot temp = treasurePosCopy[treasurePos];
+		treasurePosCopy.erase(treasurePosCopy.begin() + treasurePos);
+
+
+
+		if (rand() % 1000 < 500)
+			this->createAhnk(device, context, temp);
+
+		else
+			this->createTreasureChest(device, context, temp);
+	}
+
+}
+
 void EntityHandler::initialize()
 {
 	this->mPlayer->setPosition(DirectX::SimpleMath::Vector3(0, 0, 4));
-	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(0, 0, 5));
-	
-	for (auto& trap : mTraps) {
-		trap->resetTrap();
-	}
+	this->mEnemy->setPosition(DirectX::SimpleMath::Vector3(21, 0, 7));
 
 	this->mPlayer->initialize();
 }
