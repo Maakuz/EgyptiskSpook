@@ -33,6 +33,7 @@ private:
 
 	// Health var
 	bool damaged, dead;
+	float damageTimer;
 
 	void updateLightPosition();
 	void computeVelocity();
@@ -72,6 +73,7 @@ public:
 	void damage();
 	bool isDamaged() const;
 	bool isDead() const;
+	float getDamageTimer() const;
 	int getNrOfChests() const;
 	int getNrOfAhnks() const;
 };

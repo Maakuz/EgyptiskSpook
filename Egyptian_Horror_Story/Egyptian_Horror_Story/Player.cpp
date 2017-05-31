@@ -50,6 +50,7 @@ Player::~Player()
 void Player::initialize()
 {
 	this->dead = false;
+	this->damageTimer = false;
 	this->damaged = false;
 
 	// Treasure
@@ -93,6 +94,13 @@ void Player::updatePosition(float dt)
 	}
 
 	updateLightPosition();
+
+	//Not really position but time limitsss
+	if (this->damaged)
+		this->damageTimer += dt;
+
+	if (this->damageTimer > 5.f)
+		this->damaged = false;
 
 }
 
@@ -343,7 +351,10 @@ void Player::damage() {
 		dead = true;
 
 	else
+	{
 		damaged = true;
+		this->damageTimer = 0;
+	}
 }
 
 bool Player::isDamaged() const {
@@ -352,6 +363,11 @@ bool Player::isDamaged() const {
 
 bool Player::isDead() const {
 	return dead;
+}
+
+float Player::getDamageTimer() const
+{
+	return this->damageTimer;
 }
 
 int Player::getNrOfChests() const

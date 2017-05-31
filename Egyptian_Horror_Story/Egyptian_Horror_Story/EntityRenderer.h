@@ -5,13 +5,18 @@
 #include "GraphicsData.h"
 #include "SimpleMath.h"
 
+struct Effects
+{
+	float fadeout;
+	float bleedout;
+};
 
 class EntityRenderer : public Renderer
 {
 private:
 	GraphicsData mGraphicsData;
 	bool shadowPass;
-	float mFadeout;
+	Effects mEffects;
 
 public:
 	EntityRenderer(GAMESTATE identifier);
@@ -26,7 +31,9 @@ public:
 
 	//if a devicecontext is sent the fadeoutbuffer will be updated
 	void setFadeout(float value, ID3D11DeviceContext* context = nullptr);
+	void setBleedout(float value, ID3D11DeviceContext* context = nullptr);
 	float getFadeout() const;
+	float getBleedout() const;
 
 	GraphicsData* getGraphicsData();
 

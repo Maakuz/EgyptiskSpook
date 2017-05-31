@@ -79,9 +79,9 @@ void GUIRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shaders, G
 	shaders.setShaders(context, SHADERS, SHADERS, SHADERS);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
-	if (state == GAMESTATE::PLAY)
-		renderHud(context, shaders);
-	else if (state == GAMESTATE::MAIN_MENU)
+	//if (state == GAMESTATE::PLAY)
+		//renderHud(context, shaders);
+	if (state == GAMESTATE::MAIN_MENU)
 		renderMenu(context, shaders, 0, this->mMenuElements.size(), 0);
 	else if (state == GAMESTATE::GAME_OVER)
 	{

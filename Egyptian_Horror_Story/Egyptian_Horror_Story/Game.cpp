@@ -102,6 +102,13 @@ void Game::updateGame(float dt)
 	this->mCamera->updateRotation(this->mGraphics->getDeviceContext());
 	this->mSkyRenderer->updateTransform(this->mCamera->getPos(), this->mGraphics->getDeviceContext());
 
+	if (this->mEntityHandler->getPlayer()->isDamaged())
+	{
+		this->mEntityHandler->getEntityRenderer()->setBleedout(this->mEntityHandler->getPlayer()->getDamageTimer(), this->mGraphics->getDeviceContext());
+	}
+
+	else
+		this->mEntityHandler->getEntityRenderer()->setBleedout(0, this->mGraphics->getDeviceContext());
 
 
 	if (this->mEntityHandler->getPlayer()->isDead())

@@ -37,6 +37,7 @@ cbuffer brightnessBuffer : register(b3)
 cbuffer fadeoutBuffer : register(b4)
 {
     float fadeout;
+    float bleedout;
 }
 
 
@@ -107,6 +108,13 @@ float4 main(VS_OUT input) : SV_TARGET
     //*****************SHADOW MAPPING FINALLY END*******************
 
     lighting = saturate(diffuse + ambient) + specularity;
+
+
+    if (length(input.pos.xy) > 0.5f && bleedout)
+    {
+        lighting.r = saturate(lighting.r + 0.5 * (1.f - bleedout/5.f));
+    }
+
 
     //return shadowMap.Sample(sSampler, input.uv);
     return tex.Sample(sSampler, input.uv) * lighting * fadeout;

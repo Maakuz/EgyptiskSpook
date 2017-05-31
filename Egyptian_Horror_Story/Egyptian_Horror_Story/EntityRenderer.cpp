@@ -21,10 +21,11 @@ void EntityRenderer::setup(ID3D11Device* device, ShaderHandler& shaderHandler)
 
 	shaderHandler.setupPixelShader(device, ENTITY_SHADER, L"EntityPS.hlsl", "main");
 
-	this->mFadeout = 1;
+	this->mEffects.fadeout = 1;
+	this->mEffects.bleedout = 0;
 	D3D11_SUBRESOURCE_DATA data;
 	ZeroMemory(&data, sizeof(data));
-	data.pSysMem = &this->mFadeout;
+	data.pSysMem = &this->mEffects;
 
 	this->mGraphicsData.createConstantBuffer(700, 16, &data, device, true);
 }
@@ -119,7 +120,7 @@ void EntityRenderer::setShadowPass(bool value)
 
 void EntityRenderer::setFadeout(float value, ID3D11DeviceContext* context)
 {
-	this->mFadeout = value;
+	this->mEffects.fadeout = value;
 
 	if (context)
 	{
@@ -127,7 +128,23 @@ void EntityRenderer::setFadeout(float value, ID3D11DeviceContext* context)
 
 		context->Map(this->mGraphicsData.getConstantBuffer(700), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 
-		memcpy(data.pData, &this->mFadeout, 4);
+		memcpy(data.pData, &this->mEffects.fadeout, 4);
+
+		context->Unmap(this->mGraphicsData.getConstantBuffer(700), 0);
+	}
+}
+
+void EntityRenderer::setBleedout(float value, ID3D11DeviceContext* context)
+{
+	this->mEffects.bleedout = value;
+
+	if (context)
+	{
+		D3D11_MAPPED_SUBRESOURCE data;
+
+		context->Map(this->mGraphicsData.getConstantBuffer(700), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+
+		memcpy(data.pData, &this->mEffects, 8);
 
 		context->Unmap(this->mGraphicsData.getConstantBuffer(700), 0);
 	}
@@ -135,8 +152,14 @@ void EntityRenderer::setFadeout(float value, ID3D11DeviceContext* context)
 
 float EntityRenderer::getFadeout() const
 {
-	return this->mFadeout;
+	return this->mEffects.fadeout;
 }
+
+float EntityRenderer::getBleedout() const
+{
+	return this->mEffects.bleedout;
+}
+
 
 GraphicsData* EntityRenderer::getGraphicsData()
 {
