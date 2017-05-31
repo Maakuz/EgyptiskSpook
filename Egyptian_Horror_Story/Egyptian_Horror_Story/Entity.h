@@ -7,7 +7,7 @@
 class Entity
 {
 private:
-	DirectX::SimpleMath::Vector3 mPos, mRot, mOffsetRot, mScale; // RoT ftw
+	DirectX::SimpleMath::Vector3 mPos, mWorldPos, mRot, mOffsetRot, mScale; // RoT ftw
 	AABB* mAABB;
 	int mGraphicsKey;
 
@@ -25,6 +25,7 @@ public:
 	DirectX::SimpleMath::Vector3 getRotation() const;
 	virtual void setOffsetRotation(DirectX::SimpleMath::Vector3 offRot); // Used to transform before rotation
 	DirectX::SimpleMath::Vector3 getPosition() const;
+	DirectX::SimpleMath::Vector3 getWorldPosition() const;
 
 	//Sets the transform to the position of the object
 	void updateTransformBuffer(ID3D11DeviceContext* context, GraphicsData* gData);

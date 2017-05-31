@@ -1,7 +1,7 @@
 -- All traps should follow this template
 position = {x = 0, y = 0, z = 0}
-collision = true
 temp = 0
+triggered = true
 
 function onStart()
 	position.x, position.y, position.z = GetPosition() -- it is static, so lets just get it
@@ -9,7 +9,11 @@ function onStart()
 end
 
 function getHitboxSize()
-	return 2.5, 25, 2.5
+	return 0, 0, 0
+end
+
+function getLength() -- Sphere intersections
+	return 3.5
 end
 
 function getSize() 
@@ -26,15 +30,17 @@ function update(deltaTime)
 	local rot = math.sin(temp) * 1.4
 	rotX, rotY, rotZ = GetRotation()
 	RotateTrap(rotX, rotY, rot)
-	
-	collision = math.abs(rot) < 0.35
 end
 
 function onPlayerCollision()
-	if collision then
-		PushbackPlayer(position.x, position.y, position.z, 1)
-		DamagePlayer()
-	end
+	PushbackPlayer(position.x, position.y, position.z, 1)
+	DamagePlayer()
+end
+
+function onPlayerTrigger()
+end
+
+function onEnemyTrigger()
 end
 
 function onEnemyCollision()
