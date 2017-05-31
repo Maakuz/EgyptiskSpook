@@ -1845,7 +1845,7 @@ void EntityHandler::update(ID3D11DeviceContext* context, float dt)
 	DirectX::SimpleMath::Vector3 prevPos = this->mPlayer->getPosition();
 
 	this->mPlayer->updatePosition(dt);
-	//this->mEnemy->updatePosition(this->mEntityRenderer->getGraphicsData(), context, this->mPlayer->getPosition());
+	this->mEnemy->updatePosition(this->mEntityRenderer->getGraphicsData(), context, this->mPlayer->getPosition());
 
 	for (auto& trap : this->mTraps) {
 		trap->updateAABB();
@@ -1854,7 +1854,7 @@ void EntityHandler::update(ID3D11DeviceContext* context, float dt)
 
 	this->detectCloseTreasures();
 
-	//this->updateCollision();
+	this->updateCollision();
 
 	this->updateAudio();
 }
