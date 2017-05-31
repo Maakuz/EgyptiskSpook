@@ -1387,7 +1387,7 @@ void EntityHandler::update(ID3D11DeviceContext* context, float dt)
 
 	this->detectCloseTreasures();
 
-	//this->updateCollision();
+	this->updateCollision();
 
 	this->updateAudio();
 }

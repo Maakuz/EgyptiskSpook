@@ -5,6 +5,7 @@ SamplerState sSampler;
 struct VS_OUT
 {
     float4 pos : SV_POSITION;
+    float4 anotherPos : POS;
     float4 wPos : WORLDPOS;
     float3 normal : NORMAL;
     float2 uv : TEXCOORD;
@@ -110,9 +111,9 @@ float4 main(VS_OUT input) : SV_TARGET
     lighting = saturate(diffuse + ambient) + specularity;
 
 
-    if (length(input.pos.xy) > 0.5f && bleedout)
+    if (falloff > 0 && bleedout)
     {
-        lighting.r = saturate(lighting.r + 0.5 * (1.f - bleedout/5.f));
+        lighting.r = saturate(lighting.r + 0.5 * (1.f - bleedout/8.f) * falloff);
     }
 
 

@@ -99,7 +99,7 @@ void Player::updatePosition(float dt)
 	if (this->damaged)
 		this->damageTimer += dt;
 
-	if (this->damageTimer > 5.f)
+	if (this->damageTimer > 8.f)
 		this->damaged = false;
 
 }
