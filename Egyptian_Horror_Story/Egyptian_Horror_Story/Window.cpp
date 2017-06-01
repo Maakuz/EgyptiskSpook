@@ -52,14 +52,12 @@ void Window::startWindowLoop(GraphicsHandler* graphicsHandler, OptionsHandler* o
 
 		deltaTime = (float)(currentTime - prevTime) / SDL_GetPerformanceFrequency();
 		
-		//Säkert jätteprestandatagande
-		//SDL_Log("Time: %f\n", deltaTime);
 
 		//do stuff
 		this->mGame->update(deltaTime);
 		this->mGame->draw();
 
-		SDL_Delay(1); // 5 ms delay per frame
+		SDL_Delay(1);
 	}
 }
 
@@ -90,8 +88,10 @@ bool Window::handleKeyPress(SDL_KeyboardEvent const &key) {
 		case SDL_SCANCODE_ESCAPE:
 			return false;
 		case SDL_SCANCODE_RSHIFT:
-			//change from fullscreen and back
+			//change from window fullscreen and back
 			SDL_SetWindowFullscreen(mWindow, SDL_GetWindowFlags(mWindow) ^ SDL_WINDOW_FULLSCREEN);
+			break;
+
 		default:
 			this->mGame->handleKeyboardPress(key);
 	}

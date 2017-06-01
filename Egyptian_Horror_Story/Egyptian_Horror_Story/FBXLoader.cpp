@@ -69,125 +69,7 @@ FbxVector2 FBXLoader::getUV(int ctrlPointIndex, int polygonVertexIndex, FbxGeome
 	return uv;
 }
 
-void FBXLoader::getSkeleton(FbxNode* root)
-{
-	for (int i = 0; i < root->GetChildCount(); i++)
-	{
-		FbxNode* currentNode = root->GetChild(i);
-		this->recGetSkeleton(currentNode, 0, -1);
-	}
-}
-
-void FBXLoader::recGetSkeleton(FbxNode* node, int index, int parentIndex)
-{
-	if (node->GetNodeAttribute() && node->GetNodeAttribute()->GetAttributeType() && node->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eSkeleton)
-	{
-		Joint temp;
-		temp.parent = parentIndex;
-		temp.name = node->GetName();
-		this->mSkeleton.push_back(temp);
-	}
-
-	for (int i = 0; i < node->GetChildCount(); i++)
-	{
-		recGetSkeleton(node->GetChild(i), this->mSkeleton.size(), index);
-	}
-}
-
-void FBXLoader::setupJoints(FbxNode* root)
-{
-	FbxMesh* mesh;
-	for (int i = 0; i < root->GetChildCount(); i++)
-	{
-		FbxNode* childNode = root->GetChild(i);
-
-
-		if (childNode->GetNodeAttribute() != NULL)
-		{
-			FbxNodeAttribute::EType attributeType = childNode->GetNodeAttribute()->GetAttributeType();
-
-			if (attributeType == FbxNodeAttribute::eMesh)
-			{
-				FbxMesh* mesh = (FbxMesh*)childNode->GetNodeAttribute();
-
-				int nrOfDeformations = mesh->GetDeformerCount();
-
-				//Probably maybe not needed
-				const FbxVector4 lT = root->GetGeometricTranslation(FbxNode::eSourcePivot);
-				const FbxVector4 lR = root->GetGeometricRotation(FbxNode::eSourcePivot);
-				const FbxVector4 lS = root->GetGeometricScaling(FbxNode::eSourcePivot);
-
-				FbxAMatrix geometryTransform = FbxAMatrix(lT, lR, lS);
-				//end
-
-				for (int i = 0; i < nrOfDeformations; i++)
-				{
-					FbxSkin* skin = reinterpret_cast<FbxSkin*>(mesh->GetDeformer(i, FbxDeformer::eSkin));
-
-					if (skin)
-					{
-						int nrOfClusters = skin->GetClusterCount();
-						for (int j = 0; j < nrOfClusters; j++)
-						{
-							FbxCluster* cluster = skin->GetCluster(j);
-							int index = this->findJoint(cluster->GetLink()->GetName());
-
-							FbxAMatrix transform;
-							FbxAMatrix transformLink;
-
-							cluster->GetTransformMatrix(transform);
-							cluster->GetTransformLinkMatrix(transformLink);
-							this->mSkeleton[index].globalBindInverse = transformLink.Inverse() * transform * geometryTransform;
-							this->mSkeleton[index].node = cluster->GetLink();
-
-							int nrOfIndices = cluster->GetControlPointIndicesCount();
-
-							for (int i = 0; i < nrOfIndices; i++)
-							{
-								EntityStruct::weightAndIndex tempWeightIndex;
-								tempWeightIndex.index = index;
-								tempWeightIndex.weight = cluster->GetControlPointWeights()[i];
-								this->mVertexWeights[cluster->GetControlPointIndices()[i]].push_back(tempWeightIndex);
-							}
-
-							//MÅSTE HA -MD PAKETET PÅ 111MB FÖR DETTA OCH DET DYKER UPP
-							//MINNESLÄCKOR ÖVERALLT AAAH KILLMENAO
-
-							//FbxAnimStack* animStack = this->mScene->GetSrcObject<FbxAnimStack>(0);
-							//FbxString stackName = animStack->GetName();
-
-							//FbxTakeInfo* takeInfo = this->mScene->GetTakeInfo(stackName);
-							//FbxTime start = takeInfo->mLocalTimeSpan.GetStart();
-							//FbxTime stop = takeInfo->mLocalTimeSpan.GetStop();
-							//this->mAnimLength = stop.GetFrameCount(FbxTime::eFrames24) - start.GetFrameCount(FbxTime::eFrames24) + 1;// VARFÖR +1?
-						
-							//this->mSkeleton[index].
-						
-						}
-					}
-				}
-
-			}
-		}
-	}
-
-	
-}
-
-int FBXLoader::findJoint(std::string name)
-{
-	int res = -1;
-	
-	for (size_t i = 0; i < this->mSkeleton.size() && res == -1; i++)
-	{
-		if (this->mSkeleton[i].name == name)
-			res = i;
-	}
-
-	return res;
-}
-
-bool FBXLoader::loadVertices(std::vector<EntityStruct::VertexStruct>& vertexArray, FbxMesh* mesh)
+bool FBXLoader::loadVertices(std::vector<VertexStruct>& vertexArray, FbxMesh* mesh)
 {
 	FbxVector4* vertices = mesh->GetControlPoints();
 	FbxGeometryElementNormal* normalElem = mesh->GetElementNormal();
@@ -208,7 +90,7 @@ bool FBXLoader::loadVertices(std::vector<EntityStruct::VertexStruct>& vertexArra
 			{
 				int controlPointIndex = mesh->GetPolygonVertex(j, k);
 
-				EntityStruct::VertexStruct vertex;
+				VertexStruct vertex;
 				vertex.pos.x = (float)vertices[controlPointIndex].mData[0];
 				vertex.pos.y = (float)vertices[controlPointIndex].mData[1];
 				vertex.pos.z = (float)vertices[controlPointIndex].mData[2];
@@ -243,7 +125,7 @@ bool FBXLoader::loadVertices(std::vector<EntityStruct::VertexStruct>& vertexArra
 			{
 				int controlPointIndex = mesh->GetPolygonVertex(j, SPLIT_ARRAY[k]);
 
-				EntityStruct::VertexStruct vertice;
+				VertexStruct vertice;
 				vertice.pos.x = (float)vertices[controlPointIndex].mData[0];
 				vertice.pos.y = (float)vertices[controlPointIndex].mData[1];
 				vertice.pos.z = (float)vertices[controlPointIndex].mData[2];
@@ -282,7 +164,7 @@ FBXLoader::~FBXLoader()
 {
 }
 
-bool FBXLoader::loadMesh(std::vector<EntityStruct::VertexStruct>& verticeArray, std::string filename)
+bool FBXLoader::loadMesh(std::vector<VertexStruct>& verticeArray, std::string filename)
 {
 
 	if (this->mFbxManager == nullptr)

@@ -99,7 +99,7 @@ Enemy::UPDATE_RETURNS Enemy::update(float dt) {
 	if ((mWaypoint - getPosition()).Length() <= mSpeed * dt) {
 		setPosition(mWaypoint);
 		
-		if (mFollowPath && ++currentPathNode < mPath.size()) {
+		if (mFollowPath && ++currentPathNode < static_cast<int>(mPath.size())) {
 			setWaypoint(mPath[currentPathNode]);
 			return ON_PATH_WAYPOINT; // on path waypoint
 		}
@@ -204,7 +204,7 @@ int Enemy::setCurrentPathNodeLua(lua_State *state) {
 		(lua_touserdata(state, lua_upvalueindex(1)));
 
 	if (lua_isinteger(state, -1))
-		enemy->currentPathNode = lua_tointeger(state, -1);
+		enemy->currentPathNode = static_cast<int>(lua_tointeger(state, -1));
 
 	return 0;
 }

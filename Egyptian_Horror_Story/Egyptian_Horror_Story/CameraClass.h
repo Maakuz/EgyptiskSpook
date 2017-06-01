@@ -1,13 +1,9 @@
 #ifndef CAMERACLASS_H
 #define CAMERACLASS_H
 
-//För att kunna använda M_PI
-#define _USE_MATH_DEFINES
-
 #include "Direct3DHeader.h"
 #include "GraphicsData.h"
 
-#include <math.h>
 #include"Structs.h"
 
 

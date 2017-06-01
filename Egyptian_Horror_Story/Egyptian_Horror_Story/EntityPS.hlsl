@@ -5,7 +5,6 @@ SamplerState sSampler;
 struct VS_OUT
 {
     float4 pos : SV_POSITION;
-    float4 anotherPos : POS;
     float4 wPos : WORLDPOS;
     float3 normal : NORMAL;
     float2 uv : TEXCOORD;
@@ -25,7 +24,6 @@ cbuffer cameraPos : register(b1)
 
 cbuffer lightVP : register(b2)
 {
-    //OPTIMERING
     matrix lView;
     matrix lProjection;
 }
@@ -55,10 +53,8 @@ float4 main(VS_OUT input) : SV_TARGET
     float specularity = 0;
     float ambient = 0.1 + brightness;
 
-    //Kanske ska vara negativ
     float cosAngle = dot(normalize(lightToPos.xyz), normalize(lightDir.xyz));
 
-    //I think this is how the question thingys work
     float falloff = lightOn ? saturate((cosAngle - outerCone) / innerMinusOuter) : 0;
 
 
@@ -69,8 +65,6 @@ float4 main(VS_OUT input) : SV_TARGET
     {
         diffuse = lambert * falloff;
 
-
-        //Creds till Jakob Nyberg för formeln han stal!
         float3 posToCam = camPos.xyz - input.wPos.xyz;
         float3 H = normalize(posToCam - lightDir.xyz);
 
@@ -82,7 +76,7 @@ float4 main(VS_OUT input) : SV_TARGET
     diffuse *= attenuation;
     specularity *= attenuation;
 
-    //*******************SHADOW MAPPING FINALLY*********************
+    //*******************SHADOW MAPPING**************************
     if (falloff > 0)
     {
         float4 posFromLight = input.wPos;
@@ -106,7 +100,7 @@ float4 main(VS_OUT input) : SV_TARGET
         }
     }
 
-    //*****************SHADOW MAPPING FINALLY END*******************
+    //*****************SHADOW MAPPING END***********************
 
     lighting = saturate(diffuse + ambient) + specularity;
 
@@ -117,6 +111,5 @@ float4 main(VS_OUT input) : SV_TARGET
     }
 
 
-    //return shadowMap.Sample(sSampler, input.uv);
     return tex.Sample(sSampler, input.uv) * lighting * fadeout;
 }

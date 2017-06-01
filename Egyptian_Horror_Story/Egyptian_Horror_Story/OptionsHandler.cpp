@@ -77,7 +77,7 @@ OptionsHandler::~OptionsHandler()
 		OUT("View_Distance", this->mGraphics.farPlane);
 		OUT("Brightness", this->mGraphics.brightness);
 		OUT("Trap_Percentage", this->mDifficulty.trapPercentage);
-		OUT("Treasure_percentage", this->mDifficulty.treasurePercentage);
+		OUT("Treasure_Percentage", this->mDifficulty.treasurePercentage);
 
 		out << "\nThis file will be overwritten with the current in game values on exit!\n";
 
@@ -141,7 +141,6 @@ bool OptionsHandler::handleButtonPress(SDL_KeyboardEvent const& key, ID3D11Devic
 
 bool OptionsHandler::handleButtonRelease(SDL_KeyboardEvent const& key, ID3D11DeviceContext* context)
 {
-	
 	return true;
 }
 

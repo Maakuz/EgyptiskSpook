@@ -17,7 +17,7 @@ private:
 	std::map<int, ID3D11Buffer*> mCBuffers;
 	std::map<int, ID3D11ShaderResourceView*> mSrvs;
 
-	std::map<int, EntityStruct::VertexStruct*> mVertices;
+	std::map<int, VertexStruct*> mVertices;
 	std::map<int, int> mNrOfVertices;
 
 public:
@@ -30,7 +30,7 @@ public:
 
 	HRESULT createConstantBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device, bool isDynamic = false);
 	HRESULT createVertexBuffer(int key, UINT size, D3D11_SUBRESOURCE_DATA* data, ID3D11Device* device, bool isDynamic = false);
-	void createVerticeArray(int key, EntityStruct::VertexStruct* vertices, int nrOfVertices);
+	void createVerticeArray(int key, VertexStruct* vertices, int nrOfVertices);
 	void setNrOfVertices(int key, int nrOfVertices);
 
 	void removeData(int key);
@@ -38,13 +38,13 @@ public:
 	ID3D11Buffer* getVertexBuffer(int key);
 	ID3D11Buffer* getConstantBuffer(int key);
 	ID3D11ShaderResourceView* getSRV(int key);
-	EntityStruct::VertexStruct* getVertices(int key);
+	VertexStruct* getVertices(int key);
 	int getNrOfVertices(int key);
 
 	std::map<int, ID3D11Buffer*>* getVertexBufferMap();
 	std::map<int, ID3D11Buffer*>* getConstantBufferMap();
 	std::map<int, ID3D11ShaderResourceView*>* getSrvMap();
-	std::map<int, EntityStruct::VertexStruct*>* getVertexMap();
+	std::map<int, VertexStruct*>* getVertexMap();
 	std::map<int, int>* getNrOfVerticesMap();
 };
 

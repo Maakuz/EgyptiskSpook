@@ -93,7 +93,7 @@ GraphicsHandler::~GraphicsHandler() {
 	}
 
 	//this->mDebugDevice->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
-	this->mDebugDevice->Release();
+	//this->mDebugDevice->Release();
 }
 
 HRESULT GraphicsHandler::setupSwapChain() {
@@ -129,11 +129,11 @@ HRESULT GraphicsHandler::setupSwapChain() {
 			backBuffer->Release();
 
 			//Creating debug device
-			HRESULT hr = this->mDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast <void **>(&mDebugDevice));
+		/*	HRESULT hr = this->mDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast <void **>(&mDebugDevice));
 			if (FAILED(hr))
 			{
 				MessageBox(0, L"Debug device creation failed", L"error", MB_OK);
-			}
+			}*/
 		}
 	}
 
@@ -156,8 +156,8 @@ void GraphicsHandler::setupSamplerState() {
 		desc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
 	desc.Filter = D3D11_FILTER_ANISOTROPIC;
 	desc.MaxLOD = D3D11_FLOAT32_MAX;
-	desc.MaxAnisotropy = 16; //max
-	desc.ComparisonFunc = D3D11_COMPARISON_LESS; // idk
+	desc.MaxAnisotropy = 16;
+	desc.ComparisonFunc = D3D11_COMPARISON_LESS;
 
 	mDevice->CreateSamplerState(&desc, &mSamplerState);
 	mContext->PSSetSamplers(0, 1, &mSamplerState);
@@ -187,7 +187,7 @@ void GraphicsHandler::setupDSAndSRViews() {
 	descTex.SampleDesc.Count = 1;
 
 	if (FAILED(this->mDevice->CreateTexture2D(&descTex, NULL, &texture)))
-		exit(-2);//MSG(L"Shadow texture creation failed");
+		exit(-2);
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC descStenV;
 	ZeroMemory(&descStenV, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
@@ -195,7 +195,7 @@ void GraphicsHandler::setupDSAndSRViews() {
 	descStenV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 
 	if (FAILED(this->mDevice->CreateDepthStencilView(texture, &descStenV, &this->mDSVShadow)))
-		exit(-2);//MSG(L"Shadow stencil view creation failed");
+		exit(-2);
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	ZeroMemory(&srvDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
@@ -204,7 +204,7 @@ void GraphicsHandler::setupDSAndSRViews() {
 	srvDesc.Texture2D.MipLevels = descTex.MipLevels;
 
 	if (FAILED(this->mDevice->CreateShaderResourceView(texture, &srvDesc, &this->mSRVShadow)))
-		exit(-2); //MSG(L"Shadow srv view creation failed");
+		exit(-2);
 	texture->Release();
 }
 

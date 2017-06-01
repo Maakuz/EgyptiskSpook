@@ -49,7 +49,7 @@ private:
 	/* From image space to world space */
 	DirectX::SimpleMath::Vector2 toPixelCoord(int x, int z, int w, int h) const;
 
-	void addToMegarray(std::vector<EntityStruct::VertexStruct>& megarray, EntityStruct::VertexStruct arrayToadd[], int arratSize = 6);
+	void addToMegarray(std::vector<VertexStruct>& megarray, VertexStruct arrayToadd[], int arratSize = 6);
 
 	void hardcodedMap(ID3D11Device* device);
 	void loadEntityModel(std::string modelName, wchar_t* textureName, Entity* entity, ID3D11Device* device);
@@ -80,7 +80,7 @@ public:
 
 	void update(ID3D11DeviceContext* context, float dt);
 	/* From world space to image space */
-	DirectX::SimpleMath::Vector2 getPosition(int x, int y, int w, int h) const;
+	DirectX::SimpleMath::Vector2 getPosition(float x, float y) const;
 
 	EntityRenderer* getEntityRenderer();
 	Player* getPlayer();

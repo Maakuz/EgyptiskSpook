@@ -1,6 +1,5 @@
 #pragma once
 #include "ParticleRenderer.h"
-#include <math.h> 
 
 class ParticleEmitter {
 private:

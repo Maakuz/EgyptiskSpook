@@ -2,9 +2,9 @@
 #include <math.h> 
 #include "Emitters.h"
 #define SHADERS 30
-#define DIVIDE 2// should be divisible by 2
+#define DIVIDE 2 //should be divisible by 2
 #define START_SIZE 2048  // should be divisible by 2
-#define MAX_SIZE 10000
+#define MAX_SIZE 100000
 
 using namespace DirectX::SimpleMath;
 
@@ -44,12 +44,6 @@ void ParticleRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 
 	this->mPEs.push_back(new AreaStuff(ParticleType::AREAGREJS, this));
 	this->mPEs.push_back(new FallingEmitterHandler(this->mCamera, ParticleType::FALLING, this));
-	//for (int i = 0; i < START_SIZE; i++) {
-	//	((AreaStuff*)this->mPEs[0])->addRandomParticle();
-	//}
-	//this->currentSize = START_SIZE;x
-	//D3D11_SUBRESOURCE_DATA data;
-	//data.pSysMem = &this->mParticleVertices[0];
 	
 	for (int i = 0; i < this->mPEs.size(); i++) {
 		this->mPEs[i]->initialize(i, this->mGraphicsData, device);
@@ -150,6 +144,7 @@ UINT ParticleRenderer::getSize() const {
 	return this->mParticleVertices.size() * sizeof(ParticleVertex);
 }
 
+//This function does litteraly nothing
 void ParticleRenderer::addRandomParticle(bool timeIsRandom) {
 	//ParticleVertex particle;
 	//ParticleData partData;
@@ -167,20 +162,15 @@ void ParticleRenderer::addRandomParticle(bool timeIsRandom) {
 	//this->mParticleData.push_back(partData);
 }
 
-
 void ParticleRenderer::timeCheck(int s, int p) {
-	
-	
-
 	int mod = frame % DIVIDE;
 	int piece = mParticleVertices.size() / DIVIDE;
 	int start = piece * mod;
-	//for (int i = start; i < start + piece; i++) {
+
 	for(int i = 0; i < mParticleData.size(); i++ ) {
 		ParticleVertex *particle = &this->mParticleVertices[i];
 		ParticleData *data = &this->mParticleData[i];
 	
-		//data->timeLeft -= 0.01f * DIVIDE; //CHANGE LATER
 		if (data->kill) {
 			if (data->type == FALLING) {
 				data = data;

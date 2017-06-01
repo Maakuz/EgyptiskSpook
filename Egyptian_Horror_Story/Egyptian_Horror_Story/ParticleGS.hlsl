@@ -35,7 +35,7 @@ void main(
 
 	GS_OUT element = (GS_OUT) 0;
 	element.normal = normalize((camera - input[0].pos).xyz);
-	// somethign is wrong with the textures
+
 	pos = input[0].pos - up - right;
 	element.pos = mul(pos, vpMatrix);
 	element.uv = float2(0, 1);

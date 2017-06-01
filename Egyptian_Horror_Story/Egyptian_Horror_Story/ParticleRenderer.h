@@ -45,7 +45,6 @@ private:
 
 	//check life time, if <= 0, remove and add new one
 	void timeCheck(int start, int piece);
-	//static float getRandomNr();
 public:
 	ParticleRenderer(CameraClass *camera, GAMESTATE identifier);
 	ParticleRenderer(ParticleRenderer const &renderer) = delete;

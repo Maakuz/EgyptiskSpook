@@ -25,7 +25,7 @@ private:
 	CameraClass* mCamera;
 	EntityHandler* mEntityHandler;
 	AIHandler* mAIHandler;
-	GUIRenderer *mGuiRenderer; //temp
+	GUIRenderer *mGuiRenderer;
 	SkyRenderer *mSkyRenderer;
 	AudioManager mAudioManager;
 	OptionsHandler* mOptionHandler;
@@ -50,6 +50,7 @@ public:
 	bool handleKeyboardPress(SDL_KeyboardEvent const &key);
 	bool handleKeyboardRelease(SDL_KeyboardEvent const &key);
 	void handleMouseMotion(SDL_MouseMotionEvent const &motion);
+
 	// returns true/false if cursor should be locked / unlocked. not good code but works
 	bool handleMousePress(SDL_MouseButtonEvent const &button);
 	void updateLua();

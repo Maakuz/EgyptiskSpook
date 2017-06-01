@@ -7,7 +7,7 @@ Light::Light(Vector3 pos, Vector3 direction, ID3D11Device* device, ID3D11DeviceC
 	this->mLightInfo.dir = Vector4(direction.x, direction.y, direction.z, 1);
 	this->mLightInfo.flashlightOn = false;
 
-	this->mLightFOV = M_PI * 0.5f;
+	this->mLightFOV = static_cast<float>(M_PI) * 0.5f;
 
 	this->mMatrices.view = DirectX::XMMatrixLookToLH(pos, direction, Vector3(0, 1, 0));
 
@@ -67,14 +67,13 @@ void Light::update(Vector3 pos, Vector3 forward, Vector3 right, Vector3 up)
 	this->mContext->Unmap(this->mGData->getConstantBuffer(this->mMatrixBufferKey), 0);
 
 
-	//Transform matrix //THE 1.5 TIMES OFFSET IS A TEMPORARY FIX AND MAY GET TWEAKED
 	Matrix transform = Matrix::CreateTranslation(pos + forward + (right * 0.7f) + (up * -1.f));
 	transform = transform.Transpose();
 
 	Vector3 d = forward;
 	d.Normalize();
 
-	float pitch = asin(-d.y) + (M_PI / 2);
+	float pitch = asin(-d.y) + (static_cast<float>(M_PI) / 2.f);
 
 	float yaw = atan2(d.x, d.z);
 

@@ -23,16 +23,6 @@ class OBB {
 private:
 	void UpdateMatrix();
 public:
-	//DirectX::SimpleMath::Vector3 mPoint;
-	//DirectX::SimpleMath::Vector3 mLengthU;
-	//DirectX::SimpleMath::Vector3 mLengthV;
-	//DirectX::SimpleMath::Vector3 mLengthW;
-	//DirectX::SimpleMath::Vector3 mU;
-	//DirectX::SimpleMath::Vector3 mV;
-	//DirectX::SimpleMath::Vector3 mW;
-
-	//TA BORT OVAN
-
 	DirectX::SimpleMath::Vector3 mPoint;
 	DirectX::SimpleMath::Vector3 mDir;
 	DirectX::SimpleMath::Vector3 mUp;

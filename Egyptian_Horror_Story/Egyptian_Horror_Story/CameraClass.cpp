@@ -21,7 +21,6 @@ CameraClass::CameraClass(ID3D11Device* device, GraphicsData* gData, settings::Gr
 	this->mForward = DirectX::SimpleMath::Vector3(0, 0, 1);
 	this->mUp = DirectX::SimpleMath::Vector3(0, 1, 0);
 
-	//Might be inverted, think not
 	this->mRight = DirectX::XMVector3Cross(this->mUp, this->mForward);
 
 	DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(this->mPos, this->mForward, this->mUp);
@@ -77,6 +76,7 @@ void CameraClass::update(ID3D11DeviceContext* context)
 
 		D3D11_MAPPED_SUBRESOURCE data;
 		ZeroMemory(&data, sizeof(D3D11_MAPPED_SUBRESOURCE));
+
 		//Update cBuffer
 		context->Map(this->mVPBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 

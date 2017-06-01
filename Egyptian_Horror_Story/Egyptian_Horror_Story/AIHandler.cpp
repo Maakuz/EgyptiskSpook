@@ -217,7 +217,7 @@ void AIHandler::updateEnemy(float dt) {
 
 void AIHandler::updateTraps(float dt) {
 	Vector3 pPos = mPlayer->getPosition();
-	Vector2 pixelPos = navMesh.toPixelCoord(pPos.x, pPos.z);
+	Vector2 pixelPos = navMesh.toPixelCoord(static_cast<int>(pPos.x), static_cast<int>(pPos.z));
 
 	for (TrapScript &script : mTraps) {
 		lua_State *state = script.state;

@@ -21,7 +21,6 @@ private:
 	int currentPathNode;
 	std::vector<DirectX::SimpleMath::Vector2> mPath;
 public:
-	// temp ? 
 	Capsule* mCapsule;
 
 	Enemy(int graphicsKey);

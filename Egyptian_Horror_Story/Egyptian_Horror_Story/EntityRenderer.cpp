@@ -32,7 +32,7 @@ void EntityRenderer::setup(ID3D11Device* device, ShaderHandler& shaderHandler)
 
 void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderHandler, GAMESTATE const &state)
 {
-	UINT stride = sizeof(EntityStruct::VertexStruct), offset = 0;
+	UINT stride = sizeof(VertexStruct), offset = 0;
 
 	shaderHandler.setShaders(context, ENTITY_SHADER, ENTITY_SHADER, ShaderHandler::UNBIND_SHADER);
 
@@ -85,7 +85,7 @@ void EntityRenderer::render(ID3D11DeviceContext* context, ShaderHandler& shaderH
 	}
 }
 
-bool EntityRenderer::loadObject(ID3D11Device *device, int key, EntityStruct::VertexStruct* vertices, int nrOfVertices, UINT cbufferSize, wchar_t* texturePath, DirectX::SimpleMath::Vector3 translation, bool isDynamic)
+bool EntityRenderer::loadObject(ID3D11Device *device, int key, VertexStruct* vertices, int nrOfVertices, UINT cbufferSize, wchar_t* texturePath, DirectX::SimpleMath::Vector3 translation, bool isDynamic)
 {
 	D3D11_SUBRESOURCE_DATA data;
 	ZeroMemory(&data, sizeof(D3D11_SUBRESOURCE_DATA));
@@ -94,7 +94,7 @@ bool EntityRenderer::loadObject(ID3D11Device *device, int key, EntityStruct::Ver
 	this->mGraphicsData.loadTexture(key, texturePath, device);
 	this->mGraphicsData.setNrOfVertices(key, nrOfVertices);
 
-	if (FAILED(this->mGraphicsData.createVertexBuffer(key, nrOfVertices * sizeof(EntityStruct::VertexStruct), &data, device)))
+	if (FAILED(this->mGraphicsData.createVertexBuffer(key, nrOfVertices * sizeof(VertexStruct), &data, device)))
 	{
 		MessageBox(0, L"Entity vertex buffer creation failed", L"error", MB_OK);
 		return false;
@@ -128,7 +128,7 @@ void EntityRenderer::setFadeout(float value, ID3D11DeviceContext* context)
 
 		context->Map(this->mGraphicsData.getConstantBuffer(700), 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 
-		memcpy(data.pData, &this->mEffects.fadeout, 4);
+		memcpy(data.pData, &this->mEffects.fadeout, 8);
 
 		context->Unmap(this->mGraphicsData.getConstantBuffer(700), 0);
 	}
@@ -159,7 +159,6 @@ float EntityRenderer::getBleedout() const
 {
 	return this->mEffects.bleedout;
 }
-
 
 GraphicsData* EntityRenderer::getGraphicsData()
 {

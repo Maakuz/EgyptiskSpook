@@ -53,7 +53,6 @@ void Game::setupEntityHandler()
 		this->mGraphics->getDeviceContext(),
 		this->mCamera);
 
-	//this is neccessary for the traps
 	this->mAIHandler = new AIHandler(mEntityHandler->getEnemy(), mEntityHandler->getPlayer());
 	
 	this->mEntityHandler->setupEntities(this->mAIHandler, this->mGraphics->getDevice());
@@ -156,7 +155,7 @@ bool Game::handleKeyboardPress(SDL_KeyboardEvent const& key)
 	case SDL_SCANCODE_R:
 	{
 		// CHANGE THIS IF IMG SIZE IS CHANGED
-		DirectX::SimpleMath::Vector2 img = this->mEntityHandler->getPosition(pos.x, pos.z, 56, 86);
+		DirectX::SimpleMath::Vector2 img = this->mEntityHandler->getPosition(pos.x, pos.z);
 		SDL_Log("Px = %f, Py = %f", img.x, img.y); // TESTING METHOD
 		break;
 	}
@@ -216,7 +215,7 @@ GAMESTATE Game::StateHandler::getState() {
 
 void Game::StateHandler::setState(GAMESTATE state) {
 
-	//TODO: IF THERE EVER IS A STATE THAT DOES NOT RESTART THIS NEEDS TO BE CHANGED
+	//IF THERE EVER IS A STATE THAT DOES NOT RESTART THIS NEEDS TO BE CHANGED
 	if (state == GAMESTATE::PLAY && this->state != GAMESTATE::PLAY)
 		this->needsInitialize = true;
 

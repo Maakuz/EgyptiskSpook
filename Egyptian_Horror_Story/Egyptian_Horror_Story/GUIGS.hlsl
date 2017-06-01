@@ -17,16 +17,20 @@ void main(
 {
 	float w = input[0].dimensions[0], h = input[0].dimensions[1];
 	GS_OUT element = (GS_OUT)0;
+
 	element.pos = input[0].pos;
 	element.uv = float2(0, 1);
 	output.Append(element);
+
 	element.pos.y += h;
 	element.uv = float2(0, 0);
 	output.Append(element);
+
 	element.pos.y -= h;
 	element.pos.x += w;
 	element.uv = float2(1, 1);
 	output.Append(element);
+
 	element.pos.y += h;
 	element.uv = float2(1, 0);
 	output.Append(element);

@@ -83,18 +83,21 @@ void ShaderHandler::setVertexShader(ID3D11DeviceContext *context, int key) {
 		mVertexShaders[key], nullptr, 0);
 }
 
+// key = -1 unbinds the shader
 void ShaderHandler::setPixelShader(ID3D11DeviceContext *context, int key) {
 	context->PSSetShader(key == UNBIND_SHADER ? nullptr :
 		mPixelShaders[key], nullptr, 0);
 }
 
+// key = -1 unbinds the shader
 void ShaderHandler::setGeometryShader(ID3D11DeviceContext *context, int key) {
 	context->GSSetShader(key == UNBIND_SHADER ? nullptr :
 		mGeometryShaders[key], nullptr, 0);
 }
 
+// key = -1 unbinds the shader
 void ShaderHandler::setShaders(ID3D11DeviceContext *context, int vsKey, int psKey, int gsKey) {
-	// This error message is just a warning, if u unbind the vertex shader things will not work out very well if another vertex shader is not bound
+	// This error message is just a warning, if you unbind the vertex shader things will not work out very well if another vertex shader is not bound
 	if (mVertexShaders.find(vsKey) == mVertexShaders.end())
 		MessageBox(0, L"Ye, that is (probably) not going to work (No working vertex shader key)", L"Warning!", 0);
 	context->VSSetShader(vsKey == UNBIND_SHADER ? nullptr :

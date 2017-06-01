@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #define SAND_SPEED 20.f
-#define LIFE_TIME 10.f
+#define LIFE_TIME 30.f
 
 inline float getRandomNr() {
 	return rand() / (RAND_MAX + 1.f);
@@ -23,8 +23,7 @@ void AreaStuff::handleTimePerParticle(ParticleVertex* pv, ParticleData* pd, int 
 }
 
 void AreaStuff::update(ParticleVertex * pv, ParticleData * pd) {
-	// TEMP It was 1000, 10 was faster particles
-	pv->position += pd->direction / 40.f;
+	pv->position += pd->direction / 120.f;
 	float temp = 0;
 
 	if (rand() % 1000 == 0) {
@@ -41,8 +40,7 @@ void AreaStuff::particleRemoved() {
 void AreaStuff::addRandomParticle() {
 	ParticleVertex particle;
 	ParticleData partData;
-	//TEMP
-	//particle.position = Vector3(getRandomNr() * 30 - 15, getRandomNr() * 20 - 5, getRandomNr() * 30 - 15);
+
 	particle.position = DirectX::SimpleMath::Vector3(getRandomNr() * 20 - 10, getRandomNr() * 15 - 3, getRandomNr() * 20 - 10);
 	particle.position += this->pr->getCamera()->getPos();
 	particle.dimensions = DirectX::SimpleMath::Vector2(0.01f, 0.01f);
@@ -101,7 +99,7 @@ void FallingEmitterHandler::updatePerFrame() {
 
 	for (int i = 0; i < this->nrOfEmitters; i++) {
 
-		if (this->emitters[i]->getLifeTime() <= 0/*(this->emitters[i]->getPos() - this->c->getPos()).LengthSquared() > 50*/) {
+		if (this->emitters[i]->getLifeTime() <= 0) {
 			delete this->emitters[i];
 			this->createEmitter(i);
 		}
@@ -150,7 +148,6 @@ bool FallingEmitterHandler::FallingEmitter::update(FallingEmitterHandler * feh)
 		pv.position += offset;
 		ParticleData pd;
 		pd.direction = DirectX::SimpleMath::Vector3(0, -1.f, 0);
-		//pd.timeLeft = getRandomNr() * 3.5f;
 		pd.timeLeft = 3.f;
 		pd.kill = false;
 		pd.type = ParticleType::FALLING;

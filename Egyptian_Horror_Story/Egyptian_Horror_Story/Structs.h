@@ -3,30 +3,12 @@
 
 #include "SimpleMath.h"
 
-namespace EntityStruct
+struct VertexStruct
 {
-	struct VertexStruct
-	{
-		DirectX::SimpleMath::Vector3 pos;
-		DirectX::SimpleMath::Vector3 normal;
-		DirectX::SimpleMath::Vector2 uv;
-	};
-
-	struct weightAndIndex
-	{
-		int index;
-		float weight;
-	};
-}
-
-namespace animation
-{
-	struct Bone
-	{
-		DirectX::SimpleMath::Matrix relativeForm, absoluteForm, invBindPose;
-		int parent;
-	};
-}
+	DirectX::SimpleMath::Vector3 pos;
+	DirectX::SimpleMath::Vector3 normal;
+	DirectX::SimpleMath::Vector2 uv;
+};
 
 namespace lightStructs {
 	struct VP

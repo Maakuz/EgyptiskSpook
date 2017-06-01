@@ -15,7 +15,7 @@ class AIHandler {
 		struct TrapScript {
 			Trap* trap;
 			lua_State *state;
-			char const *scriptPath; //for easy debugging
+			char const *scriptPath;
 		};
 
 		Enemy *mEnemy; //pointer to enemy that will use the AI

@@ -5,10 +5,6 @@
 #include "Structs.h"
 #include "GraphicsData.h"
 
-#define _USE_MATH_DEFINES
-
-#include <math.h>
-
 
 class Light
 {

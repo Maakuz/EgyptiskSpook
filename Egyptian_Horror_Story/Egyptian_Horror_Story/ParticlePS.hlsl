@@ -24,7 +24,6 @@ cbuffer cameraPos : register(b1)
 
 cbuffer lightVP : register(b2)
 {
-    //OPTIMERING
     matrix lView;
     matrix lProjection;
 }
@@ -93,6 +92,5 @@ float4 main(VS_OUT input) : SV_TARGET
 
     lighting = saturate(diffuse + ambient);
 
-    //return shadowMap.Sample(sSampler, input.uv);
     return tex.Sample(sSampler, input.uv) * lighting * fadeout;
 }

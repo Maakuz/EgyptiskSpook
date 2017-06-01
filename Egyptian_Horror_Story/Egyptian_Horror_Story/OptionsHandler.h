@@ -6,9 +6,6 @@
 #include <fstream>
 #include <string>
 #include "Structs.h"
-//För att kunna använda M_PI
-#define _USE_MATH_DEFINES
-#include <math.h>
 
 
 #define DEFAULT_WIDTH 1280

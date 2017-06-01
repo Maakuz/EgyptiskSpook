@@ -10,7 +10,9 @@ struct VS_OUT {
 
 VS_OUT main(VS_IN input) {
 	VS_OUT output = (VS_OUT) 0;
+
 	output.pos = float4(input.pos, 1);
 	output.dimensions = input.dimensions;
+
 	return output;
 }

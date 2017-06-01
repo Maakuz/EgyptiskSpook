@@ -110,13 +110,13 @@ SDL_Color NavMesh::getPixelAtCoord(int x, int z) const {
 }
 
 Vector2 NavMesh::toPixelCoord(int x, int z) const {
-	int pX = floor(x * SCALE_X) + OFFSET_X;
-	int pY = (floor(z * SCALE_Z) + OFFSET_Z);
+	int pX = static_cast<int>(floor(x * SCALE_X) + OFFSET_X);
+	int pY = static_cast<int>(floor(z * SCALE_Z) + OFFSET_Z);
 
 	pX %= getWidth();
 	pY %= getHeight();
 
-	return Vector2(abs(pX), abs(pY));
+	return Vector2(static_cast<float>(abs(pX)), static_cast<float>(abs(pY)));
 }
 
 bool NavMesh::canSeeFrom(int fromX, int fromZ, int toX, int toZ) const {
@@ -177,8 +177,8 @@ void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
 			for (int y = -1; y < 2; y++) {
 				if ((x != 0 || y != 0)) {
 					node = Vector2(
-						static_cast<int>(abs(x + parent.node.x)) % getWidth(),
-						static_cast<int>(abs(y + parent.node.y)) % getHeight() // so node is in bounds
+						static_cast<float>(static_cast<int>(abs(x + parent.node.x)) % getWidth()),
+						static_cast<float>(static_cast<int>(abs(y + parent.node.y)) % getHeight()) // so node is in bounds
 					);
 
 					float cost = heuristic(node, toPos) + parent.F; //calculate cost of this node
@@ -246,7 +246,7 @@ void NavMesh::savePathTest(std::vector<Vector2> &path) {
 	unsigned int i = 0;
 
 	for (Vector2 pos : path) {
-		pos = toPixelCoord(pos.x, pos.y);
+		pos = toPixelCoord(static_cast<int>(pos.x), static_cast<int>(pos.y));
 		i = static_cast<unsigned int> (pos.x + pos.y * mCopy->w);
 
 		if (counter == 0) pixels[i] = (255 << 16);
@@ -275,7 +275,7 @@ int NavMesh::contains(std::unordered_map<int, Node> const &list,
 }
 
 inline bool NavMesh::isWalkable(Vector2 const &node) const {
-	SDL_Color col = getPixel(node.x, node.y);
+	SDL_Color col = getPixel(static_cast<int>(node.x), static_cast<int>(node.y));
 	return col.r != BLOCKADE;
 }
 
@@ -287,7 +287,7 @@ Vector2 NavMesh::getPosition(Vector2 pixel) const {
 }
 
 float NavMesh::heuristic(Vector2 node, Vector2 toPos) const {
-	SDL_Color col = getPixel(node.x, node.y);
+	SDL_Color col = getPixel(static_cast<int>(node.x), static_cast<int>(node.y));
 	Vector2 to = toPos - node;
 	return to.x * to.x + to.y * to.y - col.r / 16;
 }
@@ -309,7 +309,7 @@ void NavMesh::openListInsert(Vector2 &node, std::vector<Node> &openList,
 }
 
 int NavMesh::hashMethod(Vector2 const &pos, int w) const {
-	return pos.x + pos.y * w;
+	return static_cast<int>(pos.x + pos.y * w);
 }
 
 void* NavMesh::getNavigationTexture() const {

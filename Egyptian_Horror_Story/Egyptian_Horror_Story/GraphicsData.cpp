@@ -92,10 +92,10 @@ HRESULT GraphicsData::createVertexBuffer(int key, UINT size, D3D11_SUBRESOURCE_D
 	return hr;
 }
 
-void GraphicsData::createVerticeArray(int key, EntityStruct::VertexStruct* vertices, int nrOfVertices)
+void GraphicsData::createVerticeArray(int key, VertexStruct* vertices, int nrOfVertices)
 {
 	this->mNrOfVertices[key] = nrOfVertices;
-	this->mVertices[key] = new EntityStruct::VertexStruct[nrOfVertices];
+	this->mVertices[key] = new VertexStruct[nrOfVertices];
 
 	for (int i = 0; i < nrOfVertices; i++)
 	{
@@ -150,7 +150,7 @@ ID3D11ShaderResourceView* GraphicsData::getSRV(int key)
 	return this->mSrvs.at(key);
 }
 
-EntityStruct::VertexStruct* GraphicsData::getVertices(int key)
+VertexStruct* GraphicsData::getVertices(int key)
 {
 	return this->mVertices.at(key);
 }
@@ -175,7 +175,7 @@ std::map<int, ID3D11ShaderResourceView*>* GraphicsData::getSrvMap()
 	return &this->mSrvs;
 }
 
-std::map<int, EntityStruct::VertexStruct*>* GraphicsData::getVertexMap()
+std::map<int, VertexStruct*>* GraphicsData::getVertexMap()
 {
 	return &this->mVertices;
 }

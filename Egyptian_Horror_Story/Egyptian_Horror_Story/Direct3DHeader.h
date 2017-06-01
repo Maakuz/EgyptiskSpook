@@ -6,4 +6,8 @@
 #pragma comment (lib, "d3d11.lib")
 #pragma comment (lib, "d3dcompiler.lib")
 
+
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 #endif

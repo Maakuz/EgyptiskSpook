@@ -25,7 +25,6 @@ public:
 	HRESULT setupGeometryShader(ID3D11Device *dev, int key,
 		wchar_t *name, char *entryPoint);
 
-	// key = UNBIND_SHADER unbinds the shader
 	void setVertexShader(ID3D11DeviceContext *context, int key);
 	void setPixelShader(ID3D11DeviceContext *context, int key);
 	void setGeometryShader(ID3D11DeviceContext *context, int key);

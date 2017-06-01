@@ -65,11 +65,11 @@ void GUIRenderer::setup(ID3D11Device *device, ShaderHandler &shaders) {
 }
 
 void GUIRenderer::loadButtons(MenuHandler &menuHandler) {
-	for (int i = 0; i < this->mMenuElements.size(); i++)
+	for (size_t i = 0; i < this->mMenuElements.size(); i++)
 		menuHandler.addButton(i,
 			Vector2(this->mMenuElements[i].pos), this->mMenuElements[i].dimensions);//i is pretty hardcoded, change later, change elements to use vector2
 
-	for (int i = 0; i < this->mGameOverElements.size(); i++)
+	for (size_t i = 0; i < this->mGameOverElements.size(); i++)
 		menuHandler.addButton(i + this->mMenuElements.size(),
 			Vector2(this->mGameOverElements[i].pos), this->mGameOverElements[i].dimensions);
 }
@@ -98,7 +98,7 @@ void GUIRenderer::renderMenu(ID3D11DeviceContext *context, ShaderHandler &shader
 
 	context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
 
-	// Loop through and draw buttons, optimize plz
+	// Loop through and draw buttons
 	for (int i = 0; i < nrOfElements; i++) {
 		srv = this->mGraphicsData->getSRV(i + srvOffset);
 		context->PSSetShaderResources(0, 1, &srv);
@@ -113,7 +113,7 @@ void GUIRenderer::renderTreasure(ID3D11DeviceContext *context, ShaderHandler &sh
 
 	context->IASetVertexBuffers(0, 1, &buffer, &stride, &offset);
 
-	// Loop through and draw buttons, optimize plz
+	// Loop through and draw buttons
 	srv = this->mGraphicsData->getSRV(CHESTTEXTURE);
 	context->PSSetShaderResources(0, 1, &srv);
 	for (int i = 0; i < ahnkStartIndex; i++) {
@@ -122,7 +122,7 @@ void GUIRenderer::renderTreasure(ID3D11DeviceContext *context, ShaderHandler &sh
 
 	srv = this->mGraphicsData->getSRV(AHNKTEXTURE);
 	context->PSSetShaderResources(0, 1, &srv);
-	for (int i = ahnkStartIndex; i < mTreasures.size(); i++) {
+	for (size_t i = ahnkStartIndex; i < mTreasures.size(); i++) {
 		context->Draw(1, i);
 	}
 }
@@ -139,7 +139,7 @@ void GUIRenderer::renderHud(ID3D11DeviceContext *context, ShaderHandler &shaders
 	else
 		context->PSSetShaderResources(0, 1, &srv);
 
-	context->Draw(1, 0); // not used right now
+	context->Draw(1, 0);
 }
 
 void GUIRenderer::clearTreasures() {
@@ -157,14 +157,14 @@ void GUIRenderer::createTreasures(ID3D11Device* device, int chests, int ahnks)
 
 	for (int i = 0; i < chests; i++)
 	{
-		this->mTreasures.push_back(GUI_ELEMENT{Vector3(-0.8f + i * 0.35, 0.7f, 0), dimension });
+		this->mTreasures.push_back(GUI_ELEMENT{Vector3(-0.8f + i * 0.35f, 0.7f, 0), dimension });
 	}
 
 	ahnkStartIndex = mTreasures.size();
 
 	for (int i = 0; i < ahnks; i++)
 	{
-		this->mTreasures.push_back(GUI_ELEMENT{Vector3(-0.8f + i * 0.35, 0.4f, 0), dimension });
+		this->mTreasures.push_back(GUI_ELEMENT{Vector3(-0.8f + i * 0.35f, 0.4f, 0), dimension });
 	}
 
 	if (mTreasures.size() > 0) {
@@ -178,34 +178,4 @@ void GUIRenderer::createTreasures(ID3D11Device* device, int chests, int ahnks)
 void GUIRenderer::setNavigationTest(ID3D11Device *device, void* pixels, int w, int h) {
 	mGraphicsData->loadTexture(HUDSTARTINDEX, L"NAVIGATION_TEST.bmp", device);
 	navTest = mGraphicsData->getSRV(HUDSTARTINDEX);
-
-	/*
-	ID3D11Texture2D *tex;
-	D3D11_TEXTURE2D_DESC desc;
-	ZeroMemory(&desc, sizeof(desc));
-
-	desc.Format = DXGI_FORMAT_R8G8B8A8_SNORM;
-	desc.Width = w;
-	desc.Height = h;
-	desc.ArraySize = desc.MipLevels = 1;
-	desc.Usage = D3D11_USAGE_IMMUTABLE;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	desc.SampleDesc.Count = 1;
-
-	D3D11_SUBRESOURCE_DATA data;
-	ZeroMemory(&data, sizeof(data));
-	data.pSysMem = pixels;
-	data.SysMemPitch = w * 4;
-
-	HRESULT hr = device->CreateTexture2D(&desc, &data, &tex);
-
-	D3D11_SHADER_RESOURCE_VIEW_DESC srDesc;
-	ZeroMemory(&srDesc, sizeof(srDesc));
-	srDesc.Format = desc.Format;
-	srDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	srDesc.Texture2D.MipLevels = 1;
-	
-	hr = device->CreateShaderResourceView(tex, &srDesc, &navTest);
-	tex->Release();
-	*/
 }

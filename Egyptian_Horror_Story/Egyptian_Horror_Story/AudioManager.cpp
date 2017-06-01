@@ -9,9 +9,9 @@ AudioManager::AudioManager()
 
 	DirectX::AUDIO_ENGINE_FLAGS eflags = DirectX::AudioEngine_EnvironmentalReverb | DirectX::AudioEngine_ReverbUseFilters;
 
-//#ifdef _DEBUG
-	//eflags = eflags | DirectX::AudioEngine_Debug;
-//#endif
+#ifdef _DEBUG
+	eflags = eflags | DirectX::AudioEngine_Debug;
+#endif
 
 	this->mAudioEngine = std::make_unique<DirectX::AudioEngine>(eflags);
 	this->mAudioEngine->SetReverb(DirectX::Reverb_Alley);
@@ -120,7 +120,7 @@ int AudioManager::playSfx(lua_State* state)
 	AudioManager* manager = static_cast<AudioManager*>(lua_touserdata(state, lua_upvalueindex(1)));
 
 	if (lua_isnumber(state, -1))
-		manager->playSfx(lua_tonumber(state, -1));
+		manager->playSfx(static_cast<int>(lua_tonumber(state, -1)));
 
 	return 0;
 }
