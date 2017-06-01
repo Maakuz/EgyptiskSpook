@@ -51,7 +51,7 @@ end
 
 function onEnemyCollision()
 	if fallenDown then
-		PushbackEnemy(position.x, position.y, position.z, getLength() * 0.5)
+	--	PushbackEnemy(position.x, position.y, position.z, getLength() * 0.5)
 	else
 		falling = true
 	end

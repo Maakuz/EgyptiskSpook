@@ -152,19 +152,19 @@ void GUIRenderer::clearTreasures() {
 
 void GUIRenderer::createTreasures(ID3D11Device* device, int chests, int ahnks)
 {
-	Vector2 dimension = { 0.2f, 0.2f };
+	Vector2 dimension = { 0.15f, 0.15f };
 	// Add new GUI elements here
 
 	for (int i = 0; i < chests; i++)
 	{
-		this->mTreasures.push_back(GUI_ELEMENT{Vector3(-0.8f + i * 0.35f, 0.7f, 0), dimension });
+		this->mTreasures.push_back(GUI_ELEMENT{Vector3(-0.9f + i * 0.2f, 0.6f, 0), dimension });
 	}
 
 	ahnkStartIndex = mTreasures.size();
 
 	for (int i = 0; i < ahnks; i++)
 	{
-		this->mTreasures.push_back(GUI_ELEMENT{Vector3(-0.8f + i * 0.35f, 0.4f, 0), dimension });
+		this->mTreasures.push_back(GUI_ELEMENT{Vector3(-0.9f + i * 0.2f, 0.8f, 0), dimension });
 	}
 
 	if (mTreasures.size() > 0) {
