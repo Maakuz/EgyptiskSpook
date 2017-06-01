@@ -120,7 +120,7 @@ HRESULT GraphicsHandler::setupSwapChain() {
 
 	if (SUCCEEDED(hr)) {
 		ID3D11Texture2D* backBuffer = nullptr;
-		hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*) &backBuffer);
+		hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
 
 		if (SUCCEEDED(hr)) {
 			this->createDepthStencil();
@@ -136,6 +136,9 @@ HRESULT GraphicsHandler::setupSwapChain() {
 			}*/
 		}
 	}
+
+	else
+		MessageBox(NULL, L"SWAPCHAIN GICK INTE", L"FASIKEN", SDL_MESSAGEBOX_ERROR);
 
 	return hr;
 }

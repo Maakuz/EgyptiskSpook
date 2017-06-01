@@ -114,7 +114,7 @@ void ParticleRenderer::render(ID3D11DeviceContext *context, ShaderHandler &shade
 						   *cam = this->mGraphicsData->getConstantBuffer(1),
 						   *vp = this->mCamera->getMatrixBuffer();
 	ID3D11ShaderResourceView *srv = this->mGraphicsData->getSRV(0);
-	shaders.setShaders(context, SHADERS, SHADERS, SHADERS); //20 is from entity shader, change later
+	shaders.setShaders(context, SHADERS, SHADERS, SHADERS);
 	
 	updateCameraBuffer(context);
 	updateParticles(context);

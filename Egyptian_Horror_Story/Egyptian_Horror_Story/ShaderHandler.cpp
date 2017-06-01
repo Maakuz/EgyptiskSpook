@@ -35,7 +35,7 @@ HRESULT ShaderHandler::setupVertexShader(ID3D11Device *dev, int key,
 
 	ID3DBlob* blob = nullptr;
 	HRESULT hr;
-	hr = D3DCompileFromFile(name, nullptr, nullptr, entryPoint, "vs_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &blob, nullptr);
+	hr = D3DCompileFromFile(name, nullptr, nullptr, entryPoint, "vs_5_0", 0, 0, &blob, nullptr);
 
 	if (SUCCEEDED(hr)) {
 		hr = dev->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &mVertexShaders[key]);
@@ -54,7 +54,7 @@ HRESULT ShaderHandler::setupVertexShader(ID3D11Device *dev, int key,
 HRESULT ShaderHandler::setupPixelShader(ID3D11Device *dev, int key,
 	wchar_t *name, char *entryPoint) {
 	ID3DBlob* blob = nullptr;
-	HRESULT hr = D3DCompileFromFile(name, nullptr, nullptr, entryPoint, "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &blob, nullptr);
+	HRESULT hr = D3DCompileFromFile(name, nullptr, nullptr, entryPoint, "ps_5_0", 0, 0, &blob, nullptr);
 
 	if (SUCCEEDED(hr)) {
 		hr = dev->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &mPixelShaders[key]);
@@ -67,7 +67,7 @@ HRESULT ShaderHandler::setupPixelShader(ID3D11Device *dev, int key,
 HRESULT ShaderHandler::setupGeometryShader(ID3D11Device *dev, int key,
 	wchar_t *name, char *entryPoint) {
 	ID3DBlob* blob = nullptr;
-	HRESULT hr = D3DCompileFromFile(name, nullptr, nullptr, entryPoint, "gs_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &blob, nullptr);
+	HRESULT hr = D3DCompileFromFile(name, nullptr, nullptr, entryPoint, "gs_5_0", 0, 0, &blob, nullptr);
 
 	if (SUCCEEDED(hr)) {
 		hr = dev->CreateGeometryShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &mGeometryShaders[key]);
@@ -99,7 +99,12 @@ void ShaderHandler::setGeometryShader(ID3D11DeviceContext *context, int key) {
 void ShaderHandler::setShaders(ID3D11DeviceContext *context, int vsKey, int psKey, int gsKey) {
 	// This error message is just a warning, if you unbind the vertex shader things will not work out very well if another vertex shader is not bound
 	if (mVertexShaders.find(vsKey) == mVertexShaders.end())
-		MessageBox(0, L"Ye, that is (probably) not going to work (No working vertex shader key)", L"Warning!", 0);
+	{
+		std::wstring test(L"Ye, that is (probably) not going to work (No working vertex shader key)");
+		test += vsKey;
+		MessageBox(0, test.c_str(), L"Warning!", 0);
+	}
+	
 	context->VSSetShader(vsKey == UNBIND_SHADER ? nullptr :
 		mVertexShaders[vsKey], nullptr, 0);
 	context->GSSetShader(gsKey == UNBIND_SHADER ? nullptr :

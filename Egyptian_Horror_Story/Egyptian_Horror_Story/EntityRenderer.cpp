@@ -19,6 +19,9 @@ void EntityRenderer::setup(ID3D11Device* device, ShaderHandler& shaderHandler)
 	};
 	HRESULT hr = shaderHandler.setupVertexShader(device, ENTITY_SHADER, L"EntityVS.hlsl", "main", desc, ARRAYSIZE(desc));
 
+	if (FAILED(hr))
+		MessageBox(0, L"ENTITIYTYR", L"AAH", 0);
+
 	shaderHandler.setupPixelShader(device, ENTITY_SHADER, L"EntityPS.hlsl", "main");
 
 	this->mEffects.fadeout = 1;

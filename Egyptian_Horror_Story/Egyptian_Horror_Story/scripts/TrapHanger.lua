@@ -5,7 +5,7 @@ triggered = true
 
 function onStart()
 	position.x, position.y, position.z = GetPosition() -- it is static, so lets just get it
-	SetTrapRotOffset(0, -0.5, 0)
+	SetTrapRotOffset(0, -3, 0)
 end
 
 function getHitboxSize()

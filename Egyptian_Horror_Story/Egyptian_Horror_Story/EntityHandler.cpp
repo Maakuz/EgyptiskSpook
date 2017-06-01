@@ -1102,10 +1102,10 @@ void EntityHandler::createBoulderTrap(AIHandler* ai, ID3D11Device* device, ID3D1
 
 void EntityHandler::createGuillioutineTrap(AIHandler* ai, ID3D11Device* device, ID3D11DeviceContext* context, PosRot posRot)
 {
-	Trap* trap = new Trap(1000 + this->mTraps.size(), posRot.pos.x, posRot.pos.y + 5.f, posRot.pos.z);
+	Trap* trap = new Trap(1000 + this->mTraps.size(), posRot.pos.x, posRot.pos.y + 1.2f, posRot.pos.z);
 	trap->setRotation(DirectX::SimpleMath::Vector3(0, posRot.rot * static_cast<float>(M_PI), 0));
 
-	this->loadEntityModel("Guilliotine.fbx", L"", trap, device);
+	this->loadEntityModel("Guilliotine.fbx", L"Giljotin.png", trap, device);
 	trap->updateTransformBuffer(context, this->mEntityRenderer->getGraphicsData());
 
 	ai->addTrap("scripts/TrapHanger.lua", trap);
@@ -1118,7 +1118,7 @@ void EntityHandler::setupPlayer(ID3D11Device* device, ID3D11DeviceContext* conte
 
 	this->mEnemy = new Enemy(ENEMY_KEY);
 
-	this->loadEntityModel("monster.fbx", L"dargon_bump.jpg", this->mEnemy, device);
+	this->loadEntityModel("monster.fbx", L"GhostTexture.png", this->mEnemy, device);
 }
 
 void EntityHandler::setupTreasureAndTraps(AIHandler* ai, ID3D11Device* device)

@@ -102,16 +102,16 @@ SDL_Color NavMesh::getPixel(int x, int y) const {
 
 SDL_Color NavMesh::getPixelAtCoord(int x, int z) const {
 	Vector2 pixelCoord = toPixelCoord(x, z);
-	int pX = static_cast<int>(pixelCoord.x), 
-		pY = static_cast<int>(pixelCoord.y);
+	int pX = (pixelCoord.x), 
+		pY = (pixelCoord.y);
 	assert(mSurface);
 	return mSurface->format->palette->colors
 		[indexArray[pX + pY * getWidth()]];
 }
 
 Vector2 NavMesh::toPixelCoord(int x, int z) const {
-	int pX = static_cast<int>(floor(x * SCALE_X) + OFFSET_X);
-	int pY = static_cast<int>(floor(z * SCALE_Z) + OFFSET_Z);
+	int pX = (floor(x * SCALE_X) + OFFSET_X);
+	int pY = (floor(z * SCALE_Z) + OFFSET_Z);
 
 	pX %= getWidth();
 	pY %= getHeight();
@@ -177,8 +177,8 @@ void NavMesh::loadPathToCoordThread(Enemy *enemy, int fromX, int fromZ,
 			for (int y = -1; y < 2; y++) {
 				if ((x != 0 || y != 0)) {
 					node = Vector2(
-						static_cast<float>(static_cast<int>(abs(x + parent.node.x)) % getWidth()),
-						static_cast<float>(static_cast<int>(abs(y + parent.node.y)) % getHeight()) // so node is in bounds
+						(static_cast<int>(abs(x + parent.node.x)) % getWidth()),
+						(static_cast<int>(abs(y + parent.node.y)) % getHeight()) // so node is in bounds
 					);
 
 					float cost = heuristic(node, toPos) + parent.F; //calculate cost of this node

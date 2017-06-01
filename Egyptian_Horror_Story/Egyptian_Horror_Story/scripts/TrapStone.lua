@@ -51,7 +51,7 @@ end
 
 function onEnemyCollision()
 	if fallenDown then
-		PushbackEnemy(position.x, position.y, position.z, getLength())
+		PushbackEnemy(position.x, position.y, position.z, getLength() * 0.5)
 	else
 		falling = true
 	end
@@ -62,7 +62,7 @@ function onPlayerTrigger()
 end
 
 function onEnemyTrigger()
-	trigger()
+	--trigger()
 end
 
 function trigger()
